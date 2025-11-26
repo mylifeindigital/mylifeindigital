@@ -2,8 +2,8 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     "target": "ES2020",
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "module": "Node16",
+    "moduleResolution": "node16",
     "strict": true,
     "declaration": true,
     "outDir": "dist",
@@ -11,5 +11,8 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
+  },
+  "ts-node": {
+    "esm": true
   }
 }

@@ -1,17 +1,24 @@
 import 'dotenv/config';
-import * as z from "zod"; 
+import { ConfigurationItem } from './types/configurationItem.js';
+import { loadConfiguration } from './utils/loadConfiguration.js';
 
-const configurationSchema = z.object({
-    port: z.number().default(3000),
-    apiUrl: z.string().default('http://localhost:3000'),
-    enableAI: z.boolean().default(false),
-});
+const configurationSchema: Record<string, ConfigurationItem<any>> = {
+    port: {
+        envKey: 'PORT',
+        required: true,
+        parseFn: (value: string) => Number(value),
+    },
+    apiUrl: {
+        envKey: 'API_URL',
+        required: true,
+        parseFn: (value: string) => value,
+    },
+    enableAI: {
+        envKey: 'ENABLE_AI',
+        required: false,
+        parseFn: (value: string) => value === 'true',
+    }
+};
 
-const configuration = configurationSchema.safeParse( {
-    port: parseInt(process.env.PORT || '3000'),
-    apiUrl: process.env.API_URL,
-    enableAI: process.env.ENABLE_AI === 'true',
-});
-
+const configuration = loadConfiguration(configurationSchema);
 console.log(configuration);
-

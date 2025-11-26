@@ -30,6 +30,17 @@ New understanding, patterns, or insights:
     - `npx tsc --init` initializes typescript with tsconfig
 - Added Zod to parse the schema. Not sure if creating own custom implementation is the aim of the exercise?
 - Seeing that the focus is on the fundamentals it might be better to skip using Zod for now
+- lets try and explain the code:
+```typescript
+export type ConfigResult<T extends Record<string, ConfigurationItem<any>>> = {
+    [K in keyof T]: T[K] extends ConfigurationItem<infer V> ? V : never;
+};
+```
+  - what does the first part do, i.e. `T extends Record<string, ConfigurationItem<any>>>`.
+  - the first part is that `ConfigResult` is a type not a function.
+  - the type that is created from this is constrained to items with a string key and a value type defined by the `ConfigurationItem` interface.
+  - It then constraints the return type to only use the properties of the ConfigurationItem. and the V type is the type provided in the ConfigurationItem definition.
+  - The `ConfigResult` type acts as a constraint when calling the `loadConfiguration`
 
 ---
 
