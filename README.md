@@ -74,7 +74,7 @@ Exploring:
 
 | Date       | Area        | Summary |
 |------------|-------------|----------|
-| 2025-11-26 | TypeScript  | Built basic environment loaded, learned using generics, utility types |
+| [2025-11-26](./notes/week-01-typescript.md) | TypeScript  | Built basic environment loaded, learned using generics, utility types |
 
 (See `/notes` folder for full breakdowns)
 

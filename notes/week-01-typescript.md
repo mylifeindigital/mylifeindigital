@@ -29,6 +29,7 @@ New understanding, patterns, or insights:
     - `npm install -D typescript ts-node @types/node` - Install the TypeScript compiler, a runtime execution layer for it, and proper type definitions for Node so my environment doesn’t feel like a hallucination.
     - `npx tsc --init` initializes typescript with tsconfig
 - Added Zod to parse the schema. Not sure if creating own custom implementation is the aim of the exercise?
+- Seeing that the focus is on the fundamentals it might be better to skip using Zod for now
 
 ---
 
@@ -41,12 +42,13 @@ Things that slowed me down or felt unclear:
 ## 🔁 What I’d Do Differently
 If I repeated today, I would:
 - Handle the exceptions thrown by Zod in a better manner
+- Just wire it up myself
 
 ---
 
 ## ▶️ Next Session Plan
 Concrete next steps (not vague ideas):
-- Consider handling the Zod schema validation exceptions in an elegant manner. 
+- Consider removing Zod schema and writing custom functions 
 - Organize the code better
 - Take longer if needed to understand concept(s)
 
