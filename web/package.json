@@ -1,0 +1,28 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "Hono markdown blog application",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hono/node-server": "^1.13.0",
+    "dotenv": "^17.2.3",
+    "hono": "^4.6.11",
+    "marked": "^16.0.1",
+    "ts-core-utils": "*"
+  },
+  "devDependencies": {
+    "@types/marked": "^6.0.0",
+    "@types/node": "^24.10.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

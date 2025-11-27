@@ -41,6 +41,7 @@ export type ConfigResult<T extends Record<string, ConfigurationItem<any>>> = {
   - the type that is created from this is constrained to items with a string key and a value type defined by the `ConfigurationItem` interface.
   - It then constraints the return type to only use the properties of the ConfigurationItem. and the V type is the type provided in the ConfigurationItem definition.
   - The `ConfigResult` type acts as a constraint when calling the `loadConfiguration`
+  - I learned about npm workspaces. Really interesting!
 
 ---
 
@@ -54,7 +55,7 @@ Things that slowed me down or felt unclear:
 ## 🔁 What I’d Do Differently
 If I repeated today, I would:
 - Handle the exceptions thrown by Zod in a better manner
-- Just wire it up myself
+- Just wire up the config validation myself to gain better understanding
 
 ---
 

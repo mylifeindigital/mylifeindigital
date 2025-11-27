@@ -1,12 +1,23 @@
 {
   "name": "ts-core-utils",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "TypeScript core utilities for configuration management",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
-    "dev": "tsx src/index.ts"
+    "dev": "tsx src/index.ts",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [],
   "author": "",

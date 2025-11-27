@@ -1,0 +1,19 @@
+{
+  "name": "digitalthreadza",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Digital Thread ZA monorepo",
+  "workspaces": [
+    "web",
+    "experiments/ts-core-utils"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "build:utils": "npm run build --workspace=ts-core-utils",
+    "build:web": "npm run build --workspace=web"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+
