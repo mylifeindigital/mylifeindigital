@@ -1,0 +1,21 @@
+name = "digitalthreadz-web"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Serve static assets from the public directory
+[assets]
+directory = "./public"
+
+# Environment variables (can be overridden per environment)
+[vars]
+SITE_TITLE = "Digital Threadz"
+
+# Production environment
+[env.production]
+name = "digitalthreadz-web"
+
+# Staging environment  
+[env.staging]
+name = "digitalthreadz-web-staging"
+

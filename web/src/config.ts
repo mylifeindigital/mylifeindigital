@@ -1,15 +1,22 @@
-// Load environment variables from .env file first
-import 'dotenv/config';
-
-import { loadConfiguration, createConfigItem, parsers } from 'ts-core-utils';
+/**
+ * Environment bindings type for Cloudflare Workers
+ */
+export interface Env {
+    SITE_TITLE?: string;
+}
 
 /**
- * Application configuration loaded from environment variables.
- * Loaded once at module initialization.
+ * Application configuration derived from environment
  */
-export const config = loadConfiguration({
-    siteTitle: createConfigItem('SITE_TITLE', parsers.string, {
-        defaultValue: 'Markdown Blog'
-    }),
-});
+export interface AppConfig {
+    siteTitle: string;
+}
 
+/**
+ * Get configuration from environment bindings
+ */
+export function getConfig(env: Env): AppConfig {
+    return {
+        siteTitle: env.SITE_TITLE || 'Markdown Blog',
+    };
+}

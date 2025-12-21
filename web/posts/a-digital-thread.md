@@ -1,10 +1,10 @@
 ---
-title: "Finding the Thread"
+title: "Connecting digital stories that matter.
 date: "2025-11-27"
 author: "Fredrik Erasmus"
 ---
 
-# Conceptual view
+# Threads of code. Threads of art. Threads of people.
 
 A thread of wool. A thread in a piece of clothing material. A thread in software. A thread as a connector between people. We live our lives with threads woven between us. Each person we share experiences with can be seen as a thread.
 

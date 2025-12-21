@@ -1,13 +1,13 @@
 import { Layout } from '../components/Layout.js';
 import { getAllPostsFromCache } from '../utils/postCache.js';
-import { config } from '../config.js';
+import type { AppConfig } from '../config.js';
 
-export function indexRoute() {
+export function indexRoute(config: AppConfig) {
     const posts = getAllPostsFromCache();
-    const siteTitle = config.siteTitle || 'Digital Thread';
+    const { siteTitle } = config;
     
     return (
-        <Layout title={`${siteTitle} - Home`}>
+        <Layout title={`${siteTitle} - Home`} siteTitle={siteTitle}>
             {/* Hero Section */}
             <section class="hero">
                 <h1 class="hero-title">Welcome to <span class="gradient-text">{siteTitle}</span></h1>
@@ -65,4 +65,3 @@ export function indexRoute() {
         </Layout>
     );
 }
-

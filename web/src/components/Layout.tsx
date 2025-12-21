@@ -1,14 +1,11 @@
-import { config } from '../config.js';
-
 interface LayoutProps {
     title?: string;
+    siteTitle: string;
     children: any;
 }
 
-export function Layout({ title, children }: LayoutProps) {
-    // Use configured site title, or fallback to prop, or use default
-    const pageTitle = title || config.siteTitle || 'Markdown Blog';
-    const siteTitle = config.siteTitle || 'Markdown Blog';
+export function Layout({ title, siteTitle, children }: LayoutProps) {
+    const pageTitle = title || siteTitle;
 
     return (
         <html lang="en">
@@ -16,11 +13,11 @@ export function Layout({ title, children }: LayoutProps) {
                 <meta charset="UTF-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title>{pageTitle}</title>
-                <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
                 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-                <link rel="stylesheet" href="/static/styles/main.css" />
+                <link rel="stylesheet" href="/styles/main.css" />
             </head>
             <body>
                 <header>
@@ -64,4 +61,3 @@ export function Layout({ title, children }: LayoutProps) {
         </html>
     );
 }
-

@@ -1,70 +1,50 @@
-// Load environment variables from .env file first
-import 'dotenv/config';
-
 import { Hono } from 'hono';
-import { serve } from '@hono/node-server';
 import { jsxRenderer } from 'hono/jsx-renderer';
 import { indexRoute } from './routes/index.js';
 import { postRoute } from './routes/posts/[slug].js';
-import { serveStatic } from '@hono/node-server/serve-static';
-import { initializePostCache } from './utils/postCache.js';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { type Env, getConfig } from './config.js';
 
-// Get posts directory path
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const postsDir = join(__dirname, '../posts');
-
-// Initialize post cache before starting server
-initializePostCache(postsDir);
-
-const app = new Hono();
-
-// Serve static files
-app.use('/static/*', serveStatic({
-    root: './public',
-    rewriteRequestPath: (path) => path.replace(/^\/static/, ''),
-}));
+// Create app with environment bindings type
+const app = new Hono<{ Bindings: Env }>();
 
 // Use JSX renderer middleware
 app.use('*', jsxRenderer());
 
 // Home route - list all posts
 app.get('/', (c) => {
-    return c.render(indexRoute());
+    const config = getConfig(c.env);
+    return c.render(indexRoute(config));
 });
 
 // Individual post route
 app.get('/posts/:slug', (c) => {
     const slug = c.req.param('slug');
-    return c.render(postRoute(slug));
+    const config = getConfig(c.env);
+    return c.render(postRoute(slug, config));
 });
 
 // 404 handler
 app.notFound((c) => {
+    const config = getConfig(c.env);
     return c.html(`
         <!DOCTYPE html>
         <html>
             <head>
-                <title>404 - Not Found</title>
+                <title>404 - Not Found | ${config.siteTitle}</title>
+                <link rel="stylesheet" href="/styles/main.css" />
             </head>
             <body>
-                <h1>404 - Page Not Found</h1>
-                <p>The page you're looking for doesn't exist.</p>
-                <a href="/">Go Home</a>
+                <main class="container">
+                    <div class="not-found">
+                        <h2>404</h2>
+                        <p>The page you're looking for doesn't exist.</p>
+                        <a href="/" class="btn">← Go Home</a>
+                    </div>
+                </main>
             </body>
         </html>
     `);
 });
 
-// Get port from environment or default to 3000
-const port = Number(process.env.PORT) || 3000;
-
-console.log(`Server is running on http://localhost:${port}`);
-
-serve({
-    fetch: app.fetch,
-    port,
-});
-
+// Export for Cloudflare Workers
+export default app;

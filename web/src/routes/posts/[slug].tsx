@@ -1,13 +1,15 @@
 import { Layout } from '../../components/Layout.js';
 import { getPostBySlugFromCache } from '../../utils/postCache.js';
 import { raw } from 'hono/html';
+import type { AppConfig } from '../../config.js';
 
-export function postRoute(slug: string) {
+export function postRoute(slug: string, config: AppConfig) {
     const post = getPostBySlugFromCache(slug);
+    const { siteTitle } = config;
     
     if (!post) {
         return (
-            <Layout title="Post Not Found">
+            <Layout title="Post Not Found" siteTitle={siteTitle}>
                 <div class="not-found">
                     <h2>404</h2>
                     <p>The post you're looking for doesn't exist.</p>
@@ -18,7 +20,7 @@ export function postRoute(slug: string) {
     }
     
     return (
-        <Layout title={`${post.metadata.title}`}>
+        <Layout title={post.metadata.title} siteTitle={siteTitle}>
             <article class="article">
                 <header class="article-header">
                     <a href="/" class="back-link">← All Posts</a>
@@ -53,4 +55,3 @@ export function postRoute(slug: string) {
         </Layout>
     );
 }
-
