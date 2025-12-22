@@ -1,5 +1,5 @@
 import { Layout } from '../components/Layout.js';
-import { getAllPostsFromCache } from '../utils/postCache.js';
+import { getAllPostsFromCache } from '../utils/post-cache.js';
 import type { AppConfig } from '../config.js';
 
 export function indexRoute(config: AppConfig) {

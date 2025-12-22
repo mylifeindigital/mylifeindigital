@@ -1,5 +1,5 @@
 import { Layout } from '../../components/Layout.js';
-import { getPostBySlugFromCache } from '../../utils/postCache.js';
+import { getPostBySlugFromCache } from '../../utils/post-cache.js';
 import { raw } from 'hono/html';
 import type { AppConfig } from '../../config.js';
 

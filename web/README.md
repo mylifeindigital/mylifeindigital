@@ -113,7 +113,7 @@ Your markdown content here...
   │   │   └── Layout.tsx        # Base layout component
   │   └── utils/
   │       ├── markdown.ts       # Markdown types and parsing
-  │       ├── postCache.ts      # Post data access
+  │       ├── post-cache.ts     # Post data access
   │       └── posts-data.ts     # Generated posts (build artifact)
   ├── posts/                    # Markdown post files
   ├── public/                   # Static assets (served from CDN)

@@ -26,3 +26,4 @@ export function getPostBySlugFromCache(slug: string): Post | null {
 export function getPostCount(): number {
     return postsCache.length;
 }
+
