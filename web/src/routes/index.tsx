@@ -10,8 +10,8 @@ export function indexRoute(config: AppConfig) {
         <Layout title={`${siteTitle} - Home`} siteTitle={siteTitle} sections={sections}>
             {/* Hero Section */}
             <section class="hero">
-                <h1 class="hero-title">Welcome to <span class="gradient-text">{siteTitle}</span></h1>
-                <p class="hero-subtitle">Exploring ideas, code, and the connections between them.</p>
+                <h1 class="hero-title">{config.heroTitle} <span class="gradient-text">{siteTitle}</span></h1>
+                <p class="hero-subtitle">{config.heroSubtitle}</p>
             </section>
 
             {/* Sections Grid */}

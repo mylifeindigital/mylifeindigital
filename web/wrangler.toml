@@ -10,6 +10,8 @@ directory = "./public"
 # Environment variables (can be overridden per environment)
 [vars]
 SITE_TITLE = "Digital Threadz"
+HERO_TITLE = "Welcome to"
+HERO_SUBTITLE = 'Exploring ideas, code, and the connecting bits between them.'
 
 # Production environment
 [env.production]
