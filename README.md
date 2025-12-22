@@ -30,10 +30,10 @@ If you’re reading this: welcome to the engine room.
 ## 🗂️ Repository Structure
 
 ```
-/notes           → Learning logs & reflections  
-/experiments     → Isolated technical explorations  
-/projects        → Structured, longer-term builds  
-/resources       → Useful links and references  
+/content/posts    → Learning logs & reflections  
+/content/technical- Sessions → Technical session logs  
+/experiments      → Isolated technical explorations  
+/web              → A website build using Cloudflare workers   
 ```
 
 ---
