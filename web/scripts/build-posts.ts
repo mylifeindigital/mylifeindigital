@@ -1,12 +1,12 @@
 /**
- * Build script to generate posts data at build time.
- * This reads all markdown files from the posts directory and generates
- * a TypeScript file with the parsed post data embedded.
+ * Build script to generate content data at build time.
+ * This reads all markdown files from the content directory and generates
+ * a TypeScript file with the parsed content data embedded, organized by sections.
  * 
  * This is necessary because Cloudflare Workers don't have filesystem access.
  */
 
-import { readFileSync, readdirSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { readFileSync, readdirSync, writeFileSync, existsSync, mkdirSync, statSync } from 'fs';
 import { join, dirname, extname, basename } from 'path';
 import { fileURLToPath } from 'url';
 import { marked } from 'marked';
@@ -14,20 +14,44 @@ import { marked } from 'marked';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-interface PostMetadata {
+interface ContentMetadata {
     title: string;
     date?: string;
     author?: string;
     description?: string;
     tags?: string[];
+    section?: string;
     [key: string]: string | string[] | undefined;
 }
 
-interface Post {
+interface ContentItem {
     slug: string;
-    metadata: PostMetadata;
+    section: string;
+    metadata: ContentMetadata;
     content: string;
     html: string;
+}
+
+interface Section {
+    slug: string;
+    title: string;
+    description?: string;
+    items: ContentItem[];
+}
+
+interface SiteContent {
+    sections: Section[];
+    allItems: ContentItem[];
+}
+
+/**
+ * Convert slug to human-readable title
+ */
+function slugToTitle(slug: string): string {
+    return slug
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 }
 
 /**
@@ -72,7 +96,7 @@ function extractFrontmatter(content: string): { frontmatter: Record<string, stri
 /**
  * Parse a single markdown file
  */
-function parseMarkdownFile(filePath: string, slug: string): Post {
+function parseMarkdownFile(filePath: string, slug: string, sectionSlug: string): ContentItem {
     const content = readFileSync(filePath, 'utf-8');
     const { frontmatter, body } = extractFrontmatter(content);
     
@@ -80,17 +104,19 @@ function parseMarkdownFile(filePath: string, slug: string): Post {
     const html = marked.parse(body) as string;
     
     // Extract metadata
-    const metadata: PostMetadata = {
+    const metadata: ContentMetadata = {
         title: (frontmatter.title as string) || slug,
         date: frontmatter.date as string | undefined,
         author: frontmatter.author as string | undefined,
         description: frontmatter.description as string | undefined,
         tags: frontmatter.tags as string[] | undefined,
+        section: sectionSlug,
         ...frontmatter,
     };
     
     return {
         slug,
+        section: sectionSlug,
         metadata,
         content: body,
         html,
@@ -98,31 +124,31 @@ function parseMarkdownFile(filePath: string, slug: string): Post {
 }
 
 /**
- * Get all posts from the posts directory
+ * Get all content items from a section directory
  */
-function getAllPosts(postsDir: string): Post[] {
-    const posts: Post[] = [];
+function getSectionContent(sectionDir: string, sectionSlug: string): ContentItem[] {
+    const items: ContentItem[] = [];
     
-    if (!existsSync(postsDir)) {
-        console.warn(`⚠️ Posts directory not found: ${postsDir}`);
-        return posts;
+    if (!existsSync(sectionDir)) {
+        return items;
     }
     
-    const files = readdirSync(postsDir);
+    const files = readdirSync(sectionDir);
     
     for (const file of files) {
-        const filePath = join(postsDir, file);
+        const filePath = join(sectionDir, file);
+        const stat = statSync(filePath);
         
-        if (extname(file) === '.md') {
+        if (stat.isFile() && extname(file) === '.md') {
             const slug = basename(file, '.md');
-            const post = parseMarkdownFile(filePath, slug);
-            posts.push(post);
-            console.log(`  📄 Parsed: ${file}`);
+            const item = parseMarkdownFile(filePath, slug, sectionSlug);
+            items.push(item);
+            console.log(`    📄 ${file}`);
         }
     }
     
     // Sort by date if available, otherwise by title
-    return posts.sort((a, b) => {
+    return items.sort((a, b) => {
         if (a.metadata.date && b.metadata.date) {
             return new Date(b.metadata.date).getTime() - new Date(a.metadata.date).getTime();
         }
@@ -131,19 +157,58 @@ function getAllPosts(postsDir: string): Post[] {
 }
 
 /**
- * Generate the posts data file
+ * Get all sections from the content directory
  */
-function generatePostsDataFile(posts: Post[], outputPath: string): void {
+function getAllSections(contentDir: string): Section[] {
+    const sections: Section[] = [];
+    
+    if (!existsSync(contentDir)) {
+        console.warn(`⚠️ Content directory not found: ${contentDir}`);
+        return sections;
+    }
+    
+    const entries = readdirSync(contentDir);
+    
+    for (const entry of entries) {
+        const entryPath = join(contentDir, entry);
+        const stat = statSync(entryPath);
+        
+        if (stat.isDirectory()) {
+            console.log(`  📁 Section: ${entry}`);
+            const sectionSlug = entry;
+            const items = getSectionContent(entryPath, sectionSlug);
+            
+            if (items.length > 0) {
+                sections.push({
+                    slug: sectionSlug,
+                    title: slugToTitle(sectionSlug),
+                    items,
+                });
+            }
+        }
+    }
+    
+    // Sort sections alphabetically by title
+    return sections.sort((a, b) => a.title.localeCompare(b.title));
+}
+
+/**
+ * Generate the content data file
+ */
+function generateContentDataFile(siteContent: SiteContent, outputPath: string): void {
     const output = `/**
- * Auto-generated posts data file.
+ * Auto-generated content data file.
  * DO NOT EDIT MANUALLY - this file is generated by scripts/build-posts.ts
  * 
  * Generated at: ${new Date().toISOString()}
  */
 
-import type { Post } from './markdown.js';
+import type { ContentItem, Section, SiteContent } from './markdown.js';
 
-export const postsData: Post[] = ${JSON.stringify(posts, null, 2)};
+export const siteContent: SiteContent = ${JSON.stringify(siteContent, null, 2)};
+
+// Backward compatibility exports
+export const postsData: ContentItem[] = siteContent.allItems;
 `;
     
     // Ensure the output directory exists
@@ -156,18 +221,28 @@ export const postsData: Post[] = ${JSON.stringify(posts, null, 2)};
 }
 
 // Main execution
-const postsDir = join(__dirname, '../posts');
+const contentDir = join(__dirname, '../../content');
 const outputPath = join(__dirname, '../src/utils/posts-data.ts');
 
-console.log('📦 Building posts data...');
-console.log(`  Source: ${postsDir}`);
+console.log('📦 Building content data...');
+console.log(`  Source: ${contentDir}`);
 console.log(`  Output: ${outputPath}`);
 console.log('');
 
-const posts = getAllPosts(postsDir);
+const sections = getAllSections(contentDir);
+const allItems = sections.flatMap(section => section.items);
 
-generatePostsDataFile(posts, outputPath);
+const siteContent: SiteContent = {
+    sections,
+    allItems,
+};
+
+generateContentDataFile(siteContent, outputPath);
 
 console.log('');
-console.log(`✅ Generated posts data with ${posts.length} post(s)`);
-
+console.log(`✅ Generated content data:`);
+console.log(`   - ${sections.length} section(s)`);
+console.log(`   - ${allItems.length} item(s) total`);
+sections.forEach(section => {
+    console.log(`   - ${section.title}: ${section.items.length} item(s)`);
+});

@@ -1,20 +1,38 @@
 import { marked } from 'marked';
 
-export interface PostMetadata {
+export interface ContentMetadata {
     title: string;
     date?: string;
     author?: string;
     description?: string;
     tags?: string[];
+    section?: string;
     [key: string]: string | string[] | undefined;
 }
 
-export interface Post {
+export interface ContentItem {
     slug: string;
-    metadata: PostMetadata;
+    section: string;
+    metadata: ContentMetadata;
     content: string;
     html: string;
 }
+
+export interface Section {
+    slug: string;
+    title: string;
+    description?: string;
+    items: ContentItem[];
+}
+
+export interface SiteContent {
+    sections: Section[];
+    allItems: ContentItem[];
+}
+
+// Backward compatibility aliases
+export type PostMetadata = ContentMetadata;
+export type Post = ContentItem;
 
 /**
  * Extract frontmatter from markdown content
@@ -56,26 +74,28 @@ export function extractFrontmatter(content: string): { frontmatter: Record<strin
 }
 
 /**
- * Parse markdown content and return a Post object
+ * Parse markdown content and return a ContentItem object
  */
-export function parseMarkdownContent(content: string, slug: string): Post {
+export function parseMarkdownContent(content: string, slug: string, section: string = 'posts'): ContentItem {
     const { frontmatter, body } = extractFrontmatter(content);
     
     // Parse markdown to HTML
     const html = marked.parse(body) as string;
     
     // Extract metadata
-    const metadata: PostMetadata = {
+    const metadata: ContentMetadata = {
         title: (frontmatter.title as string) || slug,
         date: frontmatter.date as string | undefined,
         author: frontmatter.author as string | undefined,
         description: frontmatter.description as string | undefined,
         tags: frontmatter.tags as string[] | undefined,
+        section,
         ...frontmatter,
     };
     
     return {
         slug,
+        section,
         metadata,
         content: body,
         html,

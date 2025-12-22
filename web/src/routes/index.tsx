@@ -1,65 +1,72 @@
 import { Layout } from '../components/Layout.js';
-import { getAllPostsFromCache } from '../utils/post-cache.js';
+import { getAllSections } from '../utils/post-cache.js';
 import type { AppConfig } from '../config.js';
 
 export function indexRoute(config: AppConfig) {
-    const posts = getAllPostsFromCache();
+    const sections = getAllSections();
     const { siteTitle } = config;
     
     return (
-        <Layout title={`${siteTitle} - Home`} siteTitle={siteTitle}>
+        <Layout title={`${siteTitle} - Home`} siteTitle={siteTitle} sections={sections}>
             {/* Hero Section */}
             <section class="hero">
                 <h1 class="hero-title">Welcome to <span class="gradient-text">{siteTitle}</span></h1>
                 <p class="hero-subtitle">Exploring ideas, code, and the connections between them.</p>
             </section>
 
-            {/* Posts Section */}
-            <section class="posts-section">
-                <div class="section-header">
-                    <h2>Latest Posts</h2>
-                    <span class="post-count">{posts.length} {posts.length === 1 ? 'post' : 'posts'}</span>
-                </div>
-                
-                {posts.length === 0 ? (
+            {/* Sections Grid */}
+            <section class="sections-grid">
+                {sections.length === 0 ? (
                     <div class="empty-state">
-                        <p>No posts found yet.</p>
-                        <p class="hint">Add some markdown files to the /posts directory to get started.</p>
+                        <p>No content found yet.</p>
+                        <p class="hint">Add some markdown files to the /content directory to get started.</p>
                     </div>
                 ) : (
-                    <ul class="post-list">
-                        {posts.map(post => (
-                            <li class="post-card">
-                                <a href={`/posts/${post.slug}`}>
-                                    <div class="post-card-content">
-                                        <h3 class="post-title">{post.metadata.title}</h3>
-                                        {post.metadata.description && (
-                                            <p class="post-excerpt">{post.metadata.description}</p>
-                                        )}
-                                        <div class="post-footer">
-                                            {post.metadata.date && (
-                                                <span class="post-date">
-                                                    {new Date(post.metadata.date).toLocaleDateString('en-US', {
-                                                        year: 'numeric',
-                                                        month: 'short',
-                                                        day: 'numeric'
-                                                    })}
-                                                </span>
-                                            )}
-                                            {post.metadata.tags && (
-                                                <div class="post-tags">
-                                                    {(post.metadata.tags as string[]).slice(0, 3).map(tag => (
-                                                        <span class="tag">{tag}</span>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <span class="post-arrow">→</span>
-                                </a>
-                            </li>
+                    <div class="section-cards">
+                        {sections.map(section => (
+                            <article class="section-card">
+                                <div class="section-card-header">
+                                    <h2 class="section-title">
+                                        <a href={`/${section.slug}`}>{section.title}</a>
+                                    </h2>
+                                    <span class="item-count">{section.items.length} {section.items.length === 1 ? 'item' : 'items'}</span>
+                                </div>
+                                
+                                {section.items.length > 0 && (
+                                    <ul class="section-items-preview">
+                                        {section.items.slice(0, 3).map(item => (
+                                            <li class="section-item-preview">
+                                                <a href={`/${section.slug}/${item.slug}`}>
+                                                    <span class="item-title">{item.metadata.title}</span>
+                                                    {item.metadata.date && (
+                                                        <span class="item-date">
+                                                            {new Date(item.metadata.date).toLocaleDateString('en-US', {
+                                                                year: 'numeric',
+                                                                month: 'short',
+                                                                day: 'numeric'
+                                                            })}
+                                                        </span>
+                                                    )}
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                                
+                                {section.items.length > 3 && (
+                                    <a href={`/${section.slug}`} class="view-all-link">
+                                        View all {section.items.length} items →
+                                    </a>
+                                )}
+                                
+                                {section.items.length <= 3 && section.items.length > 0 && (
+                                    <a href={`/${section.slug}`} class="view-all-link">
+                                        View section →
+                                    </a>
+                                )}
+                            </article>
                         ))}
-                    </ul>
+                    </div>
                 )}
             </section>
         </Layout>

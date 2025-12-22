@@ -1,10 +1,13 @@
+import type { Section } from '../utils/markdown.js';
+
 interface LayoutProps {
     title?: string;
     siteTitle: string;
+    sections?: Section[];
     children: any;
 }
 
-export function Layout({ title, siteTitle, children }: LayoutProps) {
+export function Layout({ title, siteTitle, sections = [], children }: LayoutProps) {
     const pageTitle = title || siteTitle;
 
     return (
@@ -46,6 +49,9 @@ export function Layout({ title, siteTitle, children }: LayoutProps) {
                         </a>
                         <nav>
                             <a href="/">Home</a>
+                            {sections.map(section => (
+                                <a href={`/${section.slug}`}>{section.title}</a>
+                            ))}
                         </nav>
                     </div>
                 </header>

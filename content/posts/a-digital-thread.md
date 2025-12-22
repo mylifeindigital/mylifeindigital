@@ -2,6 +2,7 @@
 title: "Connecting digital stories that matter.
 date: "2025-11-27"
 author: "Fredrik Erasmus"
+section: "posts"
 ---
 
 # Threads of code. Threads of art. Threads of people.

@@ -1,3 +1,11 @@
+---
+title: "Daily Technical Session – [2025-11-26]"
+date: "2025-11-26"
+author: "Fredrik Erasmus"
+section: "technical-sessions"
+tags: ["typescript"]
+---
+
 # Daily Technical Session – [2025-11-26]
 
 ## Focus Area
