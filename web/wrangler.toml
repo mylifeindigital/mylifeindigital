@@ -1,4 +1,4 @@
-name = "digitalthreadz-web"
+name = "mylifeindigital-web"
 main = "src/index.ts"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
@@ -9,15 +9,15 @@ directory = "./public"
 
 # Environment variables (can be overridden per environment)
 [vars]
-SITE_TITLE = "Digital Threadz"
+SITE_TITLE = "My Life In Digital"
 HERO_TITLE = "Welcome to"
 HERO_SUBTITLE = 'Exploring ideas, code, and the connecting bits between them.'
 
 # Production environment
 [env.production]
-name = "digitalthreadz-web"
+name = "mylifeindigital-web"
 
 # Staging environment  
 [env.staging]
-name = "digitalthreadz-web-staging"
+name = "mylifeindigital-web-staging"
 

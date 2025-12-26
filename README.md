@@ -1,4 +1,4 @@
-# Digital Thread Evolution — Technical Growth Log
+# My Life In Digital — Technical Growth Log
 
 > A living record of my progression as an engineer, focused on mastering AI systems, backend architecture, and TypeScript at a professional level.  
 > Not a portfolio. Not a tutorial. A deliberate journey.
