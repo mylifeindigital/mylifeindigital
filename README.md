@@ -76,6 +76,7 @@ Exploring:
 |------------|-------------|----------|
 | [2025-11-26](./notes/week-01-typescript.md) | TypeScript  | Built basic environment loaded, learned using generics, utility types |
 | [2025-12-22](./notes/week-02-cloudflare.md) | Cloudflare  | Built a basic Hono app hosted on Cloudflare Workers |
+| [2025-12-22](./notes/week-02-web-code-deep-dive.md) | Hono  | Reading through code |
 
 (See `/notes` folder for full breakdowns)
 

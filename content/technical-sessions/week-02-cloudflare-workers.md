@@ -47,6 +47,7 @@ If I repeated today, I would:
 
 ## ▶️ Next Session Plan
 Concrete next steps (not vague ideas):
+- Read through code in the Hone app starting with index.ts
 
 ---
 
