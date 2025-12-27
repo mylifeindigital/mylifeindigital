@@ -31,7 +31,7 @@ If you’re reading this: welcome to the engine room.
 
 ```
 /content/posts    → Learning logs & reflections  
-/content/technical- Sessions → Technical session logs  
+/content/technical-sessions - Sessions → Technical session logs  
 /experiments      → Isolated technical explorations  
 /web              → A website build using Cloudflare workers   
 ```
@@ -74,11 +74,11 @@ Exploring:
 
 | Date       | Area        | Summary |
 |------------|-------------|----------|
-| [2025-11-26](./notes/week-01-typescript.md) | TypeScript  | Built basic environment loaded, learned using generics, utility types |
-| [2025-12-22](./notes/week-02-cloudflare.md) | Cloudflare  | Built a basic Hono app hosted on Cloudflare Workers |
-| [2025-12-22](./notes/week-02-web-code-deep-dive.md) | Hono  | Reading through code |
+| [2025-11-26](./content/technical-sessions/week-01-typescript.md) | TypeScript  | Built basic environment loaded, learned using generics, utility types |
+| [2025-12-22](./content/technical-sessions/week-02-01-cloudflare.md) | Cloudflare  | Built a basic Hono app hosted on Cloudflare Workers |
+| [2025-12-22](./content/technical-sessions/week-02-02-web-code-deep-dive.md) | Hono  | Reading through code |
 
-(See `/notes` folder for full breakdowns)
+(See [notes](./content/index.md) folder for full breakdowns)
 
 ---
 
@@ -105,15 +105,12 @@ So will growth.
 
 ## 📍 Next Milestones
 
-- [ ] Complete TypeScript utility library skeleton  
-- [ ] Finalise backend scaffold structure  
+- [ x ] Complete TypeScript utility library skeleton  
+- [ x ] Finalise backend scaffold structure
+- [ ] Investigate AI orchestration using Hono JS
+- [ ] Develop non-AI architecture. It should work without the AI bits first.
+- [ ] Integrate AI Models into orchestration    
 - [ ] Launch first AI-powered prototype  
-
----
-
-## 📚 Useful Resources
-
-See `/resources/links.md` for curated material.
 
 ---
 
