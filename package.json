@@ -1,8 +1,8 @@
 {
-  "name": "digitalthreadza",
+  "name": "mylifeindigital",
   "version": "1.0.0",
   "private": true,
-  "description": "Digital Thread ZA monorepo",
+  "description": "My Life In Digital monorepo",
   "workspaces": [
     "web",
     "experiments/ts-core-utils"

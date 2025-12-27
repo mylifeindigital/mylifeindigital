@@ -5,7 +5,7 @@ author: "Fredrik Erasmus"
 section: "posts"
 ---
 
-# Threads of code. Threads of art. Threads of people.
+# A Digital Life 
 
 A thread of wool. A thread in a piece of clothing material. A thread in software. A thread as a connector between people. We live our lives with threads woven between us. Each person we share experiences with can be seen as a thread.
 
