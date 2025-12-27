@@ -1,5 +1,5 @@
 ---
-title: "Daily Technical Session – [2025-12-22]"
+title: "Daily Technical Session – [2025-12-27]"
 date: "2025-12-27"
 author: "Fredrik Erasmus"
 section: "technical-sessions"
