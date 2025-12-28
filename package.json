@@ -10,10 +10,15 @@
   "scripts": {
     "build": "npm run build --workspaces",
     "build:utils": "npm run build --workspace=ts-core-utils",
-    "build:web": "npm run build --workspace=web"
+    "build:web": "npm run build --workspace=web",
+    "new-session": "npx ts-node scripts/new-session.ts"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
 }
-
