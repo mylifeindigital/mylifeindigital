@@ -11,7 +11,9 @@
     "build": "npm run build --workspaces",
     "build:utils": "npm run build --workspace=ts-core-utils",
     "build:web": "npm run build --workspace=web",
-    "new-session": "npx ts-node scripts/new-session.ts"
+    "deploy": "npm run update-date -- --all && npm run deploy --workspace=web",
+    "new-session": "npx ts-node scripts/new-session.ts",
+    "update-date": "npx ts-node scripts/update-date.ts"
   },
   "keywords": [],
   "author": "",

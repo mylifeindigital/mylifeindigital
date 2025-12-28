@@ -1,12 +1,12 @@
 ---
-title: "Daily Technical Session – [2025-12-22]"
+title: "Cloudflare Workers"
 date: "2025-12-22"
 author: "Fredrik Erasmus"
 section: "technical-sessions"
 tags: ["cloudflare"]
 ---
 
-# Daily Technical Session – [2025-12-22]
+# Cloudflare Workers – [2025-12-22]
 
 ## Focus Area
 Cloudflare workers

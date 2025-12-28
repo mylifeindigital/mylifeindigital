@@ -1,12 +1,12 @@
 ---
-title: "Daily Technical Session – [2025-12-22]"
+title: "Hono Web App Walkthrough – [2025-12-22]"
 date: "2025-12-22"
 author: "Fredrik Erasmus"
 section: "technical-sessions"
 tags: ["code-review", "hono"]
 ---
 
-# Daily Technical Session – [2025-12-22]
+# Hono Web App Walkthrough
 
 ## Focus Area
 Working through the code of the Hono App. The code in question is a web application using the Hono framework.

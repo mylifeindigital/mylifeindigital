@@ -1,12 +1,12 @@
 ---
-title: "Daily Technical Session – [2025-11-26]"
+title: "Typescript generics, typeof, keyof and utility types
 date: "2025-11-26"
 author: "Fredrik Erasmus"
 section: "technical-sessions"
 tags: ["typescript"]
 ---
 
-# Daily Technical Session – [2025-11-26]
+# Typescript generics, typeof, keyof and utility types
 
 ## Focus Area
 Typescript generics, typeof, keyof and utility types

@@ -1,6 +1,7 @@
 ---
 title: "Daily Technical Session – [{{DATE}}]"
 date: "{{DATE}}"
+updated: "{{DATE}}"
 author: "Fredrik Erasmus"
 section: "technical-sessions"
 tags: [{{TAGS}}]
