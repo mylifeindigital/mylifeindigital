@@ -34,6 +34,7 @@ If you’re reading this: welcome to the engine room.
 /content/technical-sessions - Sessions → Technical session logs  
 /experiments      → Isolated technical explorations  
 /web              → A website build using Cloudflare workers   
+/docs             → contains docs not used for content publication
 ```
 
 ---
@@ -77,6 +78,8 @@ Exploring:
 | [2025-11-26](./content/technical-sessions/week-01-typescript.md) | TypeScript  | Built basic environment loaded, learned using generics, utility types |
 | [2025-12-22](./content/technical-sessions/week-02-01-cloudflare.md) | Cloudflare  | Built a basic Hono app hosted on Cloudflare Workers |
 | [2025-12-22](./content/technical-sessions/week-02-02-web-code-deep-dive.md) | Hono  | Reading through code |
+| [2025-12-28](./content/technical-sessions/week-02-03-hono-agent-orchestrator.md) | Hono  | My attempt at building an orchestrator |
+|            |[PRD for AI Agent Orchestrator](./docs/prd-ai-agent-orchestrator.md) ||
 
 (See [notes](./content/index.md) folder for full breakdowns)
 
