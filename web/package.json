@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Hono markdown blog application for Cloudflare Workers",
   "type": "module",
   "main": "dist/index.js",

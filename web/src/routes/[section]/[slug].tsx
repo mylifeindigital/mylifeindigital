@@ -37,6 +37,15 @@ export function contentItemRoute(sectionSlug: string, itemSlug: string, config: 
                                 })}
                             </span>
                         )}
+                        {item.metadata.updated && (
+                            <span class="article-updated">
+                                (Updated: {new Date(item.metadata.updated as string).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                })})
+                            </span>
+                        )}
                         {item.metadata.author && (
                             <span class="article-author">by {item.metadata.author}</span>
                         )}

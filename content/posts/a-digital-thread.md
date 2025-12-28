@@ -1,6 +1,7 @@
 ---
 title: "Connecting digital stories that matter.
 date: "2025-11-27"
+updated: "2025-12-28"
 author: "Fredrik Erasmus"
 section: "posts"
 ---
