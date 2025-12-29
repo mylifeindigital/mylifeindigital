@@ -1,7 +1,7 @@
 ---
 title: "Typescript generics, typeof, keyof and utility types
 date: "2025-11-26"
-updated: "2025-12-28"
+updated: "2025-12-29"
 author: "Fredrik Erasmus"
 section: "technical-sessions"
 tags: ["typescript"]

@@ -1,7 +1,7 @@
 ---
 title: "AI Agent Orchestration - setup with Hono JS"
 date: "2025-12-27"
-updated: "2025-12-28"
+updated: "2025-12-29"
 author: "Fredrik Erasmus"
 section: "technical-sessions"
 tags: ["ai-agents", "ai-agent-orchestration", "hono"]
