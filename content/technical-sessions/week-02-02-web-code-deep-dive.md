@@ -1,7 +1,7 @@
 ---
 title: "Hono Web App Walkthrough"
 date: "2025-12-22"
-updated: "2025-12-29"
+updated: "2025-12-30"
 author: "Fredrik Erasmus"
 section: "technical-sessions"
 tags: ["code-review", "hono"]

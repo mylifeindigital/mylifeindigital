@@ -1,7 +1,7 @@
 ---
 title: "Analogue to Digital - A real-world example."
 date: "2025-11-27"
-updated: "2025-12-29"
+updated: "2025-12-30"
 author: "Fredrik Erasmus"
 section: "posts"
 ---
