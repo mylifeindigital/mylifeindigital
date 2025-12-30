@@ -6,7 +6,7 @@ compatibility_flags = ["nodejs_compat"]
 workers_dev = false
 
 # Custom domains
-custom_domains = ["mylifeindigital.co.za"]
+custom_domains = ["mylifeindigital.co.za", "www.mylifeindigital.co.za"]
 
 # Serve static assets from the public directory
 [assets]
