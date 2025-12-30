@@ -5,8 +5,11 @@ compatibility_flags = ["nodejs_compat"]
 
 workers_dev = false
 
-# Custom domains
-custom_domains = ["mylifeindigital.co.za", "www.mylifeindigital.co.za"]
+# Route traffic from your custom domain to this worker
+routes = [
+  { pattern = "mylifeindigital.co.za/*", zone_name = "mylifeindigital.co.za" },
+  { pattern = "www.mylifeindigital.co.za/*", zone_name = "mylifeindigital.co.za" }
+]
 
 # Serve static assets from the public directory
 [assets]
