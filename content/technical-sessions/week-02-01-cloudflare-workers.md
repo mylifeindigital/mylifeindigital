@@ -7,8 +7,6 @@ section: "technical-sessions"
 tags: ["cloudflare"]
 ---
 
-# Cloudflare Workers – [2025-12-22]
-
 ## Focus Area
 Cloudflare workers
 

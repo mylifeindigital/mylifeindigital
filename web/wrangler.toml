@@ -20,6 +20,9 @@ directory = "./public"
 SITE_TITLE = "My Life In Digital"
 HERO_TITLE = "Welcome to"
 HERO_SUBTITLE = 'Exploring ideas, code, and the connecting bits between them.'
+GITHUB_URL = "https://github.com/mylifeindigital"
+TWITTER_URL = "https://x.com/digitalthreadza"
+LINKEDIN_URL = "https://www.linkedin.com/in/fredrikerasmus"
 
 # Production environment
 [env.production]

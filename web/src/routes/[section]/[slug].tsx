@@ -7,11 +7,11 @@ export function contentItemRoute(sectionSlug: string, itemSlug: string, config: 
     const item = getItemBySlug(sectionSlug, itemSlug);
     const section = getSectionBySlug(sectionSlug);
     const allSections = getAllSections();
-    const { siteTitle } = config;
+    const { siteTitle, socialLinks } = config;
     
     if (!item || !section) {
         return (
-            <Layout title="Not Found" siteTitle={siteTitle} sections={allSections}>
+            <Layout title="Not Found" siteTitle={siteTitle} sections={allSections} socialLinks={socialLinks}>
                 <div class="not-found">
                     <h2>404</h2>
                     <p>The content you're looking for doesn't exist.</p>
@@ -22,7 +22,7 @@ export function contentItemRoute(sectionSlug: string, itemSlug: string, config: 
     }
     
     return (
-        <Layout title={`${item.metadata.title} | ${siteTitle}`} siteTitle={siteTitle} sections={allSections}>
+        <Layout title={`${item.metadata.title} | ${siteTitle}`} siteTitle={siteTitle} sections={allSections} socialLinks={socialLinks}>
             <article class="article">
                 <header class="article-header">
                     <a href={`/${section.slug}`} class="back-link">← {section.title}</a>

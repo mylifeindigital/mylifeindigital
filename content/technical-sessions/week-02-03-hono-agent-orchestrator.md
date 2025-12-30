@@ -7,8 +7,6 @@ section: "technical-sessions"
 tags: ["ai-agents", "ai-agent-orchestration", "hono"]
 ---
 
-# AI Agent Orchestration - setup with Hono JS
-
 ## Focus Area
 
 AI Agent Orchestration - setup with Hono JS

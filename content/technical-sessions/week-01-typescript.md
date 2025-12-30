@@ -7,8 +7,6 @@ section: "technical-sessions"
 tags: ["typescript"]
 ---
 
-# Typescript generics, typeof, keyof and utility types
-
 ## Focus Area
 Typescript generics, typeof, keyof and utility types
 

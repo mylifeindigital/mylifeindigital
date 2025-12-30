@@ -5,11 +5,11 @@ import type { AppConfig } from '../../config.js';
 export function sectionRoute(sectionSlug: string, config: AppConfig) {
     const section = getSectionBySlug(sectionSlug);
     const allSections = getAllSections();
-    const { siteTitle } = config;
+    const { siteTitle, socialLinks } = config;
     
     if (!section) {
         return (
-            <Layout title="Section Not Found" siteTitle={siteTitle} sections={allSections}>
+            <Layout title="Section Not Found" siteTitle={siteTitle} sections={allSections} socialLinks={socialLinks}>
                 <div class="not-found">
                     <h2>404</h2>
                     <p>The section you're looking for doesn't exist.</p>
@@ -20,7 +20,7 @@ export function sectionRoute(sectionSlug: string, config: AppConfig) {
     }
     
     return (
-        <Layout title={`${section.title} | ${siteTitle}`} siteTitle={siteTitle} sections={allSections}>
+        <Layout title={`${section.title} | ${siteTitle}`} siteTitle={siteTitle} sections={allSections} socialLinks={socialLinks}>
             <section class="section-page">
                 <header class="section-page-header">
                     <a href="/" class="back-link">← Home</a>

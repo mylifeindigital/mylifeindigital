@@ -7,8 +7,6 @@ section: "technical-sessions"
 tags: ["code-review", "hono"]
 ---
 
-# Hono Web App Walkthrough
-
 ## Focus Area
 Working through the code of the Hono App. The code in question is a web application using the Hono framework.
 

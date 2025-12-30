@@ -4,10 +4,10 @@ import type { AppConfig } from '../config.js';
 
 export function indexRoute(config: AppConfig) {
     const sections = getAllSections();
-    const { siteTitle } = config;
+    const { siteTitle, socialLinks } = config;
     
     return (
-        <Layout title={`${siteTitle} - Home`} siteTitle={siteTitle} sections={sections}>
+        <Layout title={`${siteTitle} - Home`} siteTitle={siteTitle} sections={sections} socialLinks={socialLinks}>
             {/* Hero Section */}
             <section class="hero">
                 <h1 class="hero-title">{config.heroTitle} <span class="gradient-text">{siteTitle}</span></h1>
