@@ -6,8 +6,6 @@ author: "Fredrik Erasmus"
 section: "posts"
 ---
 
-# Analogue to Digital - A real-world example.
-
 In some cases a digital asset can have an analogue counterpart. At some point of a digital asset's existence a transition occurred. It went from one state to the next, i.e. analogue to digital. Something is considered a digital asset when you can use it on an electronic device such as a smartphone, laptop or PC. It can be as simple as a document scanned using a flatbed scanner. Many scanners convert the scanned item to PDF format.
 
 I can relate the transition from analogue to digital as a lived experience. Back in the early to mid 2000s training managers at organizations still used VHS content in their workshops. 
