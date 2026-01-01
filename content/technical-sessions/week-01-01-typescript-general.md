@@ -88,7 +88,7 @@ If I repeated today, I would:
 
 ## ▶️ Next Session Plan
 Concrete next steps (not vague ideas):
-- 
+- Continue working on Typescript problems to sharpen my skills
 
 ---
 
