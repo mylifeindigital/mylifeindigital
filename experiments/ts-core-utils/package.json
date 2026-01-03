@@ -17,6 +17,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/index.ts",
+    "snippets": "tsx src/examples/snippets.ts",
     "prepublishOnly": "npm run build"
   },
   "keywords": [],
