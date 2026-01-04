@@ -30,7 +30,7 @@ Be specific. Real output only.
 
 ## 🧠 What I Learned
 New understanding, patterns, or insights:
-- As in a previous session [general](./week-01-01-typescript-general.md) a function is initialized with an inner function
+- As in a previous session [general](./week-01-01-typescript-general) a function is initialized with an inner function
 - The outer function declares constants only initialized when a call is made to the function
 - The inner function then has access to the constant and because it returns a function it will have access to the constants declared in the body of the outer function.
 
