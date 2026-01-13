@@ -16,8 +16,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "gray-matter": "^4.0.3",
     "hono": "^4.6.11",
-    "marked": "^16.0.1"
+    "install": "^0.13.0",
+    "marked": "^16.0.1",
+    "npm": "^11.7.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241205.0",

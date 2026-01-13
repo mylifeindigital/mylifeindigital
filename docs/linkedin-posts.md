@@ -65,8 +65,37 @@ Progress sometimes looks like confusion followed by showing up again.
 **TUE:**
 **Topic:** *Feeling competent vs being competent*
 
-* How confidence lags skill
-* Why seniors still doubt themselves
+Feeling competent vs being competent
+
+I recall a time several years ago when something went wrong in a system.
+Users reported the issue, and I was able to narrow it down quickly by looking at logs.
+
+Not just reading logs — but knowing where to look, and more importantly, what to look for.
+
+It felt good. Resolving the issue reinforced a sense of competence.
+
+But I’ve learned that feeling competent and being competent don’t always line up.
+
+I’ve also been wrong. I’ve backed the wrong technical choice while others backed the better one. I’ve proposed solutions that worked well in the past, only to see them rejected in a new context.
+
+Rejection stings. It hits the ego — especially when the intent was honest and the experience was real.
+
+But being wrong in those moments didn’t make me an incompetent engineer.
+It exposed a gap — not in ability, but in context.
+
+Experience teaches you patterns.
+Competence is knowing when those patterns don’t apply.
+
+Another lesson that took time to learn: don’t hang onto your ideas.
+
+Ideas are temporary. The way you engage with your team lasts much longer.
+Holding onto a rejected solution rarely improves outcomes — but it often affects wellbeing and trust.
+
+Letting go of an idea isn’t a sign of incompetence.
+And acceptance of ideas isn’t a reliable measure of competence either.
+
+More often than not, competence is already there.
+The feeling just hasn’t caught up yet.
 
 **THU:**
 **Topic:** *A tiny technical win this week*
