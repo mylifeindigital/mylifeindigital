@@ -29,12 +29,16 @@ function getToday(): string {
   return `${year}-${month}-${day}`;
 }
 
-function getWeekNumber(date: Date): number {
-  const startOfYear = new Date(date.getFullYear(), 0, 1);
-  const days = Math.floor(
-    (date.getTime() - startOfYear.getTime()) / (24 * 60 * 60 * 1000)
-  );
-  return Math.ceil((days + startOfYear.getDay() + 1) / 7);
+function getWeekOfMonth(date: Date): number {
+  const day = date.getDate();
+  return Math.ceil(day / 7);
+}
+
+function getYearMonthWeekPrefix(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const week = getWeekOfMonth(date);
+  return `${year}-${month}-w${week}`;
 }
 
 function slugify(text: string): string {
@@ -42,37 +46,6 @@ function slugify(text: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
-}
-
-function getNextSessionNumber(weekNum: number): string {
-  const weekPrefix = `week-${String(weekNum).padStart(2, "0")}`;
-
-  if (!fs.existsSync(CONTENT_DIR)) {
-    fs.mkdirSync(CONTENT_DIR, { recursive: true });
-    return "01";
-  }
-
-  const files = fs.readdirSync(CONTENT_DIR);
-  const weekFiles = files.filter((f) => f.startsWith(weekPrefix));
-
-  if (weekFiles.length === 0) {
-    return "01";
-  }
-
-  // Extract session numbers from filenames like week-02-01-topic.md
-  const sessionNumbers = weekFiles
-    .map((f) => {
-      const match = f.match(new RegExp(`^${weekPrefix}-(\\d+)-`));
-      return match ? parseInt(match[1], 10) : 0;
-    })
-    .filter((n) => n > 0);
-
-  if (sessionNumbers.length === 0) {
-    return "01";
-  }
-
-  const maxNum = Math.max(...sessionNumbers);
-  return String(maxNum + 1).padStart(2, "0");
 }
 
 function parseArgs(): { focus?: string; tags?: string } {
@@ -149,13 +122,17 @@ async function main() {
     : [];
   const tagsString = tags.join(", ");
 
-  // Generate filename
+  // Generate filename using year-month-week format
   const today = new Date();
-  const weekNum = getWeekNumber(today);
-  const sessionNum = getNextSessionNumber(weekNum);
+  const prefix = getYearMonthWeekPrefix(today);
   const slug = slugify(focusArea);
-  const filename = `week-${String(weekNum).padStart(2, "0")}-${sessionNum}-${slug}.md`;
+  const filename = `${prefix}-${slug}.md`;
   const filepath = path.join(CONTENT_DIR, filename);
+
+  // Ensure content directory exists
+  if (!fs.existsSync(CONTENT_DIR)) {
+    fs.mkdirSync(CONTENT_DIR, { recursive: true });
+  }
 
   // Read template and replace placeholders
   const template = fs.readFileSync(TEMPLATE_PATH, "utf-8");
