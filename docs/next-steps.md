@@ -1,0 +1,5 @@
+- Continue working on build-posts-test.ts
+  - [] generate table of contents
+  - [] add metadata that lets me create single pages. At the moment I have technical sessions and posts as a section. But I would like to add an about - it behaves slightly differently to the other pages (or rather sections)
+  - [] understand marked
+    - [] 

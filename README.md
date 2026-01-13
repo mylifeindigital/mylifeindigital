@@ -75,13 +75,15 @@ Exploring:
 
 | Date       | Area        | Summary |
 |------------|-------------|----------|
-| [2025-11-26](./content/technical-sessions/week-01-typescript.md) | TypeScript  | Built basic environment loaded, learned using generics, utility types |
-| [2025-12-22](./content/technical-sessions/week-02-01-cloudflare.md) | Cloudflare  | Built a basic Hono app hosted on Cloudflare Workers |
-| [2025-12-22](./content/technical-sessions/week-02-02-web-code-deep-dive.md) | Hono  | Reading through code |
-| [2025-12-28](./content/technical-sessions/week-02-03-hono-agent-orchestrator.md) | Hono  | Thinking about building an agent orchestrator using Hono |
+| [2025-11-26](./content/technical-sessions/2025-11-w4-typescript.md) | TypeScript  | Built basic environment loaded, learned using generics, utility types |
+| [2025-12-22](./content/technical-sessions/2025-12-w4-cloudflare-workers.md) | Cloudflare  | Built a basic Hono app hosted on Cloudflare Workers |
+| [2025-12-22](./content/technical-sessions/2025-12-w4-web-code-deep-dive.md) | Hono  | Reading through code |
+| [2025-12-28](./content/technical-sessions/2025-12-w4-hono-agent-orchestrator.md) | Hono  | Thinking about building an agent orchestrator using Hono |
 |            |[PRD for AI Agent Orchestrator](./docs/prd-ai-agent-orchestrator.md) ||
-| [2025-01-01](./content/technical-sessions/week-01-01-typescript-general.md) | Typescript  | General topics |
-| [2025-01-03](./content/technical-sessions/week-01-02-typescript.md) | Typescript  | General topics |
+| [2025-01-01](./content/technical-sessions/2026-01-w1-typescript-general.md) | Typescript  | General topics |
+| [2025-01-03](./content/technical-sessions/2026-01-w1-typescript.md) | Typescript  | General topics |
+| [2025-01-07](./content/technical-sessions/2026-01-w1-markdown-parsing.md) | Markdown  | Markdown Parsing |
+| [2025-01-13](./content/technical-sessions/2026-01-w2-markdown-metadata-parsing.md) | Markdown  | Markdown Parsing |
 
 
 (See [notes](./content/index.md) folder for full breakdowns)
