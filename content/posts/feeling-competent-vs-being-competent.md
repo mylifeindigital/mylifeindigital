@@ -1,6 +1,6 @@
 ---
 title: "Feeling Competent vs Being Competent
-date: "2026-01-08"
+date: "2026-01-13"
 updated: "2026-01-13"
 author: "Fredrik Erasmus"
 section: "posts"

@@ -100,8 +100,22 @@ The feeling just hasn’t caught up yet.
 **THU:**
 **Topic:** *A tiny technical win this week*
 
-* Could be Hono, TS types, agent orchestration
-* Focus on the *idea*, not the code dump
+Today was a good reminder that “working code” isn’t always the same as “the right approach.”
+
+I spent some time digging into Markdown metadata parsing — specifically how to deal with front-matter, headings, and generating a basic table of contents.
+
+The interesting part wasn’t getting something to work.
+It was deciding what shouldn’t be responsible for the job.
+
+Using a Markdown parser to extract metadata technically works.
+But just because you can do something doesn’t mean you should.
+
+Separating concerns — letting one tool handle metadata and another handle structure — made the overall design clearer, even if it meant a bit more thinking upfront.
+
+I’m also learning to be more critical of AI-generated code. It often reaches a goal quickly, but understanding why it chose a certain path — and when to push back — is where the real learning happens.
+
+Small scripts. Narrow focus.
+Clarity before cleverness.
 
 ---
 
