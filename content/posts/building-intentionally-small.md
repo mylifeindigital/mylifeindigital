@@ -52,7 +52,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Now resolve relative to the script location
-const contentPath = join(__dirname, "../../content/technical-sessions/2026-01-w1-markdown-parsing.md");
+const contentPath = "[content-path-goes-here]";
 const content = readFileSync(contentPath, 'utf-8');
 const tokens = extractTokensUsingLexer(content);
 tokens.forEach((token, index) => {
