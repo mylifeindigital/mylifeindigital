@@ -127,6 +127,38 @@ Clarity before cleverness.
 * Satisfaction > promotion
 * Craft > ladder
 
+Recently, I spent some time doing exploratory work with Postgres, Python, and Node.js.
+
+The interesting part wasn’t the stack.
+It was the slow, steady progress that came from using each tool for what it’s actually good at — and taking the time to understand *why* things worked, not just that they did.
+
+With AI tools like Copilot and Cursor, it’s easy to get something running quickly. But speed alone isn’t what keeps me engaged. What keeps me going is persistence — staying with a problem until the pieces start to connect and the system begins to make sense.
+
+There’s a quiet satisfaction in seeing separate parts come together.
+One service doing a single job. Another consuming the result. A shared database tying it all together.
+It feels like threading ideas into something coherent.
+
+That’s when I realised something important.
+
+This has very little to do with titles.
+
+Titles don’t make systems clearer.
+They don’t improve judgement.
+They don’t help you reason through trade-offs.
+
+What sustains me is much simpler.
+
+I care.
+
+I care about choosing the right tool, even when no one sees that decision.
+I care about understanding why a solution works, not just that it works.
+I care about building things that hold together over time.
+
+I’m not anti-growth.
+I’ve just learned that labels don’t motivate me.
+
+Caring does.
+
 **THU:**
 **Topic:** *A design decision you changed your mind on*
 

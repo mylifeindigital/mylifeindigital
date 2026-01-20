@@ -1,5 +1,5 @@
 ---
-title: "Feeling Competent vs Being Competent
+title: "Feeling Competent vs Being Competent"
 date: "2026-01-13"
 updated: "2026-01-13"
 author: "Fredrik Erasmus"
