@@ -165,6 +165,37 @@ Caring does.
 * “I thought X, learned Y”
 * Show intellectual honesty
 
+### Small systems. Clean boundaries. Long-term thinking.
+
+I spent some time this week building a small Node.js orchestration layer for processing Markdown content.
+
+Not to over-engineer anything — but to explore a simple question:
+How do you design a system that can evolve **without everything becoming tightly coupled**?
+
+I built a `Processor` abstraction with a shared `ProcessingContext`, and an orchestrator whose only job is to execute independent processors in sequence.
+
+Each processor:
+
+* does one job
+* knows nothing about the others
+* can be added or removed without breaking the pipeline
+
+The goal isn’t complexity — it’s **composability**.
+
+Instead of one growing module that handles rendering, metadata, transformations, extensions, and structure:
+→ small processors
+→ clean boundaries
+→ clear responsibilities
+→ flexible composition
+
+The interesting part wasn’t the code — it was the design thinking:
+Where orchestration adds clarity vs where it adds unnecessary complexity.
+Where abstraction helps vs where simplicity is better.
+
+Slow progress.
+Small systems.
+Designing for change instead of scale.
+
 ---
 
 ## WEEK 4 – Build trust
