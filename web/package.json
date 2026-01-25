@@ -9,7 +9,6 @@
     "dev:node": "tsx watch src/index.node.ts",
     "build": "npm run build:posts && tsc",
     "build:posts": "tsx scripts/build-posts.ts",
-    "build:processmarkdown": "tsx scripts/markdown-processor-test.ts",
     "deploy": "npm run build:posts && wrangler deploy",
     "start": "wrangler dev"
   },

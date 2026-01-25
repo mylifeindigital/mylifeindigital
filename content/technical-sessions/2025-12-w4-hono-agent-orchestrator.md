@@ -11,19 +11,13 @@ tags: ["ai-agents", "ai-agent-orchestration", "hono"]
 
 AI Agent Orchestration - setup with Hono JS
 
----
-
 ## 🎯 Objective for Today
 What I intended to work on in this session:
 - Understand the basics of an AI agent orchestration implementation
 
----
-
 ## 🛠 What I Actually Built / Did
 Be specific. Real output only.
 - Used Cursor AI to generate a PRD of an AI agent orchestration specifically using Hono and Cloudflare
-
----
 
 ## 🧠 What I Learned
 New understanding, patterns, or insights:
@@ -37,8 +31,6 @@ New understanding, patterns, or insights:
   - The client receives a workflow ID (202 Accepted) and streams/polls for results
   - Actual agent execution happens asynchronously — the client never blocks on LLM calls
 
----
-
 ## 😕 What Challenged or Confused Me
 Things that slowed me down or felt unclear:
 - Understanding the full architecture
@@ -47,15 +39,14 @@ Things that slowed me down or felt unclear:
 Concrete next steps (not vague ideas):
 - Continue working through the architecture to gain a clearer understanding
 
----
-
+<!-- exclude-start -->
 ## ⚡ Energy & Focus Check
 Rate from 1–5 and explain briefly:
 Focus: 3 / 5  
 Energy: 3 / 5  
 Notes:
 - A lot of it still feels unclear
----
+<!-- exclude-end -->
 
 ## 💬 Quick Reflection
 One honest sentence:

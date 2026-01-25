@@ -10,8 +10,6 @@ tags: ["typescript"]
 ## Focus Area
 Typescript generics, typeof, keyof and utility types
 
----
-
 ## 🎯 Objective for Today
 What I intended to work on in this session:
 - Understand how to use Generics effectively
@@ -19,14 +17,10 @@ What I intended to work on in this session:
 - A look at Typescript utility types
 - Build a typesafe environment loader
 
----
-
 ## 🛠 What I Actually Built / Did
 Be specific. Real output only.
 - Created a basic .env parser
 - Using Zod with a schema for validating the configuration
-
----
 
 ## 🧠 What I Learned
 New understanding, patterns, or insights:
@@ -50,21 +44,15 @@ export type ConfigResult<T extends Record<string, ConfigurationItem<any>>> = {
   - The `ConfigResult` type acts as a constraint when calling the `loadConfiguration`
   - I learned about npm workspaces. Really interesting!
 
----
-
 ## 😕 What Challenged or Confused Me
 Things that slowed me down or felt unclear:
 - So one thing that did come up is the error related to setting `type: module` in `package.json`
 - Reading the typescript code with good comprehension
 
----
-
 ## 🔁 What I’d Do Differently
 If I repeated today, I would:
 - Handle the exceptions thrown by Zod in a better manner
 - Just wire up the config validation myself to gain better understanding
-
----
 
 ## ▶️ Next Session Plan
 Concrete next steps (not vague ideas):
@@ -72,16 +60,14 @@ Concrete next steps (not vague ideas):
 - Organize the code better
 - Take longer if needed to understand concept(s)
 
----
-
+<!-- exclude-start -->
 ## ⚡ Energy & Focus Check
 Rate from 1–5 and explain briefly:
 Focus: 4 / 5  
 Energy: 3 / 5  
 Notes:
 - It feels good to just get stuck in
-
----
+<!-- exclude-end -->
 
 ## 💬 Quick Reflection
 One honest sentence:

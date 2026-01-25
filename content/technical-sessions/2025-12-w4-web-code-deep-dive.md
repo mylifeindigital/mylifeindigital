@@ -10,19 +10,13 @@ tags: ["code-review", "hono"]
 ## Focus Area
 Working through the code of the Hono App. The code in question is a web application using the Hono framework.
 
----
-
 ## 🎯 Objective for Today
 What I intended to work on in this session:
 - Start with the entrypoint - `index.ts`
 
----
-
 ## 🛠 What I Actually Built / Did
 Be specific. Real output only.
 - Added some new environment variables to test Hono context typing
-
----
 
 ## 🧠 What I Learned
 New understanding, patterns, or insights:
@@ -36,33 +30,26 @@ New understanding, patterns, or insights:
   - Updated wrangler.toml with values for Subtitle and Hero_Subtitle
   - The typescript types only become useful in the views
 
----
-
 ## 😕 What Challenged or Confused Me
 Things that slowed me down or felt unclear:
 - Reading the code effectively. Specifically understanding the way generics are used for Bindings and variables. 
-
----
 
 ## 🔁 What I’d Do Differently
 If I repeated today, I would:
 - Understand that the strong types you get applies to the components lower down.
 
----
-
 ## ▶️ Next Session Plan
 Concrete next steps (not vague ideas):
 - Go through the route setup in index.ts
 
----
-
+<!-- exclude-start -->
 ## ⚡ Energy & Focus Check
 Rate from 1–5 and explain briefly:
 Focus: 4 / 5  
 Energy: 3 / 5  
 Notes:
     - The more I read the code the better my understanding gets
----
+<!-- exclude-start -->
 
 ## 💬 Quick Reflection
 One honest sentence:

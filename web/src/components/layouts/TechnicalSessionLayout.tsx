@@ -1,12 +1,13 @@
 /**
  * TechnicalSessionLayout - Structured learning session layout
- * 
+ *
  * Displays technical sessions in a scannable, card-based format
  * with distinct sections for objectives, learnings, challenges, etc.
+ * Includes a TOC sidebar for navigation.
  */
 
 import { raw } from 'hono/html';
-import type { ContentItem, Section } from '../../utils/markdown.js';
+import type { ContentItem, Section, TocEntry } from '../../utils/markdown.js';
 import type { DisplaySchema } from '../../schemas/content-schemas.js';
 
 interface TechnicalSessionLayoutProps {
@@ -36,38 +37,44 @@ function decodeHtmlEntities(text: string): string {
 }
 
 /**
+ * Generate a URL-friendly slug from heading text.
+ * Must match TocProcessor's slug generation for anchor links to work.
+ */
+function generateSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+/**
  * Parse the HTML content to extract individual sections based on h2 headings
  */
 function parseSections(html: string): ParsedSection[] {
   const sections: ParsedSection[] = [];
-  
+
   // Split by h2 tags while capturing the heading content
   const h2Regex = /<h2>(.*?)<\/h2>/gi;
   const parts = html.split(h2Regex);
-  
+
   // First part before any h2 is typically the main title (h1), skip it
   // Then we have pairs: [heading, content, heading, content, ...]
   for (let i = 1; i < parts.length; i += 2) {
     const rawTitle = parts[i]?.replace(/<[^>]*>/g, '').trim() || '';
     const title = decodeHtmlEntities(rawTitle);
     const content = parts[i + 1] || '';
-    
+
     if (title && content.trim()) {
-      // Create a URL-friendly ID from the title
-      const id = title
-        .toLowerCase()
-        .replace(/[^a-z0-9\s]/g, '')
-        .replace(/\s+/g, '-')
-        .slice(0, 30);
-      
       sections.push({
-        id,
+        id: generateSlug(title),
         title,
         html: content.trim()
       });
     }
   }
-  
+
   return sections;
 }
 
@@ -130,6 +137,34 @@ function formatDate(dateString?: string): string {
 }
 
 /**
+ * TOC Sidebar component for navigation
+ */
+function TocSidebar({ toc }: { toc?: TocEntry[] }) {
+  if (!toc || toc.length === 0) return null;
+
+  // Filter to only h2 entries for the main navigation
+  const h2Entries = toc.filter(entry => entry.level === 2);
+  if (h2Entries.length === 0) return null;
+
+  return (
+    <aside class="session-toc">
+      <nav class="toc-nav">
+        <h3 class="toc-title">Contents</h3>
+        <ul class="toc-list">
+          {h2Entries.map(entry => (
+            <li class="toc-item">
+              <a href={`#${entry.slug}`} class="toc-link">
+                {entry.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+  );
+}
+
+/**
  * Get CSS class for section based on its title
  */
 function getSectionClass(title: string): string {
@@ -146,75 +181,81 @@ function getSectionClass(title: string): string {
 }
 
 export function TechnicalSessionLayout({ item, section, schema }: TechnicalSessionLayoutProps) {
-  const parsedSections = schema.extractSections 
-    ? parseSections(item.html) 
+  const parsedSections = schema.extractSections
+    ? parseSections(item.html)
     : [];
-  
+
   // Extract focus area from first section or content
-  const focusSection = parsedSections.find(s => 
+  const focusSection = parsedSections.find(s =>
     s.title.toLowerCase().includes('focus')
   );
-  
+
+  const hasToc = item.toc && item.toc.length > 0;
+
   return (
-    <article class="session">
-      <header class="session-header">
-        <a href={`/${section.slug}`} class="back-link">← {section.title}</a>
-        
-        <div class="session-meta">
-          {schema.showDate && item.metadata.date && (
-            <time class="session-date" datetime={item.metadata.date}>
-              {formatDate(item.metadata.date)}
-            </time>
-          )}
-          {schema.showTags && item.metadata.tags && (
-            <div class="session-tags">
-              {(item.metadata.tags as string[]).map(tag => (
-                <span class="session-tag">{tag}</span>
-              ))}
+    <div class={`session-wrapper ${hasToc ? 'has-toc' : ''}`}>
+      <TocSidebar toc={item.toc} />
+
+      <article class="session">
+        <header class="session-header">
+          <a href={`/${section.slug}`} class="back-link">← {section.title}</a>
+
+          <div class="session-meta">
+            {schema.showDate && item.metadata.date && (
+              <time class="session-date" datetime={item.metadata.date}>
+                {formatDate(item.metadata.date)}
+              </time>
+            )}
+            {schema.showTags && item.metadata.tags && (
+              <div class="session-tags">
+                {(item.metadata.tags as string[]).map(tag => (
+                  <span class="session-tag">{tag}</span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <h1 class="session-title">{item.metadata.title}</h1>
+
+          {focusSection && (
+            <div class="session-focus">
+              {raw(focusSection.html)}
             </div>
           )}
-        </div>
-        
-        <h1 class="session-title">{item.metadata.title}</h1>
-        
-        {focusSection && (
-          <div class="session-focus">
-            {raw(focusSection.html)}
+        </header>
+
+        {parsedSections.length > 0 ? (
+          <div class="session-grid">
+            {parsedSections
+              .filter(s => !s.title.toLowerCase().includes('focus area'))
+              .map(s => {
+                // Extract emoji from title if present, otherwise get from schema
+                const { emoji: existingEmoji, text: cleanTitle } = extractLeadingEmoji(s.title);
+                const icon = existingEmoji || getSectionIcon(s.title, schema.sectionIcons);
+
+                return (
+                  <section class={`session-section ${getSectionClass(s.title)}`} id={s.id}>
+                    <h2 class="section-heading">
+                      {icon && <span class="section-icon">{icon}</span>}
+                      <span class="section-title-text">{cleanTitle}</span>
+                    </h2>
+                    <div class="section-content">
+                      {raw(s.html)}
+                    </div>
+                  </section>
+                );
+              })}
           </div>
+        ) : (
+          // Fallback to raw HTML if no sections parsed
+          <div class="session-content">{raw(item.html)}</div>
         )}
-      </header>
-      
-      {parsedSections.length > 0 ? (
-        <div class="session-grid">
-          {parsedSections
-            .filter(s => !s.title.toLowerCase().includes('focus area'))
-            .map(s => {
-              // Extract emoji from title if present, otherwise get from schema
-              const { emoji: existingEmoji, text: cleanTitle } = extractLeadingEmoji(s.title);
-              const icon = existingEmoji || getSectionIcon(s.title, schema.sectionIcons);
-              
-              return (
-                <section class={`session-section ${getSectionClass(s.title)}`} id={s.id}>
-                  <h2 class="section-heading">
-                    {icon && <span class="section-icon">{icon}</span>}
-                    <span class="section-title-text">{cleanTitle}</span>
-                  </h2>
-                  <div class="section-content">
-                    {raw(s.html)}
-                  </div>
-                </section>
-              );
-            })}
-        </div>
-      ) : (
-        // Fallback to raw HTML if no sections parsed
-        <div class="session-content">{raw(item.html)}</div>
-      )}
-      
-      <footer class="session-footer">
-        <a href={`/${section.slug}`} class="btn">← Back to {section.title}</a>
-      </footer>
-    </article>
+
+        <footer class="session-footer">
+          <a href={`/${section.slug}`} class="btn">← Back to {section.title}</a>
+        </footer>
+      </article>
+    </div>
   );
 }
 

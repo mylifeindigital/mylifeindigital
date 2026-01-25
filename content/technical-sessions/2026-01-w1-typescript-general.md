@@ -11,14 +11,10 @@ tags: ["typescript"]
 
 Want to look at some code from LeetCode - [Counter](https://leetcode.com/problems/counter/). 
 
----
-
 ## 🎯 Objective for Today
 What I intended to work on in this session:
 -  Explain the code
 -  Consider alternatives
-
----
 
 ## 🛠 What I Actually Built / Did
 Be specific. Real output only.
@@ -38,40 +34,32 @@ function createCounter(n: number): () => number {
 }
 ```
 
----
-
 ## 🧠 What I Learned
 New understanding, patterns, or insights:
 - Revisited some key concepts of JavaScript
-
----
 
 ## 😕 What Challenged or Confused Me
 Things that slowed me down or felt unclear:
 - Remembering closures and how they work
 
----
-
+<!-- exclude-start -->
 ## 🔁 What I'd Do Differently
 If I repeated today, I would:
 - 
-
----
+<!-- exclude-end -->
 
 ## ▶️ Next Session Plan
 Concrete next steps (not vague ideas):
 - Continue working on Typescript problems to sharpen my skills
 
----
-
+<!-- exclude-start -->
 ## ⚡ Energy & Focus Check
 Rate from 1–5 and explain briefly:
 Focus: 2 / 5  
 Energy: 2 / 5  
 Notes:
 - New year's day. trying to get my mind back into thinking about these problems.
-
----
+<!-- exclude-end -->
 
 ## 💬 Quick Reflection
 One honest sentence:

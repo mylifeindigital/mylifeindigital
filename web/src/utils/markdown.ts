@@ -10,12 +10,19 @@ export interface ContentMetadata {
     [key: string]: string | string[] | undefined;
 }
 
+export interface TocEntry {
+    level: number;   // 1-6
+    text: string;
+    slug: string;    // anchor id
+}
+
 export interface ContentItem {
     slug: string;
     section: string;
     metadata: ContentMetadata;
     content: string;
     html: string;
+    toc?: TocEntry[];
 }
 
 export interface Section {

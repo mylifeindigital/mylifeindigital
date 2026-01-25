@@ -15,9 +15,8 @@ NodeJS Orchestrator Pattern
 
 I’m exploring the orchestrator pattern as part of a broader goal to build a flexible, evolvable content-processing system for Markdown-based content. The intention is not architectural complexity for its own sake, but creating a structure that allows independent processing behaviours to evolve without tight coupling.
 
----
-
 ## 🎯 Objective for Today
+
 What I intended to work on in this session:
 - Understand the use of an orchestrator pattern in a NodeJS application.
 - Separate Markdown processing into separate processes
@@ -27,14 +26,6 @@ What I intended to work on in this session:
     - Update the metadata with TOC
 - Update or create derivative of 'posts-data.ts' / 'published-data.ts'
 - Understand the use of an orchestrator pattern in a NodeJS app
-
----
-
-Yes — the idea is good, the **expression is just too dense**. You’re mixing design intent, justification, and architecture philosophy into one block, which makes it feel heavier than it needs to be.
-
-Here’s a **clear, structured, and concise version** that keeps your thinking intact but makes it readable and precise:
-
----
 
 ## 🛠 What I Actually Built / Did
 
@@ -90,16 +81,11 @@ Input Markdown
 → Metadata Mutator  
 → Output Content Model
 
-
----
-
 ## 🧠 What I Learned
 New understanding, patterns, or insights:
 - Method chaining via returning `this` enables fluent pipeline construction
 - This pattern makes composition expressive without introducing configuration complexity
 - It also makes pipeline assembly declarative instead of imperative
-
----
 
 ## 😕 What Challenged or Confused Me
 - Distinguishing between structural clarity and accidental complexity
@@ -109,16 +95,11 @@ New understanding, patterns, or insights:
   - composition is required
   - extensibility is a real goal
 
----
-
 ## 🔁 What I'd Do Differently
 
 - Start with a simpler pipeline first (function composition)
 - Introduce orchestration only once duplication appears
 - Prototype the processing flow without abstractions to validate necessity
-
-
----
 
 ## ▶️ Next Session Plan
 
@@ -130,17 +111,14 @@ New understanding, patterns, or insights:
 - Add validation around ProcessingContext mutation
 - Test pipeline composition with 3+ processors
 
-
----
-
+<!-- exclude-start -->
 ## ⚡ Energy & Focus Check
 Rate from 1–5 and explain briefly:
 Focus:  4 / 5  
 Energy:  4 / 5  
 Notes:
 - Once I get started without postponing it gets better and easier
-
----
+<!-- exclude-end -->
 
 ## 💬 Quick Reflection
 One honest sentence:
