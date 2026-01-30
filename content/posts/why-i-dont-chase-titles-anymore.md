@@ -5,6 +5,10 @@ updated: "2026-01-20"
 author: "Fredrik Erasmus"
 section: "posts"
 tags: ["software engineering"]
+heroSection:
+  title: "Welcome to"
+  subtitle: "Your custom hero subtitle here"
+  showOnHomepage: true
 ---
 
 Recently, I spent some time doing exploratory work using Postgres, Python, and Node.js. From the outset, my focus wasn’t on building something impressive — it was on using each tool for what it’s genuinely good at.

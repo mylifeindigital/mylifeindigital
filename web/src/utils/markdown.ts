@@ -1,5 +1,11 @@
 import { marked } from 'marked';
 
+export interface HeroSectionConfig {
+    title?: string;
+    subtitle?: string;
+    showOnHomepage?: boolean;
+}
+
 export interface ContentMetadata {
     title: string;
     date?: string;
@@ -7,7 +13,9 @@ export interface ContentMetadata {
     description?: string;
     tags?: string[];
     section?: string;
-    [key: string]: string | string[] | undefined;
+    image?: string;
+    heroSection?: HeroSectionConfig;
+    [key: string]: string | string[] | HeroSectionConfig | undefined;
 }
 
 export interface TocEntry {

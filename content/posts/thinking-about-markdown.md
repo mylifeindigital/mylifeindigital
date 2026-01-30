@@ -5,6 +5,10 @@ updated: "2026-01-02"
 author: "Fredrik Erasmus"
 section: "posts"
 tags: ["markdown", "hono"]
+heroSection:
+  title: "Explore"
+  subtitle: "How far can Markdown take you?"
+  showOnHomepage: true
 ---
 
 ## Using Hono
