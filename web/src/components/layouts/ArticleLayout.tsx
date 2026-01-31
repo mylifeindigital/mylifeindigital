@@ -55,6 +55,8 @@ function TocSidebar({ toc }: { toc?: TocEntry[] }) {
 
 export function ArticleLayout({ item, section, schema }: ArticleLayoutProps) {
   const hasToc = item.toc && item.toc.length > 0;
+  const heroImage = item.metadata.image;
+  const heroImageAlt = item.metadata.imageAlt || `Cover image for ${item.metadata.title}`;
 
   return (
     <div class={`article-wrapper ${hasToc ? 'has-toc' : ''}`}>
@@ -63,6 +65,18 @@ export function ArticleLayout({ item, section, schema }: ArticleLayoutProps) {
       <article class="article">
         <header class="article-header">
           <a href={`/${section.slug}`} class="back-link">← {section.title}</a>
+
+          {heroImage && (
+            <div class="article-hero">
+              <img
+                src={heroImage}
+                alt={heroImageAlt}
+                class="article-hero-image"
+                loading="eager"
+              />
+            </div>
+          )}
+
           <h1 class="article-title">{item.metadata.title}</h1>
 
           <div class="article-meta">

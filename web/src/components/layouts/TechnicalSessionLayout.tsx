@@ -191,6 +191,8 @@ export function TechnicalSessionLayout({ item, section, schema }: TechnicalSessi
   );
 
   const hasToc = item.toc && item.toc.length > 0;
+  const heroImage = item.metadata.image;
+  const heroImageAlt = item.metadata.imageAlt || `Cover image for ${item.metadata.title}`;
 
   return (
     <div class={`session-wrapper ${hasToc ? 'has-toc' : ''}`}>
@@ -199,6 +201,17 @@ export function TechnicalSessionLayout({ item, section, schema }: TechnicalSessi
       <article class="session">
         <header class="session-header">
           <a href={`/${section.slug}`} class="back-link">← {section.title}</a>
+
+          {heroImage && (
+            <div class="session-hero">
+              <img
+                src={heroImage}
+                alt={heroImageAlt}
+                class="session-hero-image"
+                loading="eager"
+              />
+            </div>
+          )}
 
           <div class="session-meta">
             {schema.showDate && item.metadata.date && (
