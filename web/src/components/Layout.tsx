@@ -1,15 +1,22 @@
 import type { Section } from '../utils/markdown.js';
 import type { SocialLinks } from '../config.js';
 
+interface PreloadImage {
+    href: string;
+    imageSrcset?: string;
+    imageSizes?: string;
+}
+
 interface LayoutProps {
     title?: string;
     siteTitle: string;
     sections?: Section[];
     socialLinks?: SocialLinks;
+    preloadImages?: PreloadImage[];
     children: any;
 }
 
-export function Layout({ title, siteTitle, sections = [], socialLinks = {}, children }: LayoutProps) {
+export function Layout({ title, siteTitle, sections = [], socialLinks = {}, preloadImages = [], children }: LayoutProps) {
     const pageTitle = title || siteTitle;
 
     return (
@@ -19,6 +26,21 @@ export function Layout({ title, siteTitle, sections = [], socialLinks = {}, chil
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title>{pageTitle}</title>
                 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+                {/* Preconnect to image CDN for faster LCP */}
+                <link rel="preconnect" href="https://images.mylifeindigital.co.za" />
+
+                {/* Preload critical LCP images */}
+                {preloadImages.map(img => (
+                    <link
+                        rel="preload"
+                        as="image"
+                        href={img.href}
+                        imagesrcset={img.imageSrcset}
+                        imagesizes={img.imageSizes}
+                    />
+                ))}
+
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
                 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />

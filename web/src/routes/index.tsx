@@ -40,12 +40,24 @@ export function indexRoute(config: AppConfig) {
     const sections = getAllSections();
     const allItems = getAllItems();
     const { siteTitle, socialLinks } = config;
-    
+
     // Find all posts with hero configuration
     const heroPosts = findHeroPosts(allItems);
-    
+
+    // Preload the first hero image for LCP optimization
+    const preloadImages: Array<{ href: string; imageSrcset?: string; imageSizes?: string }> = [];
+    const firstHeroImage = heroPosts[0]?.metadata.image;
+    if (firstHeroImage) {
+        const mobileImage = heroPosts[0].metadata.imageMobile;
+        preloadImages.push({
+            href: firstHeroImage,
+            imageSrcset: mobileImage ? `${mobileImage} 600w, ${firstHeroImage} 1200w` : undefined,
+            imageSizes: '100vw',
+        });
+    }
+
     return (
-        <Layout title={`${siteTitle} - Home`} siteTitle={siteTitle} sections={sections} socialLinks={socialLinks}>
+        <Layout title={`${siteTitle} - Home`} siteTitle={siteTitle} sections={sections} socialLinks={socialLinks} preloadImages={preloadImages}>
             {/* Hero Section - Slider for multiple posts, static for single */}
             {heroPosts.length > 1 ? (
                 <HeroSlider posts={heroPosts} siteTitle={siteTitle} config={config} />

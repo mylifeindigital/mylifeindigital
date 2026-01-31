@@ -10,10 +10,11 @@ interface HeroSliderProps {
 /**
  * Hero slider component for displaying multiple featured posts.
  * Auto-rotates every 5 seconds with dot navigation and pause on hover.
+ * First slide uses <img> for better LCP performance.
  */
 export function HeroSlider({ posts, siteTitle, config }: HeroSliderProps) {
     const sliderId = `hero-slider-${Date.now()}`;
-    
+
     return (
         <section class="hero hero-slider" id={sliderId}>
             <div class="hero-slides-container">
@@ -22,17 +23,36 @@ export function HeroSlider({ posts, siteTitle, config }: HeroSliderProps) {
                         const heroConfig = post.metadata.heroSection as HeroSectionConfig | undefined;
                         const heroTitle = heroConfig?.title || config.heroTitle;
                         const heroSubtitle = heroConfig?.subtitle || config.heroSubtitle;
-                        const backgroundImage = post.metadata.image;
-                        const backgroundStyle = backgroundImage
-                            ? `background-image: url('${backgroundImage}');`
+                        const desktopImage = post.metadata.image;
+                        const mobileImage = post.metadata.imageMobile;
+                        const imageAlt = post.metadata.imageAlt || `Cover for ${post.metadata.title}`;
+
+                        // First slide uses <img> for LCP optimization
+                        // Other slides use background-image (lazy loaded by browser)
+                        const isFirstSlide = index === 0;
+                        const useImgTag = isFirstSlide && desktopImage;
+                        const backgroundStyle = !useImgTag && desktopImage
+                            ? `background-image: url('${desktopImage}');`
                             : '';
 
                         return (
                             <div
-                                class={`hero-slide ${index === 0 ? 'active' : ''} ${backgroundImage ? 'has-image' : ''}`}
+                                class={`hero-slide ${isFirstSlide ? 'active' : ''} ${desktopImage ? 'has-image' : ''}`}
                                 data-index={index}
                                 style={backgroundStyle}
                             >
+                                {/* First slide: use <img> for LCP optimization */}
+                                {useImgTag && (
+                                    <img
+                                        src={desktopImage}
+                                        srcset={mobileImage ? `${mobileImage} 600w, ${desktopImage} 1200w` : undefined}
+                                        sizes="100vw"
+                                        alt={imageAlt}
+                                        class="hero-slide-image"
+                                        fetchpriority="high"
+                                        decoding="async"
+                                    />
+                                )}
                                 <div class="hero-slide-content">
                                     <h1 class="hero-title">
                                         {heroTitle} <span class="gradient-text">{siteTitle}</span>
