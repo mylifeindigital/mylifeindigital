@@ -28,7 +28,12 @@ LINKEDIN_URL = "https://www.linkedin.com/in/fredrikerasmus"
 [env.production]
 name = "mylifeindigital-web"
 
-# Staging environment  
+# Staging environment
 [env.staging]
 name = "mylifeindigital-web-staging"
+
+# R2 bucket for generated images
+[[r2_buckets]]
+binding = "IMAGES_BUCKET"
+bucket_name = "mylifeindigital-images"
 

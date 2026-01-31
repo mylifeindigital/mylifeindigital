@@ -7,8 +7,10 @@
   "scripts": {
     "dev": "wrangler dev",
     "dev:node": "tsx watch src/index.node.ts",
-    "build": "npm run build:posts && tsc",
+    "build": "npm run build:posts:images && tsc",
     "build:posts": "tsx scripts/build-posts.ts",
+    "build:posts:images": "tsx scripts/build-posts.ts --generate-images",
+    "generate:images": "tsx scripts/generate-images.ts",
     "deploy": "npm run build:posts && wrangler deploy",
     "start": "wrangler dev"
   },
@@ -23,9 +25,12 @@
     "npm": "^11.7.0"
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.0.0",
     "@cloudflare/workers-types": "^4.20241205.0",
     "@types/marked": "^6.0.0",
     "@types/node": "^25.0.3",
+    "dotenv": "^16.0.0",
+    "sharp": "^0.33.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "wrangler": "^3.99.0"

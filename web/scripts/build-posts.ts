@@ -4,11 +4,16 @@
  * a TypeScript file with the parsed content data embedded, organized by sections.
  *
  * This is necessary because Cloudflare Workers don't have filesystem access.
+ *
+ * Usage:
+ *   npm run build:posts           # Build without image generation
+ *   npm run build:posts:images    # Build with AI image generation
  */
 
 import { readFileSync, readdirSync, writeFileSync, existsSync, mkdirSync, statSync } from 'fs';
 import { join, dirname, extname, basename } from 'path';
 import { fileURLToPath } from 'url';
+import { config as dotenvConfig } from 'dotenv';
 
 import { MarkdownProcessingPipeline } from './MarkdownProcessingPipeline.js';
 import {
@@ -18,20 +23,45 @@ import {
     TocProcessor,
     HtmlProcessor,
     ExcludeProcessor,
+    ImageGeneratorProcessor,
 } from './processors/index.js';
 import type { ContentItem, Section, SiteContent } from '../src/utils/markdown.js';
 
+// Load environment variables from .env file
+dotenvConfig();
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+// Parse command line arguments
+const args = process.argv.slice(2);
+const generateImages = args.includes('--generate-images');
+const forceRegenerate = args.includes('--force-regenerate');
+const dryRun = args.includes('--dry-run');
+
+// Track ImageGeneratorProcessor for manifest saving
+let imageGeneratorProcessor: ImageGeneratorProcessor | null = null;
 
 /**
  * Create the markdown processing pipeline.
  */
 function createPipeline(): MarkdownProcessingPipeline {
-    return new MarkdownProcessingPipeline()
+    const pipeline = new MarkdownProcessingPipeline()
         .use(new FrontmatterProcessor())
         .use(new GitDateProcessor())
-        .use(new ExcludeProcessor())
+        .use(new ExcludeProcessor());
+
+    // Add image generation if requested
+    if (generateImages) {
+        imageGeneratorProcessor = new ImageGeneratorProcessor({
+            enabled: true,
+            forceRegenerate,
+            dryRun,
+        });
+        pipeline.use(imageGeneratorProcessor);
+    }
+
+    return pipeline
         .use(new AstProcessor())
         .use(new TocProcessor({ minLevel: 1, maxLevel: 3 }))
         .use(new HtmlProcessor());
@@ -178,6 +208,9 @@ async function main(): Promise<void> {
     console.log('📦 Building content data...');
     console.log(`  Source: ${contentDir}`);
     console.log(`  Output: ${outputPath}`);
+    if (generateImages) {
+        console.log(`  🎨 Image generation: enabled${dryRun ? ' (dry run)' : ''}${forceRegenerate ? ' (force regenerate)' : ''}`);
+    }
     console.log('');
 
     const pipeline = createPipeline();
@@ -188,6 +221,11 @@ async function main(): Promise<void> {
         sections,
         allItems,
     };
+
+    // Save image manifest if we generated images
+    if (imageGeneratorProcessor) {
+        imageGeneratorProcessor.saveManifestIfDirty();
+    }
 
     generateContentDataFile(siteContent, outputPath);
 

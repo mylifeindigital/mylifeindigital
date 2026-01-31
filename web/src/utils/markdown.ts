@@ -13,7 +13,9 @@ export interface ContentMetadata {
     description?: string;
     tags?: string[];
     section?: string;
-    image?: string;
+    image?: string;           // Primary image URL (desktop)
+    imageMobile?: string;     // Mobile-optimized image URL
+    imageAlt?: string;        // Generated alt text for accessibility
     heroSection?: HeroSectionConfig;
     [key: string]: string | string[] | HeroSectionConfig | undefined;
 }

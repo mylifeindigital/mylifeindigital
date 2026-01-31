@@ -7,7 +7,7 @@ section: "posts"
 tags: ["software engineering"]
 heroSection:
   title: "Welcome to"
-  subtitle: "Your custom hero subtitle here"
+  subtitle: "Why I don’t chase titles anymore"
   showOnHomepage: true
 ---
 

@@ -22,16 +22,26 @@ export function HeroSlider({ posts, siteTitle, config }: HeroSliderProps) {
                         const heroConfig = post.metadata.heroSection as HeroSectionConfig | undefined;
                         const heroTitle = heroConfig?.title || config.heroTitle;
                         const heroSubtitle = heroConfig?.subtitle || config.heroSubtitle;
-                        
+                        const backgroundImage = post.metadata.image;
+                        const backgroundStyle = backgroundImage
+                            ? `background-image: url('${backgroundImage}');`
+                            : '';
+
                         return (
-                            <div class={`hero-slide ${index === 0 ? 'active' : ''}`} data-index={index}>
-                                <h1 class="hero-title">
-                                    {heroTitle} <span class="gradient-text">{siteTitle}</span>
-                                </h1>
-                                <p class="hero-subtitle">{heroSubtitle}</p>
-                                <a href={`/${post.section}/${post.slug}`} class="hero-cta">
-                                    Read Featured Post →
-                                </a>
+                            <div
+                                class={`hero-slide ${index === 0 ? 'active' : ''} ${backgroundImage ? 'has-image' : ''}`}
+                                data-index={index}
+                                style={backgroundStyle}
+                            >
+                                <div class="hero-slide-content">
+                                    <h1 class="hero-title">
+                                        {heroTitle} <span class="gradient-text">{siteTitle}</span>
+                                    </h1>
+                                    <p class="hero-subtitle">{heroSubtitle}</p>
+                                    <a href={`/${post.section}/${post.slug}`} class="hero-cta">
+                                        Read Featured Post →
+                                    </a>
+                                </div>
                             </div>
                         );
                     })}
