@@ -1014,7 +1014,6 @@ pre code {
 
 /* Hero Slide with Background Image */
 .hero-slide.has-image {
-    position: relative;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
