@@ -8,6 +8,21 @@ export interface Env {
     GITHUB_URL?: string;
     TWITTER_URL?: string;
     LINKEDIN_URL?: string;
+
+    // GitHub API (content storage)
+    GITHUB_TOKEN?: string;
+    GITHUB_OWNER?: string;
+    GITHUB_REPO?: string;
+    GITHUB_BRANCH?: string;
+
+    // Admin auth
+    ADMIN_ALLOWED_EMAILS?: string;
+    ADMIN_BYPASS_ACCESS_FOR_LOCAL?: string;
+    ADMIN_LOCAL_TEST_EMAIL?: string;
+
+    // AI transforms
+    OPENAI_API_KEY?: string;
+    OPENAI_MODEL?: string;
 }
 
 /**

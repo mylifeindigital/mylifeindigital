@@ -3,6 +3,8 @@ import { jsxRenderer } from 'hono/jsx-renderer';
 import { indexRoute } from './routes/index.js';
 import { sectionRoute } from './routes/[section]/index.js';
 import { contentItemRoute } from './routes/[section]/[slug].js';
+import { adminApp, adminApi } from './routes/admin/index.js';
+import { adminAuth } from './middleware/admin-auth.js';
 import { type Env, getConfig } from './config.js';
 
 // Create app with environment bindings type
@@ -10,6 +12,11 @@ const app = new Hono<{ Bindings: Env }>();
 
 // Use JSX renderer middleware
 app.use('*', jsxRenderer());
+
+// Admin routes — MUST be before /:section to avoid matching "dashboard" as a section
+app.route('/dashboard', adminApp);
+app.use('/api/admin/*', adminAuth);
+app.route('/api/admin', adminApi);
 
 // Home route - list all sections
 app.get('/', (c) => {

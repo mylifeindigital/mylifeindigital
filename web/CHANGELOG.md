@@ -2,6 +2,21 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.1.0] - 2026-03-01
+
+### Added
+
+- Admin dashboard at `/dashboard` with Monaco editor for creating and editing posts
+- Cloudflare Access auth middleware with local dev bypass
+- GitHub REST API content service for reading/writing markdown files
+- AI text transform service (rewrite, shorten, expand, explain, define) via OpenAI API
+- Sliding window rate limiter for AI transform endpoint (20 req/60s)
+- Client-side markdown preview via marked.js with live updates
+- File tree sidebar with collapsible sections and unsaved changes warnings
+- New file creation with frontmatter template
+- Request validation and path sanitization for admin API
+- Admin CSS with cyberpunk theme matching main site
+
 ## [0.0.3] - 2026-01-02
 
 ### Added

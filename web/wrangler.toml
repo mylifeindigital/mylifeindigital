@@ -32,6 +32,11 @@ name = "mylifeindigital-web"
 [env.staging]
 name = "mylifeindigital-web-staging"
 
+# Admin dashboard settings (non-secret values only)
+# Secrets (GITHUB_TOKEN, OPENAI_API_KEY, etc.) must be set via:
+#   npx wrangler secret put <SECRET_NAME>
+# See CLAUDE.md "Setup Guide" sections for full list of required secrets.
+
 # R2 bucket for generated images
 [[r2_buckets]]
 binding = "IMAGES_BUCKET"
