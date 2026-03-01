@@ -333,6 +333,7 @@ export function getDashboardHtml(email: string): string {
             + 'date: "' + today + '"\\n'
             + 'description: ""\\n'
             + 'tags: []\\n'
+            + 'draft: true\\n'
             + '---\\n\\n'
             + '# ' + title + '\\n\\n'
             + 'Start writing here...\\n';

@@ -2,6 +2,16 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.2.0] - 2026-03-01
+
+### Added
+
+- Draft content filtering: `draft: true` in frontmatter excludes posts from the published build
+- `DraftFilterProcessor` in the build pipeline — skips draft files early, before heavy processing
+- `skip` flag on `MarkdownProcessingContext` for pipeline-level item exclusion
+- New files created from the dashboard default to `draft: true`
+- Build log shows `📝 [draft]` for skipped draft files
+
 ## [0.1.0] - 2026-03-01
 
 ### Added

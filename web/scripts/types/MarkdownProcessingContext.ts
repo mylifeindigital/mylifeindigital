@@ -19,6 +19,7 @@ export interface MarkdownProcessingContext {
     toc: TocEntry[];
     html: string;
     warnings: string[];
+    skip: boolean;             // Signal to skip this item (e.g. drafts)
 }
 
 /**
@@ -41,5 +42,6 @@ export function createContext(
         toc: [],
         html: '',
         warnings: [],
+        skip: false,
     };
 }

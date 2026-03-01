@@ -4,4 +4,5 @@ export { AstProcessor } from './AstProcessor.js';
 export { TocProcessor, type TocProcessorOptions } from './TocProcessor.js';
 export { HtmlProcessor } from './HtmlProcessor.js';
 export { ExcludeProcessor } from './ExcludeProcessor.js';
+export { DraftFilterProcessor } from './DraftFilterProcessor.js';
 export { ImageGeneratorProcessor, type ImageGeneratorOptions } from './ImageGeneratorProcessor.js';

@@ -34,7 +34,7 @@ export class MarkdownProcessingPipeline {
         filePath: string,
         slug: string,
         section: string
-    ): Promise<PipelineResult> {
+    ): Promise<PipelineResult | null> {
         const context = createContext(rawContent, filePath, slug, section);
 
         for (const processor of this.processors) {
@@ -44,6 +44,7 @@ export class MarkdownProcessingPipeline {
                 const message = error instanceof Error ? error.message : String(error);
                 context.warnings.push(`[${processor.name}] Error: ${message}`);
             }
+            if (context.skip) return null;
         }
 
         const item: ContentItem = {

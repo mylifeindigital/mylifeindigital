@@ -18,6 +18,7 @@ import { config as dotenvConfig } from 'dotenv';
 import { MarkdownProcessingPipeline } from './MarkdownProcessingPipeline.js';
 import {
     FrontmatterProcessor,
+    DraftFilterProcessor,
     GitDateProcessor,
     AstProcessor,
     TocProcessor,
@@ -48,6 +49,7 @@ let imageGeneratorProcessor: ImageGeneratorProcessor | null = null;
 function createPipeline(): MarkdownProcessingPipeline {
     const pipeline = new MarkdownProcessingPipeline()
         .use(new FrontmatterProcessor())
+        .use(new DraftFilterProcessor())
         .use(new GitDateProcessor())
         .use(new ExcludeProcessor());
 
@@ -85,9 +87,11 @@ async function parseMarkdownFile(
     filePath: string,
     slug: string,
     sectionSlug: string
-): Promise<ContentItem> {
+): Promise<ContentItem | null> {
     const content = readFileSync(filePath, 'utf-8');
     const result = await pipeline.process(content, filePath, slug, sectionSlug);
+
+    if (result === null) return null;
 
     if (result.warnings.length > 0) {
         result.warnings.forEach(w => console.warn(`      ⚠️ ${w}`));
@@ -119,8 +123,12 @@ async function getSectionContent(
         if (stat.isFile() && extname(file) === '.md') {
             const slug = basename(file, '.md');
             const item = await parseMarkdownFile(pipeline, filePath, slug, sectionSlug);
-            items.push(item);
-            console.log(`    📄 ${file}`);
+            if (item === null) {
+                console.log(`    📝 [draft] ${file}`);
+            } else {
+                items.push(item);
+                console.log(`    📄 ${file}`);
+            }
         }
     }
 
