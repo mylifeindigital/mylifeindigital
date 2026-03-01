@@ -2,134 +2,99 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Commands
+See the root `../CLAUDE.md` for monorepo-level overview and commands.
+
+## Commands (run from this `web/` directory)
 
 ```bash
-npm run dev          # Start local dev server (Wrangler, http://localhost:8787)
-npm run build        # Build posts-data.ts + compile TypeScript
-npm run build:posts  # Only regenerate posts-data.ts from markdown
-npm run deploy       # Build + deploy to Cloudflare Workers
+npm run dev                # Local dev server at http://localhost:8787
+npm run build              # Build posts-data.ts (with images) + compile TypeScript
+npm run build:posts        # Regenerate posts-data.ts from markdown (no images)
+npm run build:posts:images # Rebuild posts with AI image generation
+npm run generate:images    # Generate missing or regenerate all images standalone
+npm run deploy             # Build + deploy to Cloudflare Workers
 ```
 
-After adding or modifying content in `/content`, run `npm run build:posts` to regenerate the embedded data.
+After modifying content in `/content`, run `npm run build:posts` to regenerate embedded data.
 
-## Architecture
+## Build-Time Content Pipeline
 
-This is a Hono-based blog deployed as a Cloudflare Worker. Content is embedded at build time because Workers have no filesystem access at runtime.
+`scripts/build-posts.ts` reads markdown from `/content/{section}/` and runs it through `MarkdownProcessingPipeline` — a composable chain of processors:
 
-### Build-time Content Pipeline
+**Processor order:** Frontmatter → GitDate → Exclude → ImageGenerator → AST → TOC → HTML
 
-1. `scripts/build-posts.ts` reads markdown files from `/content/{section}/` directories
-2. Processes each file through an extensible pipeline:
-   - **Frontmatter**: Extracts metadata using `gray-matter`
-   - **AST**: Parses markdown to tokens using `marked.lexer()`
-   - **TOC**: Extracts heading structure for table of contents
-   - **HTML**: Renders final HTML using `marked.parser()`
-3. Generates `src/utils/posts-data.ts` with all content embedded as a TypeScript object
-4. At runtime, `src/utils/post-cache.ts` provides fast lookups via pre-built Maps
+Output: `src/utils/posts-data.ts` (generated artifact, never edit manually). At runtime, `src/utils/post-cache.ts` provides O(1) Map-based lookups.
 
-### Markdown Processing Pipeline
+### Custom Processors
 
-The pipeline architecture allows extensible markdown processing through composable processors:
-
-```
-scripts/
-├── build-posts.ts                    # Uses pipeline
-├── MarkdownProcessingPipeline.ts     # Pipeline orchestrator
-├── types/
-│   ├── MarkdownProcessingContext.ts  # Context interface
-│   └── MarkdownProcessor.ts          # Processor interface
-└── processors/
-    ├── index.ts                      # Barrel export
-    ├── FrontmatterProcessor.ts       # gray-matter parsing
-    ├── AstProcessor.ts               # marked.lexer() tokenization
-    ├── TocProcessor.ts               # Heading extraction
-    └── HtmlProcessor.ts              # marked.parser() rendering
-```
-
-**Creating Custom Processors:**
-
-Implement the `MarkdownProcessor` interface:
+Implement `MarkdownProcessor` interface in `scripts/processors/`, then add to pipeline in `build-posts.ts`:
 
 ```typescript
-import { MarkdownProcessor, MarkdownProcessingContext } from './types';
-
 export class MyProcessor implements MarkdownProcessor {
   name = 'my-processor';
-
   process(context: MarkdownProcessingContext): MarkdownProcessingContext {
-    // Transform context and return it
-    return {
-      ...context,
-      // Add your modifications
-    };
+    return { ...context, /* modifications */ };
   }
 }
+// In build-posts.ts: pipeline.use(new MyProcessor());
 ```
 
-Then add to the pipeline in `build-posts.ts`:
+### Image Generation Pipeline
+
+- `ImageGeneratorProcessor` runs during build, generates images via DALL-E 3 (OpenAI API)
+- `scripts/image-manifest.json` tracks content hashes to avoid regenerating unchanged images
+- Images uploaded to Cloudflare R2 via S3-compatible API (`scripts/utils/r2-storage.ts`)
+- `scripts/utils/image-resize.ts` creates desktop and mobile variants using Sharp
+- Requires env vars: `OPENAI_API_KEY`, R2 credentials (see `.env.example`)
+
+## Routing
+
+- `/` — Home with hero slider (posts with `heroSection.showOnHomepage: true`)
+- `/:section` — Section listing (e.g., `/posts`, `/technical-sessions`)
+- `/:section/:slug` — Individual content item
+- `/admin` — Auth-protected admin editor
+- `/api/admin/*` — Admin CRUD + AI transform endpoints
+
+Routes in `src/routes/` use file-based patterns: `index.tsx`, `[section]/index.tsx`, `[section]/[slug].tsx`, `admin/`.
+
+## Schema-Driven Rendering
+
+`src/schemas/content-schemas.ts` defines per-section display rules (layout type, showTags, showDate, headerStyle, etc.). Frontmatter `layout` field overrides section default.
+
+Layouts: `article` (posts — clean prose with optional TOC sidebar), `technical-session` (structured cards with emoji-coded sections). Components in `src/components/layouts/`, registry maps schema to component.
+
+## Admin System
+
+- **Auth:** Cloudflare Access header (`Cf-Access-Authenticated-User-Email`) with local dev bypass
+- **Content:** GitHub API integration (`services/content/`) — reads/writes markdown directly via GitHub REST API
+- **AI transforms:** OpenAI GPT-4o-mini via `services/ai/` — rewrite, explain, define, shorten, expand
+- **Rate limiting:** Sliding window middleware on `/api/admin/ai/transform` (20 req/60s)
+- **Validation:** `routes/admin/validation.ts` for request body and path sanitization
+
+## Key Types
 
 ```typescript
-pipeline.use(new MyProcessor());
-```
-
-### Routing Structure
-
-- `/` - Home page listing all sections
-- `/:section` - Lists all items in a section (e.g., `/posts`, `/technical-sessions`)
-- `/:section/:slug` - Individual content item (e.g., `/posts/my-article`)
-
-Routes are in `src/routes/` using file-based patterns: `index.tsx`, `[section]/index.tsx`, `[section]/[slug].tsx`.
-
-### Content Schemas and Layouts
-
-`src/schemas/content-schemas.ts` defines how each section renders (layout type, which metadata to show). Currently supports:
-- `article` layout (for posts)
-- `technical-session` layout (structured format with section icons)
-
-Layout components live in `src/components/layouts/`. The registry in `index.ts` maps schema layouts to components.
-
-### Key Types
-
-```typescript
-interface TocEntry {
-  level: number;   // 1-6
-  text: string;
-  slug: string;    // anchor id
-}
-
 interface ContentItem {
   slug: string;
   section: string;
-  metadata: ContentMetadata;
-  content: string;  // raw markdown body
-  html: string;     // rendered HTML
-  toc?: TocEntry[]; // table of contents
-}
-
-interface Section {
-  slug: string;
-  title: string;
-  items: ContentItem[];
+  metadata: ContentMetadata;  // title, date, description, tags, image, imageMobile, imageAlt, heroSection
+  content: string;            // raw markdown
+  html: string;               // rendered HTML
+  toc?: TocEntry[];           // table of contents (level, text, slug)
 }
 ```
 
-## Adding Content
-
-1. Create `/content/{section-name}/your-file.md` with frontmatter:
-   ```markdown
-   ---
-   title: "Title"
-   date: "2024-01-15"
-   description: "Brief description"
-   ---
-   Content...
-   ```
-2. Run `npm run build:posts`
-3. New sections are auto-discovered from directory names
-
 ## Configuration
 
-Environment variables in `wrangler.toml` under `[vars]`: `SITE_TITLE`, `HERO_TITLE`, `HERO_SUBTITLE`, social URLs.
+- Worker env vars: `wrangler.toml` under `[vars]`
+- Local dev secrets: `.dev.vars`
+- `Env` interface: `src/config.ts`
+- R2 bucket binding: `IMAGES_BUCKET`
+- JSX runtime: Hono JSX (`jsxImportSource: "hono/jsx"`)
 
-JSX uses Hono's JSX (`jsxImportSource: "hono/jsx"` in tsconfig).
+## Release Management
+
+When completing features or fixes:
+1. Bump version in both `package.json` and `src/version.ts` (semver)
+2. Add entry to `CHANGELOG.md`: `## [x.y.z] - YYYY-MM-DD` with categories (Added, Changed, Fixed, Removed)
+3. Include version files and changelog in the commit
