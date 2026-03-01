@@ -8,3 +8,4 @@ tags: []
 # My Journal Journey
 
 Start writing here...
+There is some text here
