@@ -7,4 +7,4 @@ tags: []
 
 # My Wandering Mind
 
-Start writing here...
+Start writing here
