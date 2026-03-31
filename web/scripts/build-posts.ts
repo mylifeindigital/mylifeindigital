@@ -15,7 +15,7 @@ import { join, dirname, extname, basename } from 'path';
 import { fileURLToPath } from 'url';
 import { config as dotenvConfig } from 'dotenv';
 
-import { MarkdownProcessingPipeline } from './MarkdownProcessingPipeline.js';
+import { MarkdownProcessingPipeline } from '../src/utils/pipeline/MarkdownProcessingPipeline.js';
 import {
     FrontmatterProcessor,
     DraftFilterProcessor,

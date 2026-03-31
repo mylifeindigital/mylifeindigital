@@ -1,7 +1,7 @@
 import type { Token, Tokens } from 'marked';
 import type { MarkdownProcessor } from '../types/MarkdownProcessor.js';
 import type { MarkdownProcessingContext } from '../types/MarkdownProcessingContext.js';
-import type { TocEntry } from '../../src/utils/markdown.js';
+import type { TocEntry } from '../../markdown.js';
 
 export interface TocProcessorOptions {
     minLevel?: number;  // Minimum heading level to include (default: 1)

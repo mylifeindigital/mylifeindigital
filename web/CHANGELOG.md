@@ -2,6 +2,30 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.3.1] - 2026-03-01
+
+### Fixed
+
+- Dashboard preview now renders table of contents above content with anchor links to headings
+
+## [0.3.0] - 2026-03-01
+
+### Added
+
+- Server-side markdown preview endpoint (`POST /api/admin/preview`) using the build pipeline
+- Shared pipeline infrastructure at `src/utils/pipeline/` — runtime processors available to both build scripts and Worker runtime
+
+### Changed
+
+- Dashboard preview now uses server-side rendering instead of client-side marked.js CDN
+- Preview output matches build pipeline exactly (heading IDs, TOC, exclude blocks, frontmatter stripping)
+- Moved 6 runtime-compatible processors (Frontmatter, DraftFilter, Exclude, AST, TOC, HTML) from `scripts/` to `src/utils/pipeline/`
+- Build scripts re-export from shared pipeline; build-only processors (GitDate, ImageGenerator) remain in `scripts/`
+
+### Removed
+
+- Client-side `marked@12.0.0` CDN dependency from dashboard
+
 ## [0.2.0] - 2026-03-01
 
 ### Added

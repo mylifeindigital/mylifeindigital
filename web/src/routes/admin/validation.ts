@@ -74,6 +74,26 @@ export function validateSaveBody(
     };
 }
 
+export function validatePreviewBody(
+    body: unknown
+): { valid: true; content: string } | { valid: false; error: string } {
+    if (!body || typeof body !== 'object') {
+        return { valid: false, error: 'Request body is required' };
+    }
+
+    const { content } = body as Record<string, unknown>;
+
+    if (!content || typeof content !== 'string') {
+        return { valid: false, error: 'Content is required and must be a string' };
+    }
+
+    if (content.length > MAX_CONTENT_SIZE) {
+        return { valid: false, error: `Content exceeds maximum size of ${MAX_CONTENT_SIZE} bytes` };
+    }
+
+    return { valid: true, content };
+}
+
 export function validateTransformBody(
     body: unknown
 ): { valid: true; text: string; action: TransformAction } | { valid: false; error: string } {

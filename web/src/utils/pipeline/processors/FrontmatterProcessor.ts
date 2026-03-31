@@ -1,7 +1,7 @@
 import matter from 'gray-matter';
 import type { MarkdownProcessor } from '../types/MarkdownProcessor.js';
 import type { MarkdownProcessingContext } from '../types/MarkdownProcessingContext.js';
-import type { ContentMetadata } from '../../src/utils/markdown.js';
+import type { ContentMetadata } from '../../markdown.js';
 
 /**
  * Extracts frontmatter from markdown using gray-matter.

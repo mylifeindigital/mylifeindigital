@@ -115,8 +115,6 @@ export function getDashboardHtml(email: string): string {
     </div>
 </div>
 
-<!-- Marked for preview (loaded BEFORE Monaco AMD loader to avoid AMD hijack) -->
-<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/lib/marked.umd.js"></script>
 <!-- Monaco AMD Loader -->
 <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
 
@@ -370,17 +368,27 @@ export function getDashboardHtml(email: string): string {
     function updatePreview() {
         if (!previewVisible || !editor) return;
         clearTimeout(previewTimeout);
-        previewTimeout = setTimeout(function() {
-            let content = editor.getValue();
-            // Strip frontmatter
-            const fmMatch = content.match(/^---\\n[\\s\\S]*?\\n---\\n?/);
-            if (fmMatch) {
-                content = content.slice(fmMatch[0].length);
+        previewTimeout = setTimeout(async function() {
+            try {
+                var data = await api('POST', '/api/admin/preview', {
+                    content: editor.getValue(),
+                });
+                var tocHtml = '';
+                if (data.toc && data.toc.length > 0) {
+                    tocHtml = '<nav style="margin-bottom:24px;padding:16px;border:1px solid #7c3aed44;border-radius:8px;background:#12122b;">';
+                    tocHtml += '<h3 style="margin:0 0 8px;font-size:0.85rem;color:#00d4ff;text-transform:uppercase;letter-spacing:0.05em;">Contents</h3><ul style="list-style:none;margin:0;padding:0;">';
+                    for (var i = 0; i < data.toc.length; i++) {
+                        var entry = data.toc[i];
+                        var indent = (entry.level - 1) * 16;
+                        tocHtml += '<li style="padding-left:' + indent + 'px;"><a href="#' + entry.slug + '" style="color:#e0e0e0;text-decoration:none;font-size:0.85rem;line-height:1.8;opacity:' + (entry.level === 1 ? '1' : '0.8') + ';">' + entry.text + '</a></li>';
+                    }
+                    tocHtml += '</ul></nav>';
+                }
+                $previewContent.innerHTML = tocHtml + (data.html || '');
+            } catch (err) {
+                $previewContent.innerHTML = '<p style="color:#ef4444;">Preview error: ' + err.message + '</p>';
             }
-            if (typeof marked !== 'undefined') {
-                $previewContent.innerHTML = marked.parse(content);
-            }
-        }, 300);
+        }, 500);
     }
 
     // ---- AI Transform ----

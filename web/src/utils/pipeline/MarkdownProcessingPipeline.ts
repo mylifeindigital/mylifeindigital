@@ -1,7 +1,7 @@
 import type { MarkdownProcessor } from './types/MarkdownProcessor.js';
 import type { MarkdownProcessingContext } from './types/MarkdownProcessingContext.js';
 import { createContext } from './types/MarkdownProcessingContext.js';
-import type { ContentItem, TocEntry } from '../src/utils/markdown.js';
+import type { ContentItem, TocEntry } from '../markdown.js';
 
 /**
  * Result returned from pipeline processing.

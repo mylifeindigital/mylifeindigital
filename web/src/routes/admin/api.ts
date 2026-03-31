@@ -6,8 +6,17 @@ import { createRateLimit } from '../../middleware/rate-limit.js';
 import {
     sanitizePath,
     validateSaveBody,
+    validatePreviewBody,
     validateTransformBody,
 } from './validation.js';
+import {
+    MarkdownProcessingPipeline,
+    FrontmatterProcessor,
+    ExcludeProcessor,
+    AstProcessor,
+    TocProcessor,
+    HtmlProcessor,
+} from '../../utils/pipeline/index.js';
 
 type AdminApiEnv = {
     Bindings: Env;
@@ -143,6 +152,44 @@ api.post('/ai/transform', aiRateLimit, async (c) => {
         const ai = new OpenAIService(c.env.OPENAI_API_KEY, c.env.OPENAI_MODEL);
         const transformed = await ai.transform(result.text, result.action);
         return c.json({ result: transformed });
+    } catch (err) {
+        const message = err instanceof Error ? err.message : 'Unknown error';
+        return c.json({ error: message }, 500);
+    }
+});
+
+// POST /api/admin/preview
+api.post('/preview', async (c) => {
+    const body = await c.req.json();
+    const result = validatePreviewBody(body);
+    if (!result.valid) {
+        return c.json({ error: result.error }, 400);
+    }
+
+    try {
+        const pipeline = new MarkdownProcessingPipeline()
+            .use(new FrontmatterProcessor())
+            .use(new ExcludeProcessor())
+            .use(new AstProcessor())
+            .use(new TocProcessor({ minLevel: 1, maxLevel: 3 }))
+            .use(new HtmlProcessor());
+
+        const pipelineResult = await pipeline.process(
+            result.content,
+            'preview',
+            'preview',
+            'preview'
+        );
+
+        if (!pipelineResult) {
+            return c.json({ html: '', toc: [], metadata: {} });
+        }
+
+        return c.json({
+            html: pipelineResult.item.html,
+            toc: pipelineResult.item.toc,
+            metadata: pipelineResult.item.metadata,
+        });
     } catch (err) {
         const message = err instanceof Error ? err.message : 'Unknown error';
         return c.json({ error: message }, 500);

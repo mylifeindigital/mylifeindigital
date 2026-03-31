@@ -3,8 +3,8 @@
  * Adds image URLs to context.metadata.
  */
 
-import type { MarkdownProcessor } from '../types/MarkdownProcessor.js';
-import type { MarkdownProcessingContext } from '../types/MarkdownProcessingContext.js';
+import type { MarkdownProcessor } from '../../src/utils/pipeline/types/MarkdownProcessor.js';
+import type { MarkdownProcessingContext } from '../../src/utils/pipeline/types/MarkdownProcessingContext.js';
 import { generateImageFromContent } from '../utils/cloudflare-ai.js';
 import { uploadImage, getImageKey } from '../utils/r2-storage.js';
 import { resizeToMultipleSizes } from '../utils/image-resize.js';

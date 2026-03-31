@@ -1,8 +1,14 @@
-export { FrontmatterProcessor } from './FrontmatterProcessor.js';
+// Re-export runtime processors from shared pipeline
+export {
+    FrontmatterProcessor,
+    DraftFilterProcessor,
+    ExcludeProcessor,
+    AstProcessor,
+    TocProcessor,
+    type TocProcessorOptions,
+    HtmlProcessor,
+} from '../../src/utils/pipeline/processors/index.js';
+
+// Build-only processors (require Node.js APIs)
 export { GitDateProcessor } from './GitDateProcessor.js';
-export { AstProcessor } from './AstProcessor.js';
-export { TocProcessor, type TocProcessorOptions } from './TocProcessor.js';
-export { HtmlProcessor } from './HtmlProcessor.js';
-export { ExcludeProcessor } from './ExcludeProcessor.js';
-export { DraftFilterProcessor } from './DraftFilterProcessor.js';
 export { ImageGeneratorProcessor, type ImageGeneratorOptions } from './ImageGeneratorProcessor.js';

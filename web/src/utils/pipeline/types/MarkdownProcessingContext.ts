@@ -1,5 +1,5 @@
 import type { Token } from 'marked';
-import type { ContentMetadata, TocEntry } from '../../src/utils/markdown.js';
+import type { ContentMetadata, TocEntry } from '../../markdown.js';
 
 /**
  * Context object passed through the markdown processing pipeline.
