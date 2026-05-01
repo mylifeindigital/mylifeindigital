@@ -39,6 +39,29 @@ If you’re reading this: welcome to the engine room.
 
 ---
 
+## 🛠️ Development Setup
+
+This repository is managed as an npm workspace from the repo root.
+
+Install dependencies from the root only:
+
+```bash
+npm install
+```
+
+When adding package-specific dependencies, target the workspace explicitly:
+
+```bash
+npm install <package> --workspace=web
+npm install <package> --workspace=ts-core-utils
+```
+
+For local development, avoid running package-local installs inside `web` or `experiments/ts-core-utils`; update dependencies through the workspace commands above so the root `package-lock.json` stays in sync.
+
+The `web/package-lock.json` file is intentionally kept for Cloudflare builds that use `web` as the project root.
+
+---
+
 ## 📅 Current Focus
 
 **Phase:** Foundations & Architecture  
