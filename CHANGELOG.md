@@ -10,6 +10,7 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 - Added UI metadata for the local change request skill.
 - Added `CR-004` to plan removing Monaco editor from the web admin.
 - Added proposed change request dashboard entries for content operations, repository boundaries, publishing workflow, web admin improvements, content pipeline decisions, and validation checks.
+- Added `CR-005` detail for the Electron vs Tauri content operations app runtime decision.
 - Added `AGENTS.md` as the canonical tool-neutral coding-agent guide.
 - Added repository-level changelog tracking for docs, process, planning, and workspace changes.
 
