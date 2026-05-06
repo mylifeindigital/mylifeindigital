@@ -14,6 +14,9 @@ Use this skill to manage local-first Markdown change requests in `change-request
 - Use one detail file per change request.
 - Preserve stable IDs in the format `CR-001`, `CR-002`, etc.
 - Keep each request focused on a single implementation outcome.
+- Preserve the dashboard columns: `ID`, `Title`, `Status`, `Priority`, `Area`, `Created`, and `Detail`.
+- Preserve the detail-file headings from `change-requests/templates/change-request.md` unless the repository workflow changes.
+- Use the current date from the conversation or environment for new `Created` values.
 - Do not replace this workflow with GitHub Issues, GitHub Projects, or external tooling unless the user explicitly asks.
 
 ## Statuses
@@ -51,6 +54,12 @@ Use one of:
 3. Add implementation notes instead of deleting useful history.
 4. When complete, update `Outcome` with what actually changed.
 
+## Reviewing Existing Requests
+
+1. Read `change-requests/index.md` first to understand status and scope.
+2. Open only the relevant detail files unless the user asks for a full review.
+3. Report stale statuses, missing acceptance criteria, unclear outcomes, or index/detail mismatches.
+
 ## Completion Rule
 
 A change request is only `Done` when:
@@ -58,3 +67,5 @@ A change request is only `Done` when:
 - acceptance criteria are satisfied,
 - relevant implementation notes or decisions are captured,
 - and `change-requests/index.md` reflects the final status.
+
+Use `Dropped` only when the request is intentionally closed without implementation, and record the reason in `Outcome`.

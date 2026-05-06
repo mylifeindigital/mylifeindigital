@@ -1,0 +1,4 @@
+interface:
+  display_name: "Change Requests"
+  short_description: "Track local Markdown change requests"
+  default_prompt: "Use $mylifeindigital-change-requests to create a concise change request for planned work."
