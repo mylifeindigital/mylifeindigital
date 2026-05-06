@@ -77,7 +77,7 @@ Or use `.dev.vars` for local development secrets.
 
 ## Adding Posts
 
-1. Create a new `.md` file in the `/posts` directory
+1. Create a new `.md` file in the repo-root `/content/posts` directory
 2. Add frontmatter at the top:
 
 ```markdown
@@ -92,7 +92,7 @@ tags: ["tag1", "tag2"]
 Your markdown content here...
 ```
 
-3. Rebuild posts: `npm run build:posts`
+3. From `/web`, rebuild posts: `npm run build:posts`
 4. The post will appear on the home page
 5. Access it at `/posts/your-filename` (without the `.md` extension)
 
@@ -107,15 +107,16 @@ Your markdown content here...
   │   ├── config.ts             # Configuration and types
   │   ├── routes/
   │   │   ├── index.tsx         # Home page route
-  │   │   └── posts/
-  │   │       └── [slug].tsx    # Individual post route
+  │   │   ├── [section]/
+  │   │   │   ├── index.tsx     # Section listing route
+  │   │   │   └── [slug].tsx    # Individual content route
+  │   │   └── admin/            # Admin dashboard and API routes
   │   ├── components/
   │   │   └── Layout.tsx        # Base layout component
   │   └── utils/
   │       ├── markdown.ts       # Markdown types and parsing
   │       ├── post-cache.ts     # Post data access
   │       └── posts-data.ts     # Generated posts (build artifact)
-  ├── posts/                    # Markdown post files
   ├── public/                   # Static assets (served from CDN)
   │   ├── favicon.svg
   │   └── styles/

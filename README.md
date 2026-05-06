@@ -35,6 +35,8 @@ If you’re reading this: welcome to the engine room.
 /experiments      → Isolated technical explorations  
 /web              → A website build using Cloudflare workers   
 /docs             → contains docs not used for content publication
+/change-requests  → Local-first planned implementation requests
+/AGENTS.md        → Canonical coding-agent guide
 ```
 
 ---
