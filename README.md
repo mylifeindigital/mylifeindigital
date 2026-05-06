@@ -37,6 +37,7 @@ If you’re reading this: welcome to the engine room.
 /docs             → contains docs not used for content publication
 /change-requests  → Local-first planned implementation requests
 /AGENTS.md        → Canonical coding-agent guide
+/CHANGELOG.md     → Repository-level changelog
 ```
 
 ---

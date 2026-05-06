@@ -91,13 +91,21 @@ When a user asks for planned work, implementation tracking, CRs, or PRD-like not
 
 ## Release Management
 
+Use separate changelogs for separate scopes:
+
+- Root `CHANGELOG.md` tracks repository-level changes such as docs, process, planning, workspace structure, and agent guidance.
+- `web/CHANGELOG.md` tracks web app runtime, feature, deployment, and user-facing changes.
+
 When completing features or fixes for the web app:
 
 1. Bump the version in both `web/package.json` and `web/src/version.ts`.
 2. Add an entry to `web/CHANGELOG.md` using the existing changelog format.
 3. Include both version files and the changelog in the commit.
 
-For docs-only or process-only changes, do not bump the web app version unless the user asks.
+For docs-only, process-only, planning, or agent-guidance changes:
+
+1. Add an entry to root `CHANGELOG.md`.
+2. Do not bump the web app version unless the user asks.
 
 ## Git And Generated Files
 
