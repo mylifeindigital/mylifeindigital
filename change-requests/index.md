@@ -18,7 +18,7 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-002 | Tool-neutral agent guide | Done | Medium | Process | 2026-05-06 | [CR-002-tool-neutral-agent-guide.md](./CR-002-tool-neutral-agent-guide.md) |
 | CR-003 | Repository-level changelog | Done | Medium | Process | 2026-05-06 | [CR-003-repository-level-changelog.md](./CR-003-repository-level-changelog.md) |
 | CR-004 | Remove Monaco editor from web admin | Proposed | Medium | Web Admin | 2026-05-06 | [CR-004-remove-monaco-editor-from-web-admin.md](./CR-004-remove-monaco-editor-from-web-admin.md) |
-| CR-005 | Decide Electron vs Tauri for content operations app | Proposed | High | Content Operations | 2026-05-06 | Pending detail |
+| CR-005 | Decide Electron vs Tauri for content operations app | Done | High | Content Operations | 2026-05-06 | [CR-005-decide-electron-vs-tauri-for-content-operations-app.md](./CR-005-decide-electron-vs-tauri-for-content-operations-app.md) |
 | CR-006 | Define content operations app scope and workflows | Proposed | High | Content Operations | 2026-05-06 | Pending detail |
 | CR-007 | Decide single repo vs split content repository | Proposed | High | Architecture | 2026-05-06 | Pending detail |
 | CR-008 | Define publishing workflow rules | Proposed | High | Publishing | 2026-05-06 | Pending detail |
