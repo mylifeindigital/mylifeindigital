@@ -89,6 +89,14 @@ Use `change-requests/` for local-first planning and implementation tracking.
 
 When a user asks for planned work, implementation tracking, CRs, or PRD-like notes, follow the change-request workflow before or during implementation as appropriate.
 
+## Git Workflow
+
+Use one branch per change request by default. Branch names should be scoped and readable, for example `codex/cr-001-admin-editor-autosave`. For small docs-only or maintenance changes that do not need a change request, use a scoped branch such as `codex/docs-agent-guidance` or `codex/fix-build-posts`.
+
+Commit at meaningful checkpoints rather than after every small edit or only at the end. A good rhythm is one commit for planning or CR updates, one or more commits for implementation, and a final commit for validation, changelog, and version updates when applicable.
+
+Keep commits coherent and reviewable. Avoid mixing unrelated cleanup with feature work. Each branch or pull request should usually represent one change-request outcome.
+
 ## Release Management
 
 Use separate changelogs for separate scopes:

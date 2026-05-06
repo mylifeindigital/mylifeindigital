@@ -1,11 +1,11 @@
 # Change Requests
 
-Local-first change requests for `mylifeindigital`. Each row links to a detail file that captures the intent, proposed implementation, acceptance criteria, notes, and outcome for a planned change.
+Local-first change requests for `mylifeindigital`. Proposed rows may start as lightweight dashboard entries. Detail files capture the intent, proposed implementation, acceptance criteria, notes, and outcome once a request is ready for planning or implementation.
 
 ## Workflow
 
 1. Add a new row to this index with the next available `CR-xxx` ID.
-2. Create a matching detail file from `templates/change-request.md`.
+2. Create a matching detail file from `templates/change-request.md` when a request moves toward active planning or implementation.
 3. Move status through `Proposed`, `Planned`, `In Progress`, `Blocked`, `Done`, or `Dropped`.
 4. Update the detail file as implementation decisions are made.
 5. Record the final result in `Outcome` before marking a request `Done`.
@@ -17,6 +17,17 @@ Local-first change requests for `mylifeindigital`. Each row links to a detail fi
 | CR-001 | Local-first change request system | Done | High | Process | 2026-05-06 | [CR-001-local-first-change-request-system.md](./CR-001-local-first-change-request-system.md) |
 | CR-002 | Tool-neutral agent guide | Done | Medium | Process | 2026-05-06 | [CR-002-tool-neutral-agent-guide.md](./CR-002-tool-neutral-agent-guide.md) |
 | CR-003 | Repository-level changelog | Done | Medium | Process | 2026-05-06 | [CR-003-repository-level-changelog.md](./CR-003-repository-level-changelog.md) |
+| CR-004 | Remove Monaco editor from web admin | Proposed | Medium | Web Admin | 2026-05-06 | [CR-004-remove-monaco-editor-from-web-admin.md](./CR-004-remove-monaco-editor-from-web-admin.md) |
+| CR-005 | Decide Electron vs Tauri for content operations app | Proposed | High | Content Operations | 2026-05-06 | Pending detail |
+| CR-006 | Define content operations app scope and workflows | Proposed | High | Content Operations | 2026-05-06 | Pending detail |
+| CR-007 | Decide single repo vs split content repository | Proposed | High | Architecture | 2026-05-06 | Pending detail |
+| CR-008 | Define publishing workflow rules | Proposed | High | Publishing | 2026-05-06 | Pending detail |
+| CR-009 | Add admin metadata editing UI | Proposed | Medium | Web Admin | 2026-05-06 | Pending detail |
+| CR-010 | Add admin validation panel and author-facing warnings | Proposed | High | Web Admin | 2026-05-06 | Pending detail |
+| CR-011 | Spike browser-worker preview pipeline | Proposed | Medium | Content Pipeline | 2026-05-06 | Pending detail |
+| CR-012 | Decide parser roadmap for markdown processing | Proposed | Medium | Content Pipeline | 2026-05-06 | Pending detail |
+| CR-013 | Add CI content validation checks | Proposed | Medium | Quality | 2026-05-06 | Pending detail |
+| CR-014 | Reassess generated content artifact strategy | Proposed | Medium | Architecture | 2026-05-06 | Pending detail |
 
 ## Status Guide
 
