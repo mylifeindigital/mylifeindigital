@@ -124,5 +124,14 @@
       "mobile": "https://images.mylifeindigital.co.za/technical-sessions/2026-01-w4-nodejs-orchestrator-pattern-600.webp"
     },
     "generatedAt": "2026-01-31T07:50:18.276Z"
+  },
+  "posts/when-is-a-desktop-app-a-good-idea": {
+    "contentHash": "4211b7585adc1efc",
+    "prompt": "Create an abstract image that embodies the fluidity and interconnected nature of a digital workflow. Utilize swirling shapes and layered textures to represent the seamless transition between writing, coding, and rendering. Incorporate a palette of cool blues and vibrant greens, reflecting creativity and technology. Include subtle hints of geometric patterns to symbolize structure amidst the chaos of ideas, conveying a sense of harmony in a lightweight, efficient system. The overall mood should evoke inspiration and innovation without depicting concrete elements.",
+    "images": {
+      "desktop": "https://images.mylifeindigital.co.za/posts/when-is-a-desktop-app-a-good-idea-1200.webp",
+      "mobile": "https://images.mylifeindigital.co.za/posts/when-is-a-desktop-app-a-good-idea-600.webp"
+    },
+    "generatedAt": "2026-05-06T10:08:35.163Z"
   }
 }
