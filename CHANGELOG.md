@@ -2,6 +2,18 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-05-10
+
+### Added
+
+- Added `CR-006` detail for defining the content operations app scope and workflows.
+
+### Changed
+
+- Expanded `CR-006` with an AI assistance marker/provenance strategy to evaluate.
+- Refined `CR-006` to define content creation as a template-driven operation with content-type configuration.
+- Reorganized `CR-006` with clearer proposed implementation subsections and follow-up change request candidates.
+
 ## 2026-05-06
 
 ### Added
