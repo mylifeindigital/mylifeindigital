@@ -2,6 +2,20 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-05-21
+
+### Added
+
+- Added `CR-015` to plan a template-driven content generator for `post` and `about` content creation.
+- Added the root `new-content` workflow, MVP Markdown templates, and focused generator tests for draft `post` and `about` content creation.
+- Added `CR-016` to plan standalone About content rendering in the web app.
+
+### Changed
+
+- Clarified `CR-015` acceptance criteria with focused test outcomes and root content-tooling ESM alignment for the MVP content generation slice.
+- Moved root content-tooling execution to the ESM-aligned `tsx` path while preserving `new-session` and `update-date` commands.
+- Added TypeScript, Node.js, verification, and dependency guidance for coding agents in `AGENTS.md`.
+
 ## 2026-05-17
 
 ### Changed

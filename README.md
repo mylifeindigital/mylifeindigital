@@ -65,6 +65,28 @@ The `web/package-lock.json` file is intentionally kept for Cloudflare builds tha
 
 ---
 
+## Content Authoring
+
+Root content tooling runs through the ESM TypeScript script path.
+
+Create draft content from the MVP templates:
+
+```bash
+npm run new-content -- --type post --title "My New Post"
+npm run new-content -- --type about --title "About"
+```
+
+The post template writes title-slugged drafts under `content/posts/`. The About template writes the standalone MVP draft to `content/pages/about.md`. Generated files default to `draft: true`.
+
+Technical-session creation and content date maintenance remain available:
+
+```bash
+npm run new-session
+npm run update-date -- content/posts/my-post.md
+```
+
+---
+
 ## 📅 Current Focus
 
 **Phase:** Foundations & Architecture  
