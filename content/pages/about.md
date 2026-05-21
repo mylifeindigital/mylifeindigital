@@ -4,7 +4,7 @@ description: "A personal digital space for software, AI experiments, side projec
 contentType: "about"
 layout: "article"
 slug: "about"
-draft: true
+draft: false
 ---
 
 # My Life in Digital

@@ -29,7 +29,7 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-013 | Add CI content validation checks | Proposed | Medium | Quality | 2026-05-06 | Pending detail |
 | CR-014 | Reassess generated content artifact strategy | Proposed | Medium | Architecture | 2026-05-06 | Pending detail |
 | CR-015 | Template-driven content generator | Done | High | Content Operations | 2026-05-21 | [CR-015-template-driven-content-generator.md](./CR-015-template-driven-content-generator.md) |
-| CR-016 | Render standalone About content | Planned | High | Web Content | 2026-05-21 | [CR-016-render-standalone-about-content.md](./CR-016-render-standalone-about-content.md) |
+| CR-016 | Render standalone About content | Done | High | Web Content | 2026-05-21 | [CR-016-render-standalone-about-content.md](./CR-016-render-standalone-about-content.md) |
 
 ## Status Guide
 
