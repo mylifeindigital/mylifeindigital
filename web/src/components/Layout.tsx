@@ -73,6 +73,7 @@ export function Layout({ title, siteTitle, sections = [], socialLinks = {}, prel
                         </a>
                         <nav>
                             <a href="/">Home</a>
+                            <a href="/about">About</a>
                             {sections.map(section => (
                                 <a href={`/${section.slug}`}>{section.title}</a>
                             ))}

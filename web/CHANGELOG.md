@@ -6,7 +6,7 @@ All notable changes to the web app will be documented in this file.
 
 ### Added
 
-- Standalone About content authored in Markdown now renders at `/about`
+- Standalone About content authored in Markdown now renders at `/about` and appears in shared navigation
 
 ## [0.3.1] - 2026-03-01
 

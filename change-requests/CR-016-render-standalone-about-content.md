@@ -55,6 +55,7 @@ Implemented the first standalone authored page path for the web app:
 - Added build-time handling for the fixed About source at `content/pages/about.md` so it is processed with the Markdown pipeline into standalone page data instead of a listed `pages` section.
 - Added a dedicated `/about` runtime route and cache lookup while keeping listed post and technical-session routing unchanged.
 - Reused the article renderer with standalone Home navigation so About does not link back to a synthetic section route.
+- Added About to the shared layout navigation.
 - Published the checked-in About content by setting `draft: false`.
 - Bumped the web app to `0.3.2` and recorded the change in `web/CHANGELOG.md`.
 
