@@ -5,6 +5,7 @@ import { siteContent, postsData } from './posts-data.js';
 const contentCache: SiteContent = siteContent;
 const sectionsCache: Section[] = contentCache.sections;
 const allItemsCache: ContentItem[] = contentCache.allItems;
+const standalonePagesCache: ContentItem[] = contentCache.standalonePages;
 
 // Build lookup maps for fast access
 const itemsBySectionCache: Map<string, ContentItem[]> = new Map(
@@ -15,6 +16,9 @@ const itemBySlugCache: Map<string, ContentItem> = new Map(
 );
 const sectionBySlugCache: Map<string, Section> = new Map(
     sectionsCache.map(section => [section.slug, section])
+);
+const standalonePageBySlugCache: Map<string, ContentItem> = new Map(
+    standalonePagesCache.map(page => [page.slug, page])
 );
 
 /**
@@ -57,6 +61,13 @@ export function getItemBySlug(sectionSlug: string, itemSlug: string): ContentIte
  */
 export function getAllItems(): ContentItem[] {
     return [...allItemsCache];
+}
+
+/**
+ * Get a standalone page by its stable slug.
+ */
+export function getStandalonePageBySlug(slug: string): ContentItem | null {
+    return standalonePageBySlugCache.get(slug) || null;
 }
 
 /**

@@ -43,6 +43,14 @@ const dryRun = args.includes('--dry-run');
 // Track ImageGeneratorProcessor for manifest saving
 let imageGeneratorProcessor: ImageGeneratorProcessor | null = null;
 
+const standalonePageSources = [
+    {
+        slug: 'about',
+        section: 'pages',
+        relativePath: join('pages', 'about.md'),
+    },
+] as const;
+
 /**
  * Create the markdown processing pipeline.
  */
@@ -149,6 +157,9 @@ async function getAllSections(
     contentDir: string
 ): Promise<Section[]> {
     const sections: Section[] = [];
+    const standaloneSections = new Set(
+        standalonePageSources.map(page => page.section)
+    );
 
     if (!existsSync(contentDir)) {
         console.warn(`⚠️ Content directory not found: ${contentDir}`);
@@ -161,7 +172,7 @@ async function getAllSections(
         const entryPath = join(contentDir, entry);
         const stat = statSync(entryPath);
 
-        if (stat.isDirectory()) {
+        if (stat.isDirectory() && !standaloneSections.has(entry)) {
             console.log(`  📁 Section: ${entry}`);
             const sectionSlug = entry;
             const items = await getSectionContent(pipeline, entryPath, sectionSlug);
@@ -178,6 +189,42 @@ async function getAllSections(
 
     // Sort sections alphabetically by title
     return sections.sort((a, b) => a.title.localeCompare(b.title));
+}
+
+/**
+ * Get standalone pages that render outside listed section routes.
+ */
+async function getStandalonePages(
+    pipeline: MarkdownProcessingPipeline,
+    contentDir: string
+): Promise<ContentItem[]> {
+    const pages: ContentItem[] = [];
+
+    for (const page of standalonePageSources) {
+        const filePath = join(contentDir, page.relativePath);
+
+        if (!existsSync(filePath)) {
+            console.warn(`⚠️ Standalone page not found: ${filePath}`);
+            continue;
+        }
+
+        const item = await parseMarkdownFile(
+            pipeline,
+            filePath,
+            page.slug,
+            page.section
+        );
+
+        if (item === null) {
+            console.log(`  📝 [draft] Standalone page: ${page.relativePath}`);
+            continue;
+        }
+
+        pages.push(item);
+        console.log(`  📄 Standalone page: ${page.relativePath}`);
+    }
+
+    return pages;
 }
 
 /**
@@ -223,11 +270,13 @@ async function main(): Promise<void> {
 
     const pipeline = createPipeline();
     const sections = await getAllSections(pipeline, contentDir);
+    const standalonePages = await getStandalonePages(pipeline, contentDir);
     const allItems = sections.flatMap(section => section.items);
 
     const siteContent: SiteContent = {
         sections,
         allItems,
+        standalonePages,
     };
 
     // Save image manifest if we generated images
@@ -241,6 +290,7 @@ async function main(): Promise<void> {
     console.log(`✅ Generated content data:`);
     console.log(`   - ${sections.length} section(s)`);
     console.log(`   - ${allItems.length} item(s) total`);
+    console.log(`   - ${standalonePages.length} standalone page(s)`);
     sections.forEach(section => {
         console.log(`   - ${section.title}: ${section.items.length} item(s)`);
     });

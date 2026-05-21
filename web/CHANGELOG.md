@@ -2,6 +2,12 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.3.2] - 2026-05-21
+
+### Added
+
+- Standalone About content authored in Markdown now renders at `/about`
+
 ## [0.3.1] - 2026-03-01
 
 ### Fixed
@@ -81,4 +87,3 @@ All notable changes to the web app will be documented in this file.
 ### Added
 
 - Display update date in article metadata when the `updated` field is present in frontmatter
-

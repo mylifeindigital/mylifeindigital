@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { jsxRenderer } from 'hono/jsx-renderer';
 import { indexRoute } from './routes/index.js';
+import { aboutRoute } from './routes/about.js';
 import { sectionRoute } from './routes/[section]/index.js';
 import { contentItemRoute } from './routes/[section]/[slug].js';
 import { adminApp, adminApi } from './routes/admin/index.js';
@@ -22,6 +23,12 @@ app.route('/api/admin', adminApi);
 app.get('/', (c) => {
     const config = getConfig(c.env);
     return c.render(indexRoute(config));
+});
+
+// Standalone authored pages must be registered before dynamic section routes
+app.get('/about', (c) => {
+    const config = getConfig(c.env);
+    return c.render(aboutRoute(config));
 });
 
 // Section listing route (e.g., /posts, /technical-sessions)

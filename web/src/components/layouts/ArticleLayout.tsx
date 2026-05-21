@@ -12,8 +12,12 @@ import type { DisplaySchema } from '../../schemas/content-schemas.js';
 
 interface ArticleLayoutProps {
   item: ContentItem;
-  section: Section;
+  section?: Section;
   schema: DisplaySchema;
+  backLink?: {
+    href: string;
+    label: string;
+  };
 }
 
 function formatDate(dateString?: string): string {
@@ -53,10 +57,16 @@ function TocSidebar({ toc }: { toc?: TocEntry[] }) {
   );
 }
 
-export function ArticleLayout({ item, section, schema }: ArticleLayoutProps) {
+export function ArticleLayout({ item, section, schema, backLink }: ArticleLayoutProps) {
   const hasToc = item.toc && item.toc.length > 0;
   const heroImage = item.metadata.image;
   const heroImageAlt = item.metadata.imageAlt || `Cover image for ${item.metadata.title}`;
+  const navigation = backLink ?? (section
+    ? {
+        href: `/${section.slug}`,
+        label: section.title,
+      }
+    : null);
 
   return (
     <div class={`article-wrapper ${hasToc ? 'has-toc' : ''}`}>
@@ -64,7 +74,9 @@ export function ArticleLayout({ item, section, schema }: ArticleLayoutProps) {
 
       <article class="article">
         <header class="article-header">
-          <a href={`/${section.slug}`} class="back-link">← {section.title}</a>
+          {navigation && (
+            <a href={navigation.href} class="back-link">← {navigation.label}</a>
+          )}
 
           {heroImage && (
             <div class="article-hero">
@@ -105,10 +117,11 @@ export function ArticleLayout({ item, section, schema }: ArticleLayoutProps) {
         <div class="post-content">{raw(item.html)}</div>
 
         <footer class="article-footer">
-          <a href={`/${section.slug}`} class="btn">← Back to {section.title}</a>
+          {navigation && (
+            <a href={navigation.href} class="btn">← Back to {navigation.label}</a>
+          )}
         </footer>
       </article>
     </div>
   );
 }
-

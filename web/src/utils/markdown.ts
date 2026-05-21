@@ -46,6 +46,7 @@ export interface Section {
 export interface SiteContent {
     sections: Section[];
     allItems: ContentItem[];
+    standalonePages: ContentItem[];
 }
 
 // Backward compatibility aliases
