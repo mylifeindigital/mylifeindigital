@@ -70,6 +70,17 @@ Section rendering is schema-driven through `web/src/schemas/content-schemas.ts`.
 - Environment typing lives in `web/src/config.ts`.
 - JSX uses Hono's JSX runtime.
 
+## TypeScript And Node.js Changes
+
+- Preserve strict TypeScript behavior. Do not weaken types, compiler settings, or error handling just to make a change compile.
+- Prefer project-local types, schemas, utilities, and service patterns before introducing new abstractions.
+- Treat external data as a trust boundary. Validate or narrow request input, environment bindings, API responses, frontmatter, and admin-facing data before relying on it.
+- Keep async control flow explicit. Await or return promises intentionally, handle failures at the appropriate boundary, and clean up resources or timeouts where the change introduces them.
+- Runtime code under `web/src/` must remain compatible with the Cloudflare Worker deployment model. Keep Node-only assumptions in scripts or experiments unless the existing Worker configuration clearly supports them.
+- Use npm and the repository's existing workspace scripts. Do not switch package managers or invent alternate command paths when an existing script covers the workflow.
+- Add dependencies deliberately. Prefer existing dependencies or platform APIs where they fit, and verify package compatibility with the relevant runtime before changing package manifests.
+- Scale verification to the risk of the change. Run the smallest relevant existing checks first, broaden verification for shared or user-facing behavior, and state clearly when a relevant check is unavailable or was not run.
+
 ## Admin System
 
 - Auth uses the Cloudflare Access email header with a local development bypass.

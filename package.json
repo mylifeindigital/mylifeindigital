@@ -2,6 +2,7 @@
   "name": "mylifeindigital",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "My Life In Digital monorepo",
   "workspaces": [
     "web",
@@ -12,8 +13,11 @@
     "build:utils": "npm run build --workspace=ts-core-utils",
     "build:web": "npm run build --workspace=web",
     "deploy": "npm run update-date -- --all && npm run deploy --workspace=web",
-    "new-session": "npx ts-node scripts/new-session.ts",
-    "update-date": "npx ts-node scripts/update-date.ts"
+    "new-content": "tsx scripts/new-content.ts",
+    "new-session": "tsx scripts/new-session.ts",
+    "test:scripts": "tsx --test scripts/content/*.test.ts",
+    "typecheck:scripts": "tsc",
+    "update-date": "tsx scripts/update-date.ts"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +25,7 @@
   "devDependencies": {
     "@types/node": "^25.0.3",
     "ts-node": "^10.9.2",
+    "tsx": "^4.22.3",
     "typescript": "^5.9.3"
   }
 }

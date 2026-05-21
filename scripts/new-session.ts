@@ -1,11 +1,13 @@
-#!/usr/bin/env npx ts-node
+#!/usr/bin/env -S npx tsx
 
 import * as fs from "fs";
 import * as path from "path";
 import * as readline from "readline";
+import { fileURLToPath } from "url";
 
-const CONTENT_DIR = path.join(__dirname, "..", "content", "technical-sessions");
-const TEMPLATE_PATH = path.join(__dirname, "templates", "technical-session.md");
+const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
+const CONTENT_DIR = path.join(SCRIPT_DIR, "..", "content", "technical-sessions");
+const TEMPLATE_PATH = path.join(SCRIPT_DIR, "templates", "technical-session.md");
 
 function prompt(question: string): Promise<string> {
   const rl = readline.createInterface({
