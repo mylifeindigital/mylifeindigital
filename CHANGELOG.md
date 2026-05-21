@@ -2,6 +2,38 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-05-17
+
+### Changed
+
+- Expanded `CR-006` with the current section-driven content model and future `contentType` modeling consideration.
+- Clarified in `CR-006` that `contentType` should drive workflow and metadata schema, while `layout` controls visual rendering and `section` controls grouping/listing behavior.
+- Updated the `CR-006` MVP focus to listed post content and a standalone about page, with technical sessions treated as existing supported content outside the first MVP focus.
+- Simplified the `CR-006` template model toward MVP template selection, title prompts, slugged files, draft defaults, and known layout options.
+- Clarified in `CR-006` that templates should use Markdown files for generated content shape plus a small registry/config for prompts, output paths, and required metadata rules.
+- Added explicit MVP metadata operations for post and about content in `CR-006`, including the boundary between layout rendering and listing behavior.
+- Defined the `CR-006` MVP rule that unresolved AI assistance markers are allowed in drafts but block publish readiness.
+- Closed `CR-006` with the scoped content operations outcome, completed acceptance criteria, and follow-up implementation direction.
+
+## 2026-05-16
+
+### Changed
+
+- Expanded the `CR-006` content operations lifecycle with the current `build-posts.ts` pipeline behavior.
+- Clarified the role of root content authoring utilities in `CR-006`, including `new-session` and `update-date`.
+
+## 2026-05-10
+
+### Added
+
+- Added `CR-006` detail for defining the content operations app scope and workflows.
+
+### Changed
+
+- Expanded `CR-006` with an AI assistance marker/provenance strategy to evaluate.
+- Refined `CR-006` to define content creation as a template-driven operation with content-type configuration.
+- Reorganized `CR-006` with clearer proposed implementation subsections and follow-up change request candidates.
+
 ## 2026-05-06
 
 ### Added
