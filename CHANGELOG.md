@@ -11,6 +11,9 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 - Updated the `CR-006` MVP focus to listed post content and a standalone about page, with technical sessions treated as existing supported content outside the first MVP focus.
 - Simplified the `CR-006` template model toward MVP template selection, title prompts, slugged files, draft defaults, and known layout options.
 - Clarified in `CR-006` that templates should use Markdown files for generated content shape plus a small registry/config for prompts, output paths, and required metadata rules.
+- Added explicit MVP metadata operations for post and about content in `CR-006`, including the boundary between layout rendering and listing behavior.
+- Defined the `CR-006` MVP rule that unresolved AI assistance markers are allowed in drafts but block publish readiness.
+- Closed `CR-006` with the scoped content operations outcome, completed acceptance criteria, and follow-up implementation direction.
 
 ## 2026-05-16
 

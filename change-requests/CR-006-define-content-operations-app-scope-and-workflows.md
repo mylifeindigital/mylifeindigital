@@ -1,6 +1,6 @@
 # CR-006: Define Content Operations App Scope and Workflows
 
-Status: Planned  
+Status: Done  
 Priority: High  
 Area: Content Operations  
 Created: 2026-05-06
@@ -171,6 +171,52 @@ For example, a future generator could support:
 
 This keeps the operation extensible. Adding a new content type should mean adding a template and configuration entry, not writing a new generator from scratch.
 
+### Metadata Operations
+
+Metadata operations should be driven by the selected content type and its template config. The content operations app should show the metadata fields that matter for the selected content type, distinguish required fields from optional fields, and validate required values before publish readiness.
+
+`layout` should remain a rendering choice. It should not be the primary way to decide whether content belongs in a listing or behaves as a standalone page. Listing behavior should be defined by the content type/template model for the MVP unless a later need requires per-file overrides.
+
+#### Post Metadata
+
+`post` represents listed content that belongs to a section such as `posts`.
+
+Required metadata:
+
+- `title` for the visible title and slug input when the content file is created;
+- `draft` for publish protection, defaulting to `true` for newly generated content;
+- `contentType` with the value `post`;
+- `layout` with a known frontend layout value, likely `article` for the first MVP;
+- `section` for listing/grouping behavior, likely `posts`;
+- `date` for published/listed content ordering and display.
+
+Optional metadata:
+
+- `updated` for update tracking when needed;
+- `tags` for descriptive labels;
+- `description` for summary or metadata use;
+- `heroSection` for featured/homepage behavior;
+- `author` if author information is retained as a defaulted or optional value rather than required input.
+
+#### About Metadata
+
+`about` represents standalone single-page content.
+
+Required metadata:
+
+- `title` for the visible page title;
+- `draft` for publish protection, defaulting to `true` for newly generated content;
+- `contentType` with the value `about`;
+- `layout` with a known frontend layout value, initially using an existing layout unless a dedicated page layout is later added;
+- `slug` or stable generated filename identity, likely `about` for the first page.
+
+Optional metadata:
+
+- `updated` for update tracking when useful;
+- `description` for summary or metadata use.
+
+For the MVP, standalone page listing behavior should be represented by the `about` content type/template config rather than by the selected layout. An about page may reuse an article-style layout while still remaining a standalone page instead of listed section content.
+
 ### AI Assistance
 
 Define AI assistance as a controlled authoring companion rather than a replacement writer. The app should explore highlighting content for AI help, asking for clearer explanations, refining technical definitions, and preserving visibility into where AI assisted versus where the author wrote unaided.
@@ -188,7 +234,9 @@ The marker schema still needs definition, but the shape could support informatio
 - optional prompt or rationale metadata;
 - created or resolved timestamps.
 
-A future processor should be separate from `ExcludeProcessor`, for example `AiAssistanceProcessor`, so hidden author notes and AI provenance remain distinct concepts. The build pipeline should define how unresolved AI assistance blocks are handled before publishing, such as warning, failing validation, excluding suggestions, or rendering only accepted content.
+A future processor should be separate from `ExcludeProcessor`, for example `AiAssistanceProcessor`, so hidden author notes and AI provenance remain distinct concepts.
+
+For the MVP, unresolved AI assistance markers are allowed while content remains in draft. Publish readiness must block when unresolved AI assistance markers remain in content intended for publishing. The author should resolve the suggestion by accepting it, rejecting it, or producing final wording before the content can be considered ready to publish.
 
 ### Non-Goals
 
@@ -217,16 +265,16 @@ The first useful implementation slices are likely:
 
 ## Acceptance Criteria
 
-- [ ] The content operations lifecycle is documented from idea to publish.
-- [ ] The MVP workflows for listed post content and standalone about page content are defined.
-- [ ] Content creation is defined as a template-driven operation with content-type configuration.
-- [ ] Existing npm scripts and build processors relevant to content operations are identified.
-- [ ] Metadata operations are defined, including section, tags, hero section, dates, and author handling.
-- [ ] AI assistance boundaries are defined, including how assisted text should remain visible or traceable.
-- [ ] A proposed AI assistance marker/provenance strategy is documented, including how unresolved suggestions should behave before publishing.
-- [ ] Local-first and Git-first constraints are explicitly preserved.
-- [ ] Non-goals for the first content operations app scope are documented.
-- [ ] Follow-up implementation CRs are identified for the first concrete slices.
+- [x] The content operations lifecycle is documented from idea to publish.
+- [x] The MVP workflows for listed post content and standalone about page content are defined.
+- [x] Content creation is defined as a template-driven operation with content-type configuration.
+- [x] Existing npm scripts and build processors relevant to content operations are identified.
+- [x] Metadata operations are defined for listed post content and standalone about page content, including section, tags, hero section, dates, and author handling where relevant.
+- [x] AI assistance boundaries are defined, including how assisted text should remain visible or traceable.
+- [x] A proposed AI assistance marker/provenance strategy is documented, including how unresolved suggestions should behave before publishing.
+- [x] Local-first and Git-first constraints are explicitly preserved.
+- [x] Non-goals for the first content operations app scope are documented.
+- [x] Follow-up implementation CRs are identified for the first concrete slices.
 
 ## Implementation Notes
 
@@ -341,7 +389,7 @@ Readiness checks should include:
 - required metadata is present and valid;
 - section and tags are correct;
 - generated images are present or intentionally omitted;
-- unresolved AI assistance markers are handled according to the future AI marker rules;
+- unresolved AI assistance markers have been resolved before content is considered publish-ready;
 - generated artifacts are understood before committing;
 - Git status is clear enough to know what will be synced or published.
 
@@ -370,3 +418,29 @@ That build reruns the same content processing pipeline, generates `web/src/utils
 The draft flag is the main protection against incomplete content being published. Future validation should also decide whether unresolved AI assistance markers, missing metadata, or failed image generation should warn or block publishing.
 
 ## Outcome
+
+CR-006 defines content operations as the local-first workflow around creating, editing, validating, previewing, enriching, syncing, and publishing Markdown content while preserving Git as the source of truth.
+
+The first content operations app should be an Electron-based companion to the existing repository workflow, not a CMS replacement. It should make existing authoring and build behavior easier to understand and operate while the Cloudflare Worker remains responsible for rendering generated content at runtime.
+
+The MVP content focus is:
+
+- listed `post` content for section-based collections such as `posts`;
+- standalone `about` page content for single-page workflows.
+
+Technical sessions remain supported by the current pipeline but are not the first MVP authoring focus.
+
+Content creation should be template-driven without becoming over-engineered. Templates should be stored as Markdown files for generated frontmatter and starter body content, with a small registry/config describing prompts, output paths, slug behavior, required and optional metadata, and known layout options. New generated content should default to `draft: true`.
+
+The current content model is generic and section-driven. Future work should preserve the useful generic Markdown pipeline while clarifying the boundary between:
+
+- `section` for grouping, navigation, folder placement, and listing behavior;
+- `contentType` for authoring workflow, metadata schema, template selection, validation, and Electron editing UI;
+- `layout` for known frontend rendering behavior;
+- `template` for generated Markdown shape.
+
+The current repository utilities and web build pipeline provide the initial operational foundation: root authoring scripts create technical-session content and maintain frontmatter dates, while `web/scripts/build-posts.ts` processes Markdown through frontmatter, draft filtering, Git date enrichment, excludes, optional image generation, AST, table of contents, and HTML rendering before generating runtime content data.
+
+AI assistance should be treated as a controlled revision and learning companion. A future AI assistance marker strategy should keep assisted edits visible or traceable in Markdown and use a dedicated processor path rather than overloading exclusion markers. Unresolved AI assistance markers may remain in drafts, but they must block publish readiness until the author accepts, rejects, or resolves them into final wording.
+
+Follow-up implementation work should be split into smaller change requests for the generic template-driven content generator, post and about templates, metadata editing and validation, preview/build readiness, AI assistance marker processing, and any content tooling extraction needed to share operations with the Electron app.
