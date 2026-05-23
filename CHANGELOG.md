@@ -7,6 +7,7 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 ### Added
 
 - Added `CR-017` to track converting `docs/` into a Git-backed LLM wiki.
+- Added `CR-007` detail for deciding whether to keep one repository or split Markdown content into a separate content repository.
 - Added `docs/README.md`, `docs/WIKI.md`, and initial `docs/wiki/` pages for agent working memory.
 - Added a repo-local `llm-wiki` skill for ingesting, querying, and maintaining the docs wiki.
 - Added a repo-local `backlog-grooming` skill for maintaining change requests and indexing durable details into the docs wiki.
