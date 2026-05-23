@@ -1,6 +1,6 @@
 # CR-005: Decide Electron vs Tauri for Content Operations App
 
-Status: Planned  
+Status: Done
 Priority: High  
 Area: Content Operations  
 Created: 2026-05-06

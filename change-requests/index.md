@@ -32,6 +32,17 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-016 | Render standalone About content | Done | High | Web Content | 2026-05-21 | [CR-016-render-standalone-about-content.md](./CR-016-render-standalone-about-content.md) |
 | CR-017 | Convert docs to LLM wiki | Done | Medium | Process | 2026-05-23 | [CR-017-convert-docs-to-llm-wiki.md](./CR-017-convert-docs-to-llm-wiki.md) |
 
+## Backlog Grooming Notes
+
+### 2026-05-23
+
+- Detail coverage: `CR-001` through `CR-006` and `CR-015` through `CR-017` have detail files. `CR-007` through `CR-014` remain lightweight proposed rows and need detail files before they move toward planning or implementation.
+- Status reconciliation: `CR-005` is complete in the dashboard and now matches its detail file status. Its acceptance criteria are checked and its outcome records the Electron decision.
+- Completed follow-up slices: `CR-015` and `CR-016` completed two concrete follow-ups from `CR-006`: template-driven content generation and standalone About rendering.
+- High-priority decisions: `CR-007` and `CR-008` remain proposed architecture/publishing decisions. `CR-006` noted their overlap but did not resolve them.
+- Related admin work: `CR-009` and `CR-010` should be detailed together before implementation so metadata editing and validation-panel boundaries stay clear.
+- Related pipeline work: `CR-011`, `CR-012`, `CR-013`, and `CR-014` overlap around preview, parsing, validation, and generated artifacts. Detail files should clarify dependencies before any one of them moves to `Planned`.
+
 ## Status Guide
 
 | Status | Meaning |
