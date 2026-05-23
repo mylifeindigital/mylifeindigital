@@ -51,7 +51,16 @@ export function getDashboardHtml(email: string): string {
 
         <!-- Editor + Preview -->
         <div class="editor-container">
-            <div id="monaco-editor">
+            <div class="plain-editor-shell" id="editor-shell">
+                <textarea
+                    id="content-editor"
+                    class="content-editor"
+                    aria-label="Markdown editor"
+                    autocapitalize="off"
+                    autocomplete="off"
+                    spellcheck="false"
+                    disabled
+                ></textarea>
                 <div class="welcome-screen" id="welcome-screen">
                     <h2>Dashboard</h2>
                     <p>Select a file from the sidebar or create a new one</p>
@@ -115,9 +124,6 @@ export function getDashboardHtml(email: string): string {
     </div>
 </div>
 
-<!-- Monaco AMD Loader -->
-<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
-
 <script>
 (function() {
     'use strict';
@@ -133,7 +139,8 @@ export function getDashboardHtml(email: string): string {
 
     // ---- DOM refs ----
     const $tree = document.getElementById('file-tree');
-    const $editorEl = document.getElementById('monaco-editor');
+    const $editorShell = document.getElementById('editor-shell');
+    const $editorInput = document.getElementById('content-editor');
     const $welcome = document.getElementById('welcome-screen');
     const $toolbarPath = document.getElementById('toolbar-path');
     const $btnSave = document.getElementById('btn-save');
@@ -256,11 +263,12 @@ export function getDashboardHtml(email: string): string {
             isModified = false;
 
             if (!editor) {
-                await initMonaco();
+                initEditor();
             }
 
             $welcome.style.display = 'none';
             editor.setValue(file.content);
+            editor.focus();
             $toolbarPath.innerHTML = '<span>' + file.path + '</span>';
             $btnSave.disabled = true;
             setStatus('saved', 'Loaded');
@@ -345,11 +353,12 @@ export function getDashboardHtml(email: string): string {
         isModified = true;
 
         if (!editor) {
-            await initMonaco();
+            initEditor();
         }
 
         $welcome.style.display = 'none';
         editor.setValue(template);
+        editor.focus();
         $toolbarPath.innerHTML = '<span>' + path + '</span> (new)';
         $btnSave.disabled = false;
         setStatus('modified', 'New file - unsaved');
@@ -404,8 +413,7 @@ export function getDashboardHtml(email: string): string {
         $aiMenu.classList.remove('visible');
 
         if (!editor) return;
-        const selection = editor.getSelection();
-        const selectedText = editor.getModel().getValueInRange(selection);
+        const selectedText = editor.getSelectedText();
         if (!selectedText) {
             setStatus('error', 'Select text first');
             return;
@@ -417,10 +425,7 @@ export function getDashboardHtml(email: string): string {
                 text: selectedText,
                 action: action,
             });
-            editor.executeEdits('ai-transform', [{
-                range: selection,
-                text: data.result,
-            }]);
+            editor.replaceSelection(data.result);
             setStatus('saved', 'AI transform applied');
             markModified();
         } catch (err) {
@@ -428,96 +433,88 @@ export function getDashboardHtml(email: string): string {
         }
     }
 
-    // ---- Monaco init ----
-    function initMonaco() {
-        return new Promise(function(resolve) {
-            require.config({
-                paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs' }
-            });
-            require(['vs/editor/editor.main'], function() {
-                // Define cyberpunk theme
-                monaco.editor.defineTheme('cyberpunk', {
-                    base: 'vs-dark',
-                    inherit: true,
-                    rules: [
-                        { token: 'comment', foreground: '555555', fontStyle: 'italic' },
-                        { token: 'keyword', foreground: '7c3aed' },
-                        { token: 'string', foreground: '10b981' },
-                        { token: 'number', foreground: 'f59e0b' },
-                        { token: 'type', foreground: '00d4ff' },
-                    ],
-                    colors: {
-                        'editor.background': '#0f0f23',
-                        'editor.foreground': '#e0e0e0',
-                        'editor.lineHighlightBackground': '#1a1a3e44',
-                        'editor.selectionBackground': '#7c3aed44',
-                        'editorCursor.foreground': '#00d4ff',
-                        'editorLineNumber.foreground': '#555555',
-                        'editorLineNumber.activeForeground': '#00d4ff',
-                        'editorIndentGuide.background': '#1a1a3e',
-                        'editorWidget.background': '#12122b',
-                        'editorWidget.border': '#7c3aed44',
-                        'input.background': '#0f0f23',
-                        'input.border': '#7c3aed44',
-                        'input.foreground': '#e0e0e0',
-                        'focusBorder': '#00d4ff',
-                        'list.activeSelectionBackground': '#7c3aed33',
-                        'list.hoverBackground': '#7c3aed22',
-                    }
-                });
+    // ---- Local editor init ----
+    function initEditor() {
+        if (editor) return editor;
 
-                editor = monaco.editor.create($editorEl, {
-                    value: '',
-                    language: 'markdown',
-                    theme: 'cyberpunk',
-                    fontSize: 14,
-                    fontFamily: "'JetBrains Mono', 'SF Mono', 'Fira Code', monospace",
-                    lineNumbers: 'on',
-                    minimap: { enabled: false },
-                    wordWrap: 'on',
-                    padding: { top: 12 },
-                    scrollBeyondLastLine: false,
-                    renderLineHighlight: 'line',
-                    cursorBlinking: 'smooth',
-                    smoothScrolling: true,
-                    tabSize: 2,
-                    automaticLayout: true,
-                });
+        editor = {
+            setValue: function(value) {
+                $editorInput.disabled = false;
+                $editorInput.value = value;
+                updateCursorPosition();
+            },
+            getValue: function() {
+                return $editorInput.value;
+            },
+            getSelectedText: function() {
+                return $editorInput.value.slice($editorInput.selectionStart, $editorInput.selectionEnd);
+            },
+            replaceSelection: function(value) {
+                const start = $editorInput.selectionStart;
+                const end = $editorInput.selectionEnd;
+                $editorInput.setRangeText(value, start, end, 'end');
+                $editorInput.focus();
+                handleEditorInput();
+            },
+            layout: function() {
+                $editorShell.classList.toggle('with-preview', previewVisible);
+            },
+            focus: function() {
+                $editorInput.focus();
+            },
+        };
 
-                // Track changes
-                editor.onDidChangeModelContent(function() {
-                    if (currentFile) {
-                        const modified = editor.getValue() !== currentFile.originalContent;
-                        if (modified !== isModified) {
-                            isModified = modified;
-                            $btnSave.disabled = !modified;
-                            if (modified) {
-                                setStatus('modified', 'Modified');
-                                const el = $tree.querySelector('.tree-file[data-path="' + currentFile.path + '"]');
-                                if (el) el.classList.add('modified');
-                            } else {
-                                setStatus('saved', 'Saved');
-                                const el = $tree.querySelector('.tree-file[data-path="' + currentFile.path + '"]');
-                                if (el) el.classList.remove('modified');
-                            }
-                        }
-                    }
-                    updatePreview();
-                });
-
-                // Cursor position
-                editor.onDidChangeCursorPosition(function(e) {
-                    $cursorPos.textContent = 'Ln ' + e.position.lineNumber + ', Col ' + e.position.column;
-                });
-
-                // Ctrl+S keybinding
-                editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, function() {
-                    saveFile();
-                });
-
-                resolve();
-            });
+        $editorInput.addEventListener('input', handleEditorInput);
+        $editorInput.addEventListener('click', updateCursorPosition);
+        $editorInput.addEventListener('keyup', updateCursorPosition);
+        $editorInput.addEventListener('select', updateCursorPosition);
+        $editorInput.addEventListener('focus', updateCursorPosition);
+        $editorInput.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveFile();
+            }
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                $editorInput.setRangeText('  ', $editorInput.selectionStart, $editorInput.selectionEnd, 'end');
+                handleEditorInput();
+            }
         });
+
+        return editor;
+    }
+
+    function handleEditorInput() {
+        if (currentFile && editor) {
+            const modified = editor.getValue() !== currentFile.originalContent;
+            if (modified !== isModified) {
+                isModified = modified;
+                $btnSave.disabled = !modified;
+                if (modified) {
+                    setStatus('modified', 'Modified');
+                    const el = $tree.querySelector('.tree-file[data-path="' + currentFile.path + '"]');
+                    if (el) el.classList.add('modified');
+                } else {
+                    setStatus('saved', 'Saved');
+                    const el = $tree.querySelector('.tree-file[data-path="' + currentFile.path + '"]');
+                    if (el) el.classList.remove('modified');
+                }
+            }
+        }
+        updateCursorPosition();
+        updatePreview();
+    }
+
+    function updateCursorPosition() {
+        if (!editor || $editorInput.disabled) {
+            $cursorPos.textContent = '';
+            return;
+        }
+        const beforeCursor = $editorInput.value.slice(0, $editorInput.selectionStart);
+        const lines = beforeCursor.split('\\n');
+        const lineNumber = lines.length;
+        const column = lines[lines.length - 1].length + 1;
+        $cursorPos.textContent = 'Ln ' + lineNumber + ', Col ' + column;
     }
 
     function markModified() {

@@ -1,6 +1,6 @@
 /* ===========================================
    ADMIN DASHBOARD STYLES
-   Full-viewport Monaco editor layout
+   Full-viewport local editor layout
    Reuses CSS vars from main.css
    =========================================== */
 
@@ -315,9 +315,62 @@ html.dashboard, html.dashboard body {
     position: relative;
 }
 
-#monaco-editor {
+.plain-editor-shell {
     flex: 1;
     min-width: 0;
+    position: relative;
+    display: flex;
+    background: #0f0f23;
+}
+
+.content-editor {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    resize: none;
+    border: 0;
+    outline: none;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    background: #0f0f23;
+    color: #e0e0e0;
+    caret-color: #00d4ff;
+    font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    font-size: 14px;
+    line-height: 1.55;
+    tab-size: 2;
+    overflow: auto;
+}
+
+.content-editor:disabled {
+    color: transparent;
+    cursor: default;
+}
+
+.content-editor::selection {
+    background: rgba(124, 58, 237, 0.45);
+}
+
+.content-editor::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.content-editor::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.content-editor::-webkit-scrollbar-thumb {
+    background: rgba(124, 58, 237, 0.3);
+    border-radius: 3px;
+}
+
+.plain-editor-shell .welcome-screen {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: #0f0f23;
 }
 
 /* Preview panel */

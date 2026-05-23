@@ -1,6 +1,6 @@
 # CR-004: Remove Monaco Editor From Web Admin
 
-Status: Proposed  
+Status: Done  
 Priority: Medium  
 Area: Web Admin  
 Created: 2026-05-06
@@ -31,23 +31,45 @@ Update `web/public/styles/admin.css` to style the replacement editor and remove 
 
 Because this is a web app runtime change, the implementation should also bump the web app version and update `web/CHANGELOG.md` when completed.
 
+## Editor Replacement Contract
+
+The replacement editor does not need to preserve Monaco-only features such as syntax highlighting, line numbers, minimap, or Monaco command APIs. It does need to provide a small local interface for the existing admin workflow:
+
+- initialize without loading external editor assets,
+- show and hide the welcome state when content is opened or created,
+- set editor content when opening an existing file or creating a new file,
+- read current editor content for saving and preview rendering,
+- detect content changes and update dirty-state UI,
+- report cursor line and column in the status bar,
+- read the selected text for AI transforms,
+- replace the selected text with AI transform results,
+- preserve focus and selection well enough that repeated edit and transform actions feel predictable,
+- handle `Ctrl/Cmd+S` consistently whether the editor or the page has focus,
+- resize cleanly when preview is toggled or the viewport changes.
+
+If the implementation uses a native `<textarea>`, prefer a small wrapper/helper around DOM operations so the rest of the admin script can use clear editor actions instead of scattering textarea-specific selection and value logic throughout the file.
+
 ## Acceptance Criteria
 
-- [ ] The admin editor no longer loads `monaco-editor` or Monaco AMD assets from any CDN.
-- [ ] `web/src/utils/admin/html.ts` has no runtime dependency on `monaco`, `require(['vs/editor/editor.main'])`, or Monaco editor APIs.
-- [ ] The replacement editor can open, edit, save, and create Markdown content through the existing admin workflow.
-- [ ] Preview updates continue to use the current content from the editor.
-- [ ] AI transforms still apply to the selected text or the appropriate editable content range.
-- [ ] Dirty-state, cursor/status display, resize/layout behavior, and `Ctrl/Cmd+S` remain usable.
-- [ ] Monaco-specific CSS is removed or replaced with styles for the new editor.
-- [ ] The web app version and `web/CHANGELOG.md` are updated with the completed change.
-- [ ] The relevant web build checks pass.
+- [x] The admin editor no longer loads `monaco-editor` or Monaco AMD assets from any CDN.
+- [x] `web/src/utils/admin/html.ts` has no runtime dependency on `monaco`, `require(['vs/editor/editor.main'])`, or Monaco editor APIs.
+- [x] The replacement editor can open, edit, save, and create Markdown content through the existing admin workflow.
+- [x] Preview updates continue to use the current content from the editor.
+- [x] AI transforms still apply to the selected text or the appropriate editable content range.
+- [x] Dirty-state, cursor/status display, resize/layout behavior, and `Ctrl/Cmd+S` remain usable.
+- [x] Monaco-specific CSS is removed or replaced with styles for the new editor.
+- [x] The web app version and `web/CHANGELOG.md` are updated with the completed change.
+- [x] The relevant web build checks pass.
 
 ## Implementation Notes
 
 - Initial code search found Monaco usage concentrated in `web/src/utils/admin/html.ts` and Monaco-oriented admin editor styles in `web/public/styles/admin.css`.
 - `web/CHANGELOG.md` includes historical text describing the Monaco-based dashboard; update the current changelog only as part of the eventual implementation unless release history itself needs clarification.
+- Replaced Monaco with a small textarea-backed editor wrapper inside `web/src/utils/admin/html.ts`.
+- Added local editor styles in `web/public/styles/admin.css`.
+- Bumped the web app to `0.3.3` in `web/package.json`, `web/package-lock.json`, `package-lock.json`, and `web/src/version.ts`.
+- Verified with `npm run build --workspace=web` and a syntax check of the embedded admin script.
 
 ## Outcome
 
-Record what actually changed before marking the request `Done`.
+Implemented the Monaco removal from the web admin dashboard. The admin now uses a local textarea-backed Markdown editor for content editing, preview rendering, save/dirty-state tracking, cursor status, keyboard save handling, and AI selection replacement without loading Monaco or external editor assets.
