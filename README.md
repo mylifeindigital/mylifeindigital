@@ -34,7 +34,7 @@ If you’re reading this: welcome to the engine room.
 /content/technical-sessions - Sessions → Technical session logs  
 /experiments      → Isolated technical explorations  
 /web              → A website build using Cloudflare workers   
-/docs             → contains docs not used for content publication
+/docs             → Git-backed LLM wiki for non-published repository knowledge
 /change-requests  → Local-first planned implementation requests
 /AGENTS.md        → Canonical coding-agent guide
 /CHANGELOG.md     → Repository-level changelog
@@ -127,7 +127,7 @@ Exploring:
 | [2025-12-22](./content/technical-sessions/2025-12-w4-cloudflare-workers.md) | Cloudflare  | Built a basic Hono app hosted on Cloudflare Workers |
 | [2025-12-22](./content/technical-sessions/2025-12-w4-web-code-deep-dive.md) | Hono  | Reading through code |
 | [2025-12-28](./content/technical-sessions/2025-12-w4-hono-agent-orchestrator.md) | Hono  | Thinking about building an agent orchestrator using Hono |
-|            |[PRD for AI Agent Orchestrator](./docs/prd-ai-agent-orchestrator.md) ||
+|            |[PRD for AI Agent Orchestrator](./docs/raw/prd-ai-agent-orchestrator.md) ||
 | [2025-01-01](./content/technical-sessions/2026-01-w1-typescript-general.md) | Typescript  | General topics |
 | [2025-01-03](./content/technical-sessions/2026-01-w1-typescript.md) | Typescript  | General topics |
 | [2025-01-07](./content/technical-sessions/2026-01-w1-markdown-parsing.md) | Markdown  | Markdown Parsing |

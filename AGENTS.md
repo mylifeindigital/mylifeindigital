@@ -12,7 +12,7 @@ This file is the canonical guide for coding agents working in this repository. T
 - `content/` - Markdown content organized by section, including `posts/` and `technical-sessions/`.
 - `experiments/` - Isolated technical explorations, including the `ts-core-utils` workspace.
 - `scripts/` - Root-level utilities such as session creation and date updates.
-- `docs/` - Non-published documentation.
+- `docs/` - Git-backed LLM wiki for non-published repository knowledge, with raw sources in `docs/raw/` and maintained pages in `docs/wiki/`.
 - `change-requests/` - Local-first planned implementation requests.
 
 ## Commands
@@ -99,6 +99,17 @@ Use `change-requests/` for local-first planning and implementation tracking.
 - Use stable IDs such as `CR-001`, `CR-002`, and keep one implementation outcome per request.
 
 When a user asks for planned work, implementation tracking, CRs, or PRD-like notes, follow the change-request workflow before or during implementation as appropriate.
+
+## Docs Wiki
+
+Use `docs/` as an LLM-maintained wiki for repository knowledge.
+
+- `docs/raw/` contains source notes and assets. Do not edit raw sources during wiki maintenance unless the user explicitly asks.
+- `docs/wiki/` contains compiled wiki pages maintained by agents.
+- `docs/WIKI.md` defines the ingest, query, and maintenance workflows.
+- `.agents/skills/llm-wiki/SKILL.md` is the repo-local skill for docs wiki work.
+
+When a user asks to ingest a note into the wiki, query the docs wiki, or lint/maintain wiki pages, use the `llm-wiki` skill and preserve source provenance back to `docs/raw/`.
 
 ## Git Workflow
 

@@ -2,6 +2,19 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-05-23
+
+### Added
+
+- Added `CR-017` to track converting `docs/` into a Git-backed LLM wiki.
+- Added `docs/README.md`, `docs/WIKI.md`, and initial `docs/wiki/` pages for agent working memory.
+- Added a repo-local `llm-wiki` skill for ingesting, querying, and maintaining the docs wiki.
+
+### Changed
+
+- Moved existing docs notes and assets into `docs/raw/` as the wiki source layer.
+- Updated agent guidance to describe the docs wiki workflow.
+
 ## 2026-05-21
 
 ### Added
