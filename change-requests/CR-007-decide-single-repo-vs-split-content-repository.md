@@ -109,6 +109,26 @@ The migration plan should decide whether `posts-data.ts` remains committed tempo
 
 Generated image assets and image manifests should be handled separately from publishable Markdown. They may be committed, uploaded to object storage such as R2, or regenerated depending on the existing image pipeline and the follow-up migration plan.
 
+### Local Development, Validation, And Deployment
+
+Local development should use two separate Git repositories in one VS Code workspace:
+
+- `mylifeindigital` for application code, build pipeline, docs, change requests, and experiments.
+- `mylifeindigital.content` for publishable Markdown content and content-owned assets.
+
+The application repository should support a configurable content path, likely `CONTENT_DIR`, so local builds can point at the sibling content checkout. Local content preview should mean editing Markdown in `mylifeindigital.content`, running the app build or dev command from `mylifeindigital/web`, generating `web/src/utils/posts-data.ts`, and rendering the selected content through the local Worker/dev server.
+
+CI validation should be split by repository trigger:
+
+- Application repository changes should install dependencies, typecheck/build the app, run relevant tests, build against the latest approved content commit or configured default content branch, and validate that `build-posts` can read the selected content repository commit.
+- Content repository changes should validate frontmatter/schema, run `build-posts` against the app pipeline, check drafts/excludes/images/metadata rules, and confirm `web/src/utils/posts-data.ts` can be generated without treating it as authored content.
+
+Image generation should not be required for every content validation run. OpenAI-backed image generation should be a separate explicit workflow or optional CI job so missing credits, invalid credentials, or provider availability do not block ordinary Markdown validation unless the content being published requires generated images.
+
+There are no preview deployments in the current workflow, and preview deployments are intentionally out of scope for the initial split because they add operational overhead. The initial workflow should rely on local preview, schema/build validation, and production deployment through GitHub Actions. Preview deployments should be reconsidered only if rendered review, branch-based app/content pairing, or pre-production visual validation becomes a recurring need.
+
+Production deployment should be orchestrated by GitHub Actions. The workflow should check out `mylifeindigital` from the selected application ref and `mylifeindigital.content` from the selected content ref, set `CONTENT_DIR`, run validation, generate `web/src/utils/posts-data.ts`, deploy with `wrangler deploy`, and log the application commit SHA and content commit SHA.
+
 The decision should account for:
 
 - how content changes are created, reviewed, synced, and published;
@@ -141,7 +161,7 @@ Before implementation begins, document the migration path, including content rep
 - [x] The decision keeps `change-requests/` in the application repository and explains that CRs remain branch-per-change planning artifacts tied closely to code and implementation work.
 - [x] The decision keeps `docs/` in the application repository and explains that docs/wiki notes remain code-adjacent working memory, can evolve with CR branches, and are not publishable content source.
 - [x] The decision defines `README.md` as the code repository's public profile and portfolio front door, not the canonical content index after the split.
-- [ ] The decision describes how local development, CI validation, deploy previews, and production deployment will work after the decision.
+- [x] The decision describes how local development, CI validation, deploy previews, and production deployment will work after the decision.
 - [ ] The decision identifies how browser admin, Electron/content operations, terminal, and script-based authoring flows are affected.
 - [ ] The decision preserves a practical VS Code workflow where website code and Markdown content can be visible in one workspace/solution view, even if they live in separate Git repositories.
 - [ ] The decision clarifies that VS Code remains the near-term Markdown editing tool until the Electron POC is mature enough for real content operations.
