@@ -22,6 +22,19 @@ The raw editor design note raises a manifest concept for each content item. The 
 
 This remains an open design question. It may become useful if suggestions, review state, or AI assistance history need to persist outside the Markdown file itself.
 
+## Content Planning
+
+The editor may also need a pre-draft planning mode where an assistant proposes a structured content plan before a Markdown file exists or before a rough note becomes publishable.
+
+Practical suggestions should likely stay close to authoring outcomes:
+
+- possible post angles from existing ideas or repository activity
+- outlines with sections, working titles, and likely metadata
+- gaps, audience questions, and follow-up prompts for the author
+- links to related existing content when a topic risks duplication or deserves a series
+
+This planning mode should feed the same template and validation workflow as draft creation. It should not become a separate content source of truth.
+
 ## Constraints
 
 - The editor should preserve Markdown files in Git as the canonical content source.
@@ -39,4 +52,5 @@ This remains an open design question. It may become useful if suggestions, revie
 
 - [editor-design.md](../../raw/editor-design.md)
 - [design-idea.png](../../raw/design-idea.png)
+- [content-planning.md](../../raw/content-planning.md)
 - [CR-006: Define Content Operations App Scope and Workflows](../../../change-requests/CR-006-define-content-operations-app-scope-and-workflows.md)

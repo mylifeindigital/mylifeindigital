@@ -2,6 +2,13 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-05-28
+
+### Changed
+
+- Ingested the content planning raw note into the docs wiki, including editor, content operations, open questions, index, and wiki log updates.
+- Ingested the Story Crafter raw note into the docs wiki as future feature memory, including a new project page and open questions.
+
 ## 2026-05-23
 
 ### Added

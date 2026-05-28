@@ -17,6 +17,7 @@ The central direction is to keep Markdown in Git as the source of truth while im
 - [Content Editor](./projects/content-editor.md)
 - [Content Pipeline](./projects/content-pipeline.md)
 - [Content Operations App](./projects/content-operations-app.md)
+- [Story Crafter](./projects/story-crafter.md)
 - [Markdown Processing](./concepts/markdown-processing.md)
 - [Git-Backed Content](./concepts/git-backed-content.md)
 - [Authoring Surface](./decisions/authoring-surface.md)
@@ -29,3 +30,4 @@ The central direction is to keep Markdown in Git as the source of truth while im
 - [build-posts-improvements.md](../raw/build-posts-improvements.md)
 - [scaling-content-options.md](../raw/scaling-content-options.md)
 - [editor-design.md](../raw/editor-design.md)
+- [story-crafter.md](../raw/story-crafter.md)

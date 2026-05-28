@@ -14,9 +14,10 @@ Catalog of LLM-maintained wiki pages. Read this first when querying or maintaini
 
 | Page | Summary |
 | --- | --- |
-| [Content Editor](./projects/content-editor.md) | Direction for the authoring/editor experience, including templates, assistant panel, and manifest questions. |
-| [Content Operations App](./projects/content-operations-app.md) | Scope and workflow memory for the local-first content operations direction. |
+| [Content Editor](./projects/content-editor.md) | Direction for the authoring/editor experience, including templates, planning assistance, assistant panel, and manifest questions. |
+| [Content Operations App](./projects/content-operations-app.md) | Scope and workflow memory for the local-first content operations direction, including pre-draft planning. |
 | [Content Pipeline](./projects/content-pipeline.md) | Build-time Markdown processing, generated content artifacts, and scaling considerations. |
+| [Story Crafter](./projects/story-crafter.md) | Future standalone feature idea for generated story series, continuity, and mobile reading workflows. |
 
 ## Concepts
 
