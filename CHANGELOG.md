@@ -2,6 +2,17 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-05-29
+
+### Added
+
+- Added `CR-018` to decide the future role of the web admin after the content repository split.
+- Added raw notes for content split local development and authoring-flow decisions.
+
+### Changed
+
+- Expanded `CR-007` with the post-split authoring path across VS Code, Electron, terminal, scripts, and browser admin.
+
 ## 2026-05-28
 
 ### Changed

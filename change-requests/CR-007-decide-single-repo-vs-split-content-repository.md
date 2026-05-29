@@ -129,6 +129,22 @@ There are no preview deployments in the current workflow, and preview deployment
 
 Production deployment should be orchestrated by GitHub Actions. The workflow should check out `mylifeindigital` from the selected application ref and `mylifeindigital.content` from the selected content ref, set `CONTENT_DIR`, run validation, generate `web/src/utils/posts-data.ts`, deploy with `wrangler deploy`, and log the application commit SHA and content commit SHA.
 
+Before GitHub Actions production deployment is enabled, `main` should be protected in both the application repository and the content repository. The baseline protection should require pull requests before merge, require relevant status checks, block force pushes, block branch deletion, and require conversation resolution where applicable. This supports the branch-per-CR workflow and prevents direct `main` pushes from bypassing validation or triggering accidental production deployment.
+
+### Authoring Flow Impact
+
+The split repository model makes local Git the primary authoring boundary for publishable content.
+
+The browser admin should no longer be treated as the primary long-term authoring surface for publishable content. If browser editing remains, it would need to write to the content repository through a remote API such as the GitHub API. That may be useful for lightweight edits or emergency changes, but it adds vendor-specific coupling and does not align as closely with the Git-first local workflow.
+
+The Electron content operations app is the preferred future content operations surface. It should operate on the local `mylifeindigital.content` checkout and use local Git, npm scripts, validation commands, content generation commands, preview/build commands, and narrow Git operations where practical. The app should focus on content creation and operations, not on editing the code used to build the editor.
+
+Terminal authoring should remain supported for power-user, Codex-assisted, maintenance, validation, and recovery workflows. The terminal should be able to run content creation, validation, build, and Git commands against the content repository and selected application pipeline without requiring the Electron app.
+
+Script-based authoring should continue, but scripts must stop assuming publishable Markdown lives inside the application repository. Scripts such as `scripts/new-content.ts` should target the content repository through a configurable content path, likely `CONTENT_DIR` or a related setting, so new content is written to `mylifeindigital.content` instead of the application repository's current Git branch.
+
+The authoring path after the split should be explicit: VS Code is the near-term Markdown editing tool, terminal and scripts remain supported operational paths, the Electron content operations app is the preferred future content operations surface, and browser admin is not the primary content authoring path. A separate follow-up request, `CR-018`, should decide whether the existing web admin is removed, made read-only, or retained for a narrow emergency/status role.
+
 The decision should account for:
 
 - how content changes are created, reviewed, synced, and published;
@@ -162,11 +178,12 @@ Before implementation begins, document the migration path, including content rep
 - [x] The decision keeps `docs/` in the application repository and explains that docs/wiki notes remain code-adjacent working memory, can evolve with CR branches, and are not publishable content source.
 - [x] The decision defines `README.md` as the code repository's public profile and portfolio front door, not the canonical content index after the split.
 - [x] The decision describes how local development, CI validation, deploy previews, and production deployment will work after the decision.
-- [ ] The decision identifies how browser admin, Electron/content operations, terminal, and script-based authoring flows are affected.
+- [x] The decision identifies how browser admin, Electron/content operations, terminal, and script-based authoring flows are affected.
 - [ ] The decision preserves a practical VS Code workflow where website code and Markdown content can be visible in one workspace/solution view, even if they live in separate Git repositories.
 - [ ] The decision clarifies that VS Code remains the near-term Markdown editing tool until the Electron POC is mature enough for real content operations.
 - [ ] The decision clarifies that the Electron POC should operate primarily on the content repository/workspace and should not require editing the app/editor implementation code during normal content creation.
 - [ ] The decision defines the minimum branch, pull request, or sync rules needed to keep authoring work from disrupting code work.
+- [ ] The migration plan includes protecting `main` in both the application repository and content repository before GitHub Actions production deployment is enabled.
 - [ ] The decision identifies dependencies or overlaps with `CR-008` publishing workflow rules.
 - [ ] If the split-repository model is chosen, a migration plan is documented before implementation, including repository ownership, folder structure, local checkout configuration, build integration, CI/deploy changes, and rollback path.
 - [ ] Follow-up implementation change requests are identified for any repository migration, workflow automation, CI changes, or documentation updates required by the decision.
@@ -175,8 +192,10 @@ Before implementation begins, document the migration path, including content rep
 ## Implementation Notes
 
 - Related source note: `docs/raw/90-day-plan.md`.
+- Related source note: `docs/raw/authoring-flows.md`.
 - Related wiki page: `docs/wiki/concepts/git-backed-content.md`.
 - Related workflow decision: `CR-008`, which is still a pending dashboard row until its detail file exists.
+- Follow-up request: `CR-018`, which should decide the future role of the web admin after the content repository split.
 - `CR-006` notes that repository-boundary and publishing workflow decisions overlap, but does not resolve this decision.
 - Previous wiki bias was to stay with a single Git repository while treating repository boundaries as an explicit design concern. This request now supersedes that bias by choosing a separate content repository as the next direction.
 
