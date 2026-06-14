@@ -15,11 +15,6 @@ Questions that matter to future repository work.
 - What is the minimum domain content model needed before rendering?
 - Which validation failures should block local draft creation, preview, or publish readiness?
 
-## Repository Boundaries
-
-- Should content eventually move to its own repository, or should code and content stay together with better workflow discipline?
-- How much sync friction is acceptable before repository splitting becomes worth it?
-
 ## Authoring Surface
 
 - Should the primary authoring experience remain browser-based after the current 90-day window?
@@ -40,3 +35,4 @@ Questions that matter to future repository work.
 - [90-day-plan.md](../raw/90-day-plan.md)
 - [scaling-content-options.md](../raw/scaling-content-options.md)
 - [next-steps.md](../raw/next-steps.md)
+- [branching-workflows.md](../raw/branching-workflows.md)

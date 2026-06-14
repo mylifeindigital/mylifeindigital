@@ -2,6 +2,18 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-06-14
+
+### Added
+
+- Added `CR-019` to implement split-repository GitHub Actions CI/CD with a single application-owned production deployment workflow.
+
+### Changed
+
+- Ingested the content authoring raw note into the docs wiki, clarifying the VS Code and Electron authoring boundaries.
+- Ingested the branching workflow raw note, recording branch-per-CR application work and short-lived content branches with draft safeguards.
+- Ingested the branch-protection update, documenting protected `main` branches and separate validation/deployment workflows.
+
 ## 2026-05-29
 
 ### Added

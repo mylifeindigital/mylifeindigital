@@ -4,6 +4,9 @@ The content editor direction is a focused authoring surface for creating and ref
 
 ## Current Direction
 
+- VS Code remains the default Markdown editor until the Electron editor is mature enough for daily content work.
+- The intended Electron editor is focused solely on content authoring and content operations.
+- Source-code viewing, editing, and execution remain VS Code responsibilities.
 - The editor should let the author create content from templates.
 - The currently identified templates are `About` and `Post`.
 - The left side can provide a `New...` action similar to a new-chat flow, opening template selection.
@@ -40,6 +43,7 @@ This planning mode should feed the same template and validation workflow as draf
 - The editor should preserve Markdown files in Git as the canonical content source.
 - AI assistance should improve authoring flow without hiding the underlying content model.
 - Editor-specific state should not leak into published content unless explicitly modeled.
+- The editor should not expand into a general-purpose application-code IDE.
 
 ## Related Pages
 
@@ -53,4 +57,5 @@ This planning mode should feed the same template and validation workflow as draf
 - [editor-design.md](../../raw/editor-design.md)
 - [design-idea.png](../../raw/design-idea.png)
 - [content-planning.md](../../raw/content-planning.md)
+- [content-authoring.md](../../raw/content-authoring.md)
 - [CR-006: Define Content Operations App Scope and Workflows](../../../change-requests/CR-006-define-content-operations-app-scope-and-workflows.md)

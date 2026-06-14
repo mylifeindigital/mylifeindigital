@@ -116,6 +116,17 @@ Local development should use two separate Git repositories in one VS Code worksp
 - `mylifeindigital` for application code, build pipeline, docs, change requests, and experiments.
 - `mylifeindigital.content` for publishable Markdown content and content-owned assets.
 
+The practical layout can keep both repositories as sibling folders and open them through a shared VS Code workspace file:
+
+```text
+projects/
+  mylifeindigital/
+  mylifeindigital.content/
+  mylifeindigital.code-workspace
+```
+
+VS Code can then show both folders in one workspace/solution view while preserving separate Git status, branch, commit, and pull-request state for each repository. Creating and documenting the actual `.code-workspace` file belongs to migration implementation rather than this decision request.
+
 The application repository should support a configurable content path, likely `CONTENT_DIR`, so local builds can point at the sibling content checkout. Local content preview should mean editing Markdown in `mylifeindigital.content`, running the app build or dev command from `mylifeindigital/web`, generating `web/src/utils/posts-data.ts`, and rendering the selected content through the local Worker/dev server.
 
 CI validation should be split by repository trigger:
@@ -144,6 +155,18 @@ Terminal authoring should remain supported for power-user, Codex-assisted, maint
 Script-based authoring should continue, but scripts must stop assuming publishable Markdown lives inside the application repository. Scripts such as `scripts/new-content.ts` should target the content repository through a configurable content path, likely `CONTENT_DIR` or a related setting, so new content is written to `mylifeindigital.content` instead of the application repository's current Git branch.
 
 The authoring path after the split should be explicit: VS Code is the near-term Markdown editing tool, terminal and scripts remain supported operational paths, the Electron content operations app is the preferred future content operations surface, and browser admin is not the primary content authoring path. A separate follow-up request, `CR-018`, should decide whether the existing web admin is removed, made read-only, or retained for a narrow emergency/status role.
+
+### Branch, Pull Request, And Sync Rules
+
+Application work should start from an up-to-date application `main` branch and use one short-lived branch per active CR. The CR document, implementation notes, code, tests, and related docs should remain together on that branch and merge through a pull request after relevant checks pass. If the CR is abandoned, its pull request can be closed and its branch deleted without rollback work on `main`.
+
+Content work should start from an up-to-date content `main` branch and use a short-lived branch for each new content item, revision, or small group of closely related content changes. New content should default to `draft: true`, be edited and validated on its content branch, and be previewed locally against the application pipeline. When publish-ready, the content should be changed to `draft: false`, merged through a pull request, and allowed to trigger the production build from content `main`.
+
+The `draft` flag is an additional publication safeguard, not a replacement for branch isolation. Unfinished or unrelated writing should not accumulate directly on content `main`.
+
+When an outcome requires coordinated application and content changes, use a CR branch in the application repository and a content branch in the content repository. Record the paired refs in the CR or pull-request descriptions, validate them together, and merge them in an order that keeps production compatible.
+
+Hosted environments for every branch are not required for the initial workflow. Local validation and CI checks are sufficient unless preview environments later provide enough recurring value to justify the operational overhead.
 
 The decision should account for:
 
@@ -179,11 +202,11 @@ Before implementation begins, document the migration path, including content rep
 - [x] The decision defines `README.md` as the code repository's public profile and portfolio front door, not the canonical content index after the split.
 - [x] The decision describes how local development, CI validation, deploy previews, and production deployment will work after the decision.
 - [x] The decision identifies how browser admin, Electron/content operations, terminal, and script-based authoring flows are affected.
-- [ ] The decision preserves a practical VS Code workflow where website code and Markdown content can be visible in one workspace/solution view, even if they live in separate Git repositories.
-- [ ] The decision clarifies that VS Code remains the near-term Markdown editing tool until the Electron POC is mature enough for real content operations.
-- [ ] The decision clarifies that the Electron POC should operate primarily on the content repository/workspace and should not require editing the app/editor implementation code during normal content creation.
-- [ ] The decision defines the minimum branch, pull request, or sync rules needed to keep authoring work from disrupting code work.
-- [ ] The migration plan includes protecting `main` in both the application repository and content repository before GitHub Actions production deployment is enabled.
+- [x] The decision preserves a practical VS Code workflow where website code and Markdown content can be visible in one workspace/solution view, even if they live in separate Git repositories.
+- [x] The decision clarifies that VS Code remains the near-term Markdown editing tool until the Electron POC is mature enough for real content operations.
+- [x] The decision clarifies that the Electron POC should operate primarily on the content repository/workspace and should not require editing the app/editor implementation code during normal content creation.
+- [x] The decision defines the minimum branch, pull request, or sync rules needed to keep authoring work from disrupting code work.
+- [x] The migration plan includes protecting `main` in both the application repository and content repository before GitHub Actions production deployment is enabled.
 - [ ] The decision identifies dependencies or overlaps with `CR-008` publishing workflow rules.
 - [ ] If the split-repository model is chosen, a migration plan is documented before implementation, including repository ownership, folder structure, local checkout configuration, build integration, CI/deploy changes, and rollback path.
 - [ ] Follow-up implementation change requests are identified for any repository migration, workflow automation, CI changes, or documentation updates required by the decision.
@@ -193,9 +216,12 @@ Before implementation begins, document the migration path, including content rep
 
 - Related source note: `docs/raw/90-day-plan.md`.
 - Related source note: `docs/raw/authoring-flows.md`.
+- Related source note: `docs/raw/branching-workflows.md`.
 - Related wiki page: `docs/wiki/concepts/git-backed-content.md`.
+- Related wiki page: `docs/wiki/decisions/branching-workflow.md`.
 - Related workflow decision: `CR-008`, which is still a pending dashboard row until its detail file exists.
 - Follow-up request: `CR-018`, which should decide the future role of the web admin after the content repository split.
+- Follow-up implementation: `CR-019`, which should implement split-repository GitHub Actions validation and deployment.
 - `CR-006` notes that repository-boundary and publishing workflow decisions overlap, but does not resolve this decision.
 - Previous wiki bias was to stay with a single Git repository while treating repository boundaries as an explicit design concern. This request now supersedes that bias by choosing a separate content repository as the next direction.
 

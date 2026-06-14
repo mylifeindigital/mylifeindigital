@@ -14,8 +14,8 @@ Catalog of LLM-maintained wiki pages. Read this first when querying or maintaini
 
 | Page | Summary |
 | --- | --- |
-| [Content Editor](./projects/content-editor.md) | Direction for the authoring/editor experience, including templates, planning assistance, assistant panel, and manifest questions. |
-| [Content Operations App](./projects/content-operations-app.md) | Scope and workflow memory for the local-first content operations direction, including pre-draft planning. |
+| [Content Editor](./projects/content-editor.md) | Direction for the focused Electron content editor, including its boundary with VS Code, templates, planning assistance, assistant panel, and manifest questions. |
+| [Content Operations App](./projects/content-operations-app.md) | Scope and workflow memory for the local-first Electron content operations direction, with VS Code retained for source-code work. |
 | [Content Pipeline](./projects/content-pipeline.md) | Build-time Markdown processing, generated content artifacts, and scaling considerations. |
 | [Story Crafter](./projects/story-crafter.md) | Future standalone feature idea for generated story series, continuity, and mobile reading workflows. |
 
@@ -30,4 +30,5 @@ Catalog of LLM-maintained wiki pages. Read this first when querying or maintaini
 
 | Page | Summary |
 | --- | --- |
-| [Authoring Surface](./decisions/authoring-surface.md) | Current stance on browser, terminal, and desktop authoring surfaces. |
+| [Authoring Surface](./decisions/authoring-surface.md) | Current decision to use VS Code near term and a focused Electron app for future content operations. |
+| [Branching Workflow](./decisions/branching-workflow.md) | Branch-per-CR application workflow, short-lived content branches, and protected production-linked `main` branches. |

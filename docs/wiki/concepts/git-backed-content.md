@@ -14,19 +14,24 @@ The project treats Markdown in Git as the canonical content store. Authoring too
 - Cloudflare Workers cannot rely on runtime filesystem access.
 - Content must be compiled or otherwise made available during deployment.
 - App-driven commits can create repository sync friction when code and content share one repo.
-- Any future repository split should be a deliberate architectural decision.
+- Application and content commits become separate deployment inputs after the repository split.
 
-## Current Bias
+## Current Decision
 
-Stay with a single Git repository for now, but make repository boundaries an explicit design concern as content workflows mature.
+Publishable Markdown content should move to a separate Git repository, likely `mylifeindigital.content`. Application code, build tooling, change requests, docs/wiki knowledge, and experiments remain in `mylifeindigital`.
+
+Both repositories use short-lived branches. Application branches map to change requests; content branches map to content items or closely related content changes. The `draft` frontmatter flag remains a publish safeguard but does not replace branch isolation.
 
 ## Related Pages
 
 - [Content Operations App](../projects/content-operations-app.md)
 - [Content Pipeline](../projects/content-pipeline.md)
 - [Authoring Surface](../decisions/authoring-surface.md)
+- [Branching Workflow](../decisions/branching-workflow.md)
 
 ## Sources
 
 - [90-day-plan.md](../../raw/90-day-plan.md)
 - [scaling-content-options.md](../../raw/scaling-content-options.md)
+- [branching-workflows.md](../../raw/branching-workflows.md)
+- [CR-007: Decide Single Repo vs Split Content Repository](../../../change-requests/CR-007-decide-single-repo-vs-split-content-repository.md)

@@ -32,8 +32,15 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-016 | Render standalone About content | Done | High | Web Content | 2026-05-21 | [CR-016-render-standalone-about-content.md](./CR-016-render-standalone-about-content.md) |
 | CR-017 | Convert docs to LLM wiki | Done | Medium | Process | 2026-05-23 | [CR-017-convert-docs-to-llm-wiki.md](./CR-017-convert-docs-to-llm-wiki.md) |
 | CR-018 | Decide web admin role after content repository split | Proposed | Medium | Web Admin | 2026-05-29 | [CR-018-decide-web-admin-role-after-content-repository-split.md](./CR-018-decide-web-admin-role-after-content-repository-split.md) |
+| CR-019 | Implement split-repository GitHub Actions CI/CD | Proposed | High | Deployment | 2026-06-14 | [CR-019-implement-split-repository-github-actions-ci-cd.md](./CR-019-implement-split-repository-github-actions-ci-cd.md) |
 
 ## Backlog Grooming Notes
+
+### 2026-06-14
+
+- Added `CR-019` as the implementation follow-up for GitHub Actions validation and deployment across the application and content repositories.
+- The application repository owns the only production deployment workflow; the content repository validates content and requests deployment.
+- `CR-019` depends on the repository decision in `CR-007` and should align with publishing rules in `CR-008`, content validation in `CR-013`, and generated artifact handling in `CR-014`.
 
 ### 2026-05-23
 
