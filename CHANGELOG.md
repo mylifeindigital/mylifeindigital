@@ -10,6 +10,12 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 - Added `CR-021` to add `CONTENT_DIR` support to build and content-authoring tooling.
 - Added `CR-022` to update README, VS Code workspace, and local split-repository documentation.
 
+### Changed
+
+- Reconciled `CR-007` as complete after confirming its split-repository decision, follow-up implementation requests, and outcome were already documented.
+- Completed `CR-008` publishing workflow rules, including generator-bypass handling and blocking versus warning validation behavior.
+- Updated the workflow-rules raw note so it no longer depends on a temporary content draft after `CR-008` completion.
+
 ## 2026-06-14
 
 ### Added
