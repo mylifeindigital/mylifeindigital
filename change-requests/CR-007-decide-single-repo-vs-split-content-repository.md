@@ -1,6 +1,6 @@
 # CR-007: Decide Single Repo vs Split Content Repository
 
-Status: Proposed  
+Status: Done
 Priority: High  
 Area: Architecture  
 Created: 2026-05-06

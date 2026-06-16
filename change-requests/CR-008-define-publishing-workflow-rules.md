@@ -1,6 +1,6 @@
 # CR-008: Define Publishing Workflow Rules
 
-Status: Proposed  
+Status: Done
 Priority: High  
 Area: Publishing  
 Created: 2026-05-06
@@ -38,6 +38,21 @@ Use the following publishing lifecycle:
 
 The `draft` flag is a publication safeguard, not a replacement for branch isolation or validation.
 
+### Authoring And Enforcement Rules
+
+The preferred authoring path for new content is the template generator, currently `npm run new-content`, because it creates the expected file location, frontmatter shape, content type, layout, slug behavior, and `draft: true` default. After the split, the generator should target the configured content repository path rather than the application repository branch, as owned by `CR-021`.
+
+The workflow must not rely on generator usage as the only correctness mechanism. A manually created Markdown file can still enter the publishing workflow, but it must satisfy the same content validation rules as generated content before it can merge or publish. If a manually created file is missing required frontmatter, content-type metadata, slug/path expectations, `draft`, required assets, or any other publication requirement, pull-request validation should fail with a blocking error.
+
+Enforcement happens at multiple layers:
+
+- Branch protection prevents direct routine writes to content `main`.
+- Pull requests make content changes reviewable before they can merge.
+- Content validation checks the authored Markdown result, regardless of whether the file was generated or created manually.
+- The production deployment workflow builds from selected application and content refs only after trusted `main` refs or an explicit manual dispatch have been selected.
+
+Generator use is therefore a recommended creation rule and may be encouraged by documentation or future tooling, but publication safety is enforced by branch protection, pull requests, validation, and deployment ref selection.
+
 ### Publish-Readiness Rules
 
 A content item is publish-ready when:
@@ -51,6 +66,10 @@ A content item is publish-ready when:
 - the content change has been reviewed through its pull request, even when no second-person approval is required.
 
 Warnings that do not affect correctness may remain non-blocking, but the validation system should distinguish warnings from publication blockers.
+
+Blocking errors include missing required metadata, invalid frontmatter, invalid content-type metadata, `draft: true` or a missing `draft` state for content intended to publish, unresolved AI assistance markers, missing required assets, Markdown processing failures, failed application compatibility checks, and any other condition that would make the deployed content incorrect or incomplete.
+
+Non-blocking warnings may include optional metadata suggestions, editorial recommendations, non-critical asset improvements, or advisory checks that do not affect publication correctness. Warnings should be visible in pull-request validation output without preventing merge or deployment unless they are promoted to blockers by the validation policy.
 
 OpenAI-backed image generation should not run as part of every validation pass. It should be an explicit or optional workflow and should block publication only when the content requires a generated image that is missing or invalid.
 
@@ -102,22 +121,22 @@ If the source content itself must be corrected or withdrawn, make that change th
 
 ## Acceptance Criteria
 
-- [ ] The content lifecycle from branch creation through confirmed production deployment is documented.
-- [ ] Publish-readiness rules distinguish blocking errors from non-blocking warnings.
-- [ ] New content defaults to `draft: true`, and `draft: false` is required before publication.
-- [ ] The workflow requires content branches and pull requests rather than using draft status as the only isolation mechanism.
-- [ ] Pull requests run validation without production deployment.
-- [ ] Content `main` merges request production deployment through the application repository.
-- [ ] Application `main` deployment triggers are defined.
-- [ ] The application repository is the only owner of `wrangler deploy`.
-- [ ] Initial application/content ref selection rules are documented.
-- [ ] Manual deployment with explicit application and content refs is supported for recovery.
-- [ ] Branch protection and solo-author approval rules are documented.
-- [ ] Image generation behavior distinguishes ordinary validation from required publication assets.
-- [ ] Failed deployment behavior distinguishes a merged content change from a completed publication.
-- [ ] Rollback uses explicit known-good application and content SHAs.
-- [ ] Hosted preview deployments are explicitly out of scope for the initial workflow.
-- [ ] Dependencies and ownership boundaries with `CR-007`, `CR-013`, `CR-014`, and `CR-019` are explicit.
+- [x] The content lifecycle from branch creation through confirmed production deployment is documented.
+- [x] Publish-readiness rules distinguish blocking errors from non-blocking warnings.
+- [x] New content defaults to `draft: true`, and `draft: false` is required before publication.
+- [x] The workflow requires content branches and pull requests rather than using draft status as the only isolation mechanism.
+- [x] Pull requests run validation without production deployment.
+- [x] Content `main` merges request production deployment through the application repository.
+- [x] Application `main` deployment triggers are defined.
+- [x] The application repository is the only owner of `wrangler deploy`.
+- [x] Initial application/content ref selection rules are documented.
+- [x] Manual deployment with explicit application and content refs is supported for recovery.
+- [x] Branch protection and solo-author approval rules are documented.
+- [x] Image generation behavior distinguishes ordinary validation from required publication assets.
+- [x] Failed deployment behavior distinguishes a merged content change from a completed publication.
+- [x] Rollback uses explicit known-good application and content SHAs.
+- [x] Hosted preview deployments are explicitly out of scope for the initial workflow.
+- [x] Dependencies and ownership boundaries with `CR-007`, `CR-013`, `CR-014`, and `CR-019` are explicit.
 
 ## Implementation Notes
 
@@ -127,7 +146,11 @@ If the source content itself must be corrected or withdrawn, make that change th
 - Generated artifact ownership remains a separate concern under `CR-014`.
 - Related wiki decision: `docs/wiki/decisions/branching-workflow.md`.
 - Related source note: `docs/raw/content-split.md`.
+- Supporting source note: `docs/raw/workflow-rules.md`.
+- `docs/raw/workflow-rules.md` raised the practical generator-bypass question. The rule is that `npm run new-content` is the preferred creation path, but validation enforces the final Markdown shape. Manually created files are not automatically trusted and cannot publish unless they satisfy the same blocking validation requirements as generated content.
 
 ## Outcome
 
-Pending decision.
+Publishing workflow rules are defined for the split-repository model. Content publishing uses short-lived content branches, generator-created draft defaults where possible, pull requests, validation, protected `main`, application-owned production deployment, explicit application/content refs, visible deployment failure handling, and rollback by known-good application and content SHAs.
+
+Implementation remains with `CR-019`. Detailed validation check behavior remains with `CR-013`. Generated artifact ownership remains with `CR-014`. Repository boundary and migration planning remain with `CR-007`, `CR-020`, `CR-021`, and `CR-022`.
