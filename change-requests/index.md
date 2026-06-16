@@ -23,7 +23,7 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-007 | Decide single repo vs split content repository | Done | High | Architecture | 2026-05-06 | [CR-007-decide-single-repo-vs-split-content-repository.md](./CR-007-decide-single-repo-vs-split-content-repository.md) |
 | CR-008 | Define publishing workflow rules | Done | High | Publishing | 2026-05-06 | [CR-008-define-publishing-workflow-rules.md](./CR-008-define-publishing-workflow-rules.md) |
 | CR-009 | Add admin metadata editing UI | Proposed | Medium | Web Admin | 2026-05-06 | [CR-009-add-admin-metadata-editing-ui.md](./CR-009-add-admin-metadata-editing-ui.md) |
-| CR-010 | Add admin validation panel and author-facing warnings | Proposed | High | Web Admin | 2026-05-06 | Pending detail |
+| CR-010 | Add admin validation panel and author-facing warnings | Proposed | High | Web Admin | 2026-05-06 | [CR-010-add-admin-validation-panel-and-author-facing-warnings.md](./CR-010-add-admin-validation-panel-and-author-facing-warnings.md) |
 | CR-011 | Spike browser-worker preview pipeline | Proposed | Medium | Content Pipeline | 2026-05-06 | Pending detail |
 | CR-012 | Decide parser roadmap for markdown processing | Proposed | Medium | Content Pipeline | 2026-05-06 | Pending detail |
 | CR-013 | Add CI content validation checks | Proposed | Medium | Quality | 2026-05-06 | Pending detail |
@@ -45,6 +45,7 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 - Reconciled `CR-007` as `Done` because its split-repository decision, migration plan, follow-up CRs, acceptance criteria, outcome, and wiki references were already complete.
 - Completed `CR-008` by clarifying generator-bypass handling, blocking versus warning validation behavior, and publishing workflow ownership boundaries.
 - Added the `CR-009` detail file to define admin metadata editing scope and capture its dependency on the web-admin role decision in `CR-018`.
+- Added the `CR-010` detail file to define admin validation-panel scope, author-facing warnings, and its dependency on `CR-018`, `CR-013`, and `CR-019`.
 - Added `CR-020` as the focused implementation request for creating `mylifeindigital.content` and migrating publishable Markdown files.
 - Added `CR-021` as the focused implementation request for adding `CONTENT_DIR` support to build and content-authoring tooling.
 - Added `CR-022` as the focused documentation request for README, VS Code workspace, and local split-repository setup guidance.
