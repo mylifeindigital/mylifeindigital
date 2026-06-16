@@ -21,6 +21,19 @@ The application repository should own the only production deployment workflow. T
 
 ## Proposed Implementation
 
+### Phased Implementation
+
+Implement GitHub Actions in phases so the split-repository build path is proven before production deployment changes.
+
+1. Add no-deploy application CI in `mylifeindigital`.
+   This workflow should run on application pull requests, check out the application repository plus a selected/default content repository ref, configure `CONTENT_DIR`, generate `web/src/utils/posts-data.ts`, and run the web build/typecheck without deploying.
+2. Add no-deploy content CI in `mylifeindigital.content`.
+   This workflow should run on content pull requests and validate that Markdown content can be processed by the application build pipeline without deploying.
+3. Add production deployment in `mylifeindigital`.
+   This workflow should be added only after the no-deploy CI path is working and should be the only workflow that runs `wrangler deploy`.
+
+Tests should be included when they exist, but the initial migration CI does not need to wait for a full test suite. The minimum useful protection is proving dependency install, cross-repository checkout, `CONTENT_DIR`, `web/scripts/build-posts.ts`, generated `web/src/utils/posts-data.ts`, and the web build/typecheck before deployment is enabled.
+
 ### Application Repository Workflows
 
 Add workflows under `mylifeindigital/.github/workflows/`:
@@ -76,6 +89,7 @@ Generated `posts-data.ts` remains a build artifact rather than canonical content
 
 ## Acceptance Criteria
 
+- [ ] GitHub Actions implementation is phased so no-deploy validation is working before production deployment is enabled.
 - [ ] Application pull requests run build-only CI and never deploy.
 - [ ] Content pull requests run content validation and never deploy.
 - [ ] The application repository contains the only workflow that runs `wrangler deploy`.
@@ -100,6 +114,7 @@ Generated `posts-data.ts` remains a build artifact rather than canonical content
 - Content validation rules overlap with `CR-013`; this request should orchestrate those checks rather than redefine their domain behavior.
 - Generated artifact ownership overlaps with `CR-014`.
 - Production workflow ownership belongs to the application repository because it owns `web/wrangler.toml`, Worker source, build tooling, and Cloudflare deployment configuration.
+- Migration phasing is informed by `docs/raw/repo-migration-notes.md`, especially the decision to prove no-deploy CI before enabling the production deploy workflow.
 - Related wiki decision: `docs/wiki/decisions/branching-workflow.md`.
 
 ## Outcome

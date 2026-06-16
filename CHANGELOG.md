@@ -2,14 +2,26 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-06-16
+
+### Added
+
+- Added `CR-020` to create `mylifeindigital.content` and migrate publishable Markdown files out of the application repository.
+- Added `CR-021` to add `CONTENT_DIR` support to build and content-authoring tooling.
+- Added `CR-022` to update README, VS Code workspace, and local split-repository documentation.
+
 ## 2026-06-14
 
 ### Added
 
+- Added `CR-008` detail to define publishing lifecycle, readiness, trigger, failure, and rollback rules.
+- Added `CR-014` detail to define generated content artifact ownership, review, deployment, and rollback strategy.
 - Added `CR-019` to implement split-repository GitHub Actions CI/CD with a single application-owned production deployment workflow.
+- Added `CR-023` to establish a focused baseline test setup as a follow-up to the split-repository migration planning.
 
 ### Changed
 
+- Clarified `CR-019` so GitHub Actions are implemented in phases, with no-deploy validation working before production deployment is enabled.
 - Ingested the content authoring raw note into the docs wiki, clarifying the VS Code and Electron authoring boundaries.
 - Ingested the branching workflow raw note, recording branch-per-CR application work and short-lived content branches with draft safeguards.
 - Ingested the branch-protection update, documenting protected `main` branches and separate validation/deployment workflows.

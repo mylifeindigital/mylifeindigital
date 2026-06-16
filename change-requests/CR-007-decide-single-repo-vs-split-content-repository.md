@@ -207,10 +207,10 @@ Before implementation begins, document the migration path, including content rep
 - [x] The decision clarifies that the Electron POC should operate primarily on the content repository/workspace and should not require editing the app/editor implementation code during normal content creation.
 - [x] The decision defines the minimum branch, pull request, or sync rules needed to keep authoring work from disrupting code work.
 - [x] The migration plan includes protecting `main` in both the application repository and content repository before GitHub Actions production deployment is enabled.
-- [ ] The decision identifies dependencies or overlaps with `CR-008` publishing workflow rules.
-- [ ] If the split-repository model is chosen, a migration plan is documented before implementation, including repository ownership, folder structure, local checkout configuration, build integration, CI/deploy changes, and rollback path.
-- [ ] Follow-up implementation change requests are identified for any repository migration, workflow automation, CI changes, or documentation updates required by the decision.
-- [ ] The final decision is recorded in `Outcome` and reflected in the docs wiki if it becomes durable architecture knowledge.
+- [x] The decision identifies dependencies or overlaps with `CR-008` publishing workflow rules.
+- [x] If the split-repository model is chosen, a migration plan is documented before implementation, including repository ownership, folder structure, local checkout configuration, build integration, CI/deploy changes, and rollback path.
+- [x] Follow-up implementation change requests are identified for any repository migration, workflow automation, CI changes, or documentation updates required by the decision.
+- [x] The final decision is recorded in `Outcome` and reflected in the docs wiki if it becomes durable architecture knowledge.
 
 ## Implementation Notes
 
@@ -219,7 +219,7 @@ Before implementation begins, document the migration path, including content rep
 - Related source note: `docs/raw/branching-workflows.md`.
 - Related wiki page: `docs/wiki/concepts/git-backed-content.md`.
 - Related wiki page: `docs/wiki/decisions/branching-workflow.md`.
-- Related workflow decision: `CR-008`, which is still a pending dashboard row until its detail file exists.
+- Related workflow decision: `change-requests/CR-008-define-publishing-workflow-rules.md`.
 - Follow-up request: `CR-018`, which should decide the future role of the web admin after the content repository split.
 - Follow-up implementation: `CR-019`, which should implement split-repository GitHub Actions validation and deployment.
 - `CR-006` notes that repository-boundary and publishing workflow decisions overlap, but does not resolve this decision.
@@ -227,6 +227,8 @@ Before implementation begins, document the migration path, including content rep
 
 ## Outcome
 
-Decision: create a separate content repository for publishable Markdown content, likely named `mylifeindigital.content`, while keeping website/runtime code, change requests, docs/wiki knowledge, and code-adjacent notes in the existing `mylifeindigital` application repository.
+Decision: create a separate content repository for publishable Markdown content, likely named `mylifeindigital.content`, while keeping website/runtime code, build tooling, deployment configuration, generated runtime artifacts, change requests, docs/wiki knowledge, and code-adjacent notes in the existing `mylifeindigital` application repository.
 
-The next step is to document the migration plan before moving files or changing the build pipeline.
+The migration plan is documented in `docs/raw/repo-migration-notes.md`. The implementation work is split into follow-up CRs: `CR-020` for content repository creation and file migration, `CR-021` for `CONTENT_DIR` tooling, `CR-022` for README/workspace/local docs, `CR-019` for GitHub Actions CI/CD, `CR-014` for generated artifacts, `CR-018` for the web admin role, and `CR-023` for baseline test setup.
+
+The durable architecture knowledge is reflected in the docs wiki, especially `docs/wiki/concepts/git-backed-content.md` and `docs/wiki/decisions/branching-workflow.md`.
