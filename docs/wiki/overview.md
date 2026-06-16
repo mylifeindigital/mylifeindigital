@@ -7,6 +7,8 @@ The central direction is to keep Markdown in Git as the source of truth while im
 ## Current Themes
 
 - Content is processed at build time and embedded into the Worker bundle because the Worker runtime has no filesystem access.
+- Publishable Markdown is moving to a separate content repository while code, change requests, docs/wiki knowledge, and experiments remain in the application repository.
+- Application work uses one branch per CR; content work uses short-lived content branches even though new content defaults to `draft: true`.
 - The authoring experience is moving toward template-driven content creation for posts and standalone pages.
 - The content pipeline should become more structured around metadata, AST processing, table of contents generation, validation, and domain content models.
 - The authoring surface should remain replaceable: browser, terminal/TUI, and desktop app options are all valid if they share the same content model and validation logic.
@@ -17,9 +19,11 @@ The central direction is to keep Markdown in Git as the source of truth while im
 - [Content Editor](./projects/content-editor.md)
 - [Content Pipeline](./projects/content-pipeline.md)
 - [Content Operations App](./projects/content-operations-app.md)
+- [Story Crafter](./projects/story-crafter.md)
 - [Markdown Processing](./concepts/markdown-processing.md)
 - [Git-Backed Content](./concepts/git-backed-content.md)
 - [Authoring Surface](./decisions/authoring-surface.md)
+- [Branching Workflow](./decisions/branching-workflow.md)
 - [Open Questions](./questions.md)
 
 ## Sources
@@ -29,3 +33,5 @@ The central direction is to keep Markdown in Git as the source of truth while im
 - [build-posts-improvements.md](../raw/build-posts-improvements.md)
 - [scaling-content-options.md](../raw/scaling-content-options.md)
 - [editor-design.md](../raw/editor-design.md)
+- [story-crafter.md](../raw/story-crafter.md)
+- [branching-workflows.md](../raw/branching-workflows.md)

@@ -2,11 +2,54 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-06-16
+
+### Added
+
+- Added `CR-020` to create `mylifeindigital.content` and migrate publishable Markdown files out of the application repository.
+- Added `CR-021` to add `CONTENT_DIR` support to build and content-authoring tooling.
+- Added `CR-022` to update README, VS Code workspace, and local split-repository documentation.
+
+## 2026-06-14
+
+### Added
+
+- Added `CR-008` detail to define publishing lifecycle, readiness, trigger, failure, and rollback rules.
+- Added `CR-014` detail to define generated content artifact ownership, review, deployment, and rollback strategy.
+- Added `CR-019` to implement split-repository GitHub Actions CI/CD with a single application-owned production deployment workflow.
+- Added `CR-023` to establish a focused baseline test setup as a follow-up to the split-repository migration planning.
+
+### Changed
+
+- Clarified `CR-019` so GitHub Actions are implemented in phases, with no-deploy validation working before production deployment is enabled.
+- Ingested the content authoring raw note into the docs wiki, clarifying the VS Code and Electron authoring boundaries.
+- Ingested the branching workflow raw note, recording branch-per-CR application work and short-lived content branches with draft safeguards.
+- Ingested the branch-protection update, documenting protected `main` branches and separate validation/deployment workflows.
+
+## 2026-05-29
+
+### Added
+
+- Added `CR-018` to decide the future role of the web admin after the content repository split.
+- Added raw notes for content split local development and authoring-flow decisions.
+
+### Changed
+
+- Expanded `CR-007` with the post-split authoring path across VS Code, Electron, terminal, scripts, and browser admin.
+
+## 2026-05-28
+
+### Changed
+
+- Ingested the content planning raw note into the docs wiki, including editor, content operations, open questions, index, and wiki log updates.
+- Ingested the Story Crafter raw note into the docs wiki as future feature memory, including a new project page and open questions.
+
 ## 2026-05-23
 
 ### Added
 
 - Added `CR-017` to track converting `docs/` into a Git-backed LLM wiki.
+- Added `CR-007` detail for deciding whether to keep one repository or split Markdown content into a separate content repository.
 - Added `docs/README.md`, `docs/WIKI.md`, and initial `docs/wiki/` pages for agent working memory.
 - Added a repo-local `llm-wiki` skill for ingesting, querying, and maintaining the docs wiki.
 - Added a repo-local `backlog-grooming` skill for maintaining change requests and indexing durable details into the docs wiki.
