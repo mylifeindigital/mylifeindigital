@@ -7,6 +7,7 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 ### Added
 
 - Added the `CR-009` detail file to define admin metadata editing scope and capture its dependency on the web-admin role decision in `CR-018`.
+- Added the `CR-010` detail file to define admin validation-panel scope, author-facing warnings, and its relationship to web-admin role and CI validation decisions.
 - Added `CR-020` to create `mylifeindigital.content` and migrate publishable Markdown files out of the application repository.
 - Added `CR-021` to add `CONTENT_DIR` support to build and content-authoring tooling.
 - Added `CR-022` to update README, VS Code workspace, and local split-repository documentation.
