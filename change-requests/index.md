@@ -24,7 +24,7 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-008 | Define publishing workflow rules | Done | High | Publishing | 2026-05-06 | [CR-008-define-publishing-workflow-rules.md](./CR-008-define-publishing-workflow-rules.md) |
 | CR-009 | Add admin metadata editing UI | Proposed | Medium | Web Admin | 2026-05-06 | [CR-009-add-admin-metadata-editing-ui.md](./CR-009-add-admin-metadata-editing-ui.md) |
 | CR-010 | Add admin validation panel and author-facing warnings | Proposed | High | Web Admin | 2026-05-06 | [CR-010-add-admin-validation-panel-and-author-facing-warnings.md](./CR-010-add-admin-validation-panel-and-author-facing-warnings.md) |
-| CR-011 | Spike browser-worker preview pipeline | Proposed | Medium | Content Pipeline | 2026-05-06 | Pending detail |
+| CR-011 | Spike browser-worker preview pipeline | Done | Medium | Content Pipeline | 2026-05-06 | [CR-011-spike-browser-worker-preview-pipeline.md](./CR-011-spike-browser-worker-preview-pipeline.md) |
 | CR-012 | Decide parser roadmap for markdown processing | Proposed | Medium | Content Pipeline | 2026-05-06 | Pending detail |
 | CR-013 | Add CI content validation checks | Proposed | Medium | Quality | 2026-05-06 | Pending detail |
 | CR-014 | Reassess generated content artifact strategy | Proposed | Medium | Architecture | 2026-05-06 | [CR-014-reassess-generated-content-artifact-strategy.md](./CR-014-reassess-generated-content-artifact-strategy.md) |
@@ -39,6 +39,11 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-023 | Establish baseline test setup | Proposed | Medium | Quality | 2026-06-16 | [CR-023-establish-baseline-test-setup.md](./CR-023-establish-baseline-test-setup.md) |
 
 ## Backlog Grooming Notes
+
+### 2026-06-20
+
+- Added the `CR-011` detail file to define the browser-worker preview spike, preview parity questions, and its boundaries with `CR-010`, `CR-012`, `CR-013`, and `CR-014`.
+- Completed `CR-011` by adding a browser-worker preview proof-of-concept, documenting parity findings, and recording follow-up candidates.
 
 ### 2026-06-16
 
