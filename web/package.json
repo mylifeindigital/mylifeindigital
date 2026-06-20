@@ -10,6 +10,8 @@
     "build": "npm run build:posts:images && tsc",
     "build:posts": "tsx scripts/build-posts.ts",
     "build:posts:images": "tsx scripts/build-posts.ts --generate-images",
+    "compare:preview-parity": "tsx scripts/compare-preview-parity.ts",
+    "preview-worker:poc": "tsx scripts/run-preview-worker-poc.ts",
     "generate:images": "tsx scripts/generate-images.ts",
     "deploy": "npm run build:posts && wrangler deploy",
     "start": "wrangler dev"
@@ -30,6 +32,7 @@
     "@types/marked": "^6.0.0",
     "@types/node": "^25.0.3",
     "dotenv": "^16.0.0",
+    "esbuild": "^0.25.12",
     "sharp": "^0.33.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",

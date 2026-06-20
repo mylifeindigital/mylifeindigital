@@ -2,6 +2,18 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-06-20
+
+### Added
+
+- Added the `CR-011` detail file to define the browser-worker preview spike, preview parity questions, and its relationship to validation, parser roadmap, CI validation, and generated artifact work.
+- Added preview parity comparison scripts for `CR-011` that compare current admin preview, real-identity admin preview, and build-time pipeline output for representative content fixtures.
+- Added a minimal browser-worker preview proof-of-concept for `CR-011`, including browser-target bundling and representative fixture parity checks.
+
+### Changed
+
+- Completed `CR-011` with a proceed-cautiously outcome for browser-worker preview and server-preview fallback.
+
 ## 2026-06-16
 
 ### Added
