@@ -21,6 +21,16 @@ The raw note imagines an Acorn Tree series with:
 
 The prompt source expands this into a multi-pass creative workflow with roles for continuity, story structure, drafting, child engagement review, values review, series-depth review, and final editing.
 
+The Golden Valley notes add a concrete second seed:
+
+- story: `The Shiny Secret`, a polished read-aloud story about Milo returning Pippa's grandmother's pebble
+- characters: Milo the meerkat, Luma the firefly, Grandpa Tortoise, and Pippa the springhare
+- setting: a warm golden valley near a dry riverbed during the Moonlight Sharing Festival
+- value: honesty matters most when telling the truth might get you into trouble
+- continuity hooks: Milo loves shiny things, Pippa trusts Milo, Luma helps others see clearly, and Grandpa Tortoise serves as the patient wisdom figure
+
+The separation between `characters.md` and the finished `shiny-secret.md` suggests Story Crafter should store both planning inputs and generated outputs, not only the final story text.
+
 ## Workflow Memory
 
 The content workflow is intentionally unresolved. A likely future workflow is:
@@ -32,10 +42,22 @@ The content workflow is intentionally unresolved. A likely future workflow is:
 
 This suggests Story Crafter may need content models beyond ordinary posts, such as `story`, `story-series`, character metadata, continuity notes, and mobile reading layout decisions.
 
+## Git Storage Fit
+
+Git is a promising candidate for the canonical Story Crafter store because stories are authored artifacts with meaningful revisions, reviewable diffs, and reusable series context. A Git-backed model could store:
+
+- final story Markdown, including frontmatter for title, series, setting, values, reading level, draft status, and publication status
+- series files for durable continuity, such as recurring character traits, setting rules, values, and prior episode summaries
+- planning files for prompts, generated outlines, rejected variants, and editing notes when those artifacts are worth keeping
+- branch-based review flows for story drafting, child-readability passes, values review, and publication readiness
+
+Git looks weaker for runtime-only needs such as per-reader bedtime progress, live collaborative editing state, recommendation queries, analytics, or generated variants that should not become durable source material. Those should either remain ephemeral or live in a separate runtime store if Story Crafter grows past static publishing.
+
 ## Related Pages
 
 - [Content Operations App](./content-operations-app.md)
 - [Content Editor](./content-editor.md)
+- [Git-Backed Content](../concepts/git-backed-content.md)
 - [Open Questions](../questions.md)
 
 ## Sources
@@ -44,3 +66,5 @@ This suggests Story Crafter may need content models beyond ordinary posts, such 
 - [story-crafter-sample1.md](../../raw/story-crafter-sample1.md)
 - [story-crafter-sample2.md](../../raw/story-crafter-sample2.md)
 - [story-crafter-prompt.md](../../raw/story-crafter-prompt.md)
+- [golden-valley/characters.md](../../raw/story-crafter/golden-valley/characters.md)
+- [golden-valley/shiny-secret.md](../../raw/story-crafter/golden-valley/shiny-secret.md)

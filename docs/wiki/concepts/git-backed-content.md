@@ -22,10 +22,22 @@ Publishable Markdown content should move to a separate Git repository, likely `m
 
 Both repositories use short-lived branches. Application branches map to change requests; content branches map to content items or closely related content changes. The `draft` frontmatter flag remains a publish safeguard but does not replace branch isolation.
 
+## Story Content Implications
+
+The Story Crafter direction strengthens the case for Git as the canonical store for story source material. The Golden Valley example separates reusable story inputs from the finished story text, which maps well to reviewable files:
+
+- story Markdown for final or draft read-aloud text
+- character and setting files for continuity across a series
+- prompt, outline, and review notes when they are meaningful creative provenance
+- generated static artifacts that can be built into the Worker bundle or a later content deployment pipeline
+
+Git should be treated as the durable source of truth, not as the complete product database. If Story Crafter later needs per-reader progress, mobile delivery state, search indexes, analytics, or high-volume generated variants, those can be derived from or linked back to Git-backed canonical files.
+
 ## Related Pages
 
 - [Content Operations App](../projects/content-operations-app.md)
 - [Content Pipeline](../projects/content-pipeline.md)
+- [Story Crafter](../projects/story-crafter.md)
 - [Authoring Surface](../decisions/authoring-surface.md)
 - [Branching Workflow](../decisions/branching-workflow.md)
 
@@ -34,4 +46,6 @@ Both repositories use short-lived branches. Application branches map to change r
 - [90-day-plan.md](../../raw/90-day-plan.md)
 - [scaling-content-options.md](../../raw/scaling-content-options.md)
 - [branching-workflows.md](../../raw/branching-workflows.md)
+- [story-crafter/golden-valley/characters.md](../../raw/story-crafter/golden-valley/characters.md)
+- [story-crafter/golden-valley/shiny-secret.md](../../raw/story-crafter/golden-valley/shiny-secret.md)
 - [CR-007: Decide Single Repo vs Split Content Repository](../../../change-requests/CR-007-decide-single-repo-vs-split-content-repository.md)
