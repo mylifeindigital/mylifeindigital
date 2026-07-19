@@ -2,6 +2,12 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-07-04
+
+### Changed
+
+- Ingested the Golden Valley Story Crafter notes into the docs wiki, including story-series memory and Git-backed story storage considerations.
+
 ## 2026-06-20
 
 ### Added

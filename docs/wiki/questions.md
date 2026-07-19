@@ -24,6 +24,7 @@ Questions that matter to future repository work.
 
 - Should Story Crafter live as a normal content section, a standalone feature area, or a separate experiment before becoming public site content?
 - What content model is needed for generated story series: story, series, characters, settings, values, continuity notes, or all of these?
+- Is Git sufficient as the canonical story store if Story Crafter needs generated variants, revision lineage, continuity updates, and mobile delivery state, or should Git store only durable artifacts while runtime state lives elsewhere?
 - How should generated stories be delivered in a mobile-friendly format for bedtime reading?
 - When current change requests are complete, which future CR should own Story Crafter planning without expanding `CR-017`?
 
@@ -36,3 +37,5 @@ Questions that matter to future repository work.
 - [scaling-content-options.md](../raw/scaling-content-options.md)
 - [next-steps.md](../raw/next-steps.md)
 - [branching-workflows.md](../raw/branching-workflows.md)
+- [story-crafter/golden-valley/characters.md](../raw/story-crafter/golden-valley/characters.md)
+- [story-crafter/golden-valley/shiny-secret.md](../raw/story-crafter/golden-valley/shiny-secret.md)

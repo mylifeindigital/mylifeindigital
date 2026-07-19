@@ -2,6 +2,13 @@
 
 Append-only record of docs wiki activity.
 
+## [2026-07-04] ingest | Golden Valley Story Crafter notes
+
+- Ingested `docs/raw/story-crafter/golden-valley/characters.md` and `docs/raw/story-crafter/golden-valley/shiny-secret.md`.
+- Added Golden Valley as a concrete Story Crafter seed with characters, setting, value, continuity hooks, and the finished `The Shiny Secret` story.
+- Recorded that Git is a promising canonical store for durable story artifacts, but not for runtime-only reading state, analytics, live collaboration state, or high-volume ephemeral variants.
+- Added an open Story Crafter question about the boundary between Git-backed source material and future runtime storage.
+
 ## [2026-06-14] ingest | Branch protection update
 
 - Ingested the updated `Protecting main (default) branches` section from `docs/raw/branching-workflows.md`.
