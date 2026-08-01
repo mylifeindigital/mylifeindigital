@@ -6,6 +6,8 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ### Added
 
+- Completed `CR-021`: content tooling now resolves the publishable content directory through shared `CONTENT_DIR` support (`scripts/content/content-dir.ts`) — process environment first, then the repository-root `.env`, then a transitional fallback to the in-repo `content/` directory. Wired into `web/scripts/build-posts.ts`, `scripts/new-content.ts`, `scripts/update-date.ts`, and `scripts/sync-stories.ts`, each logging the resolved path and its provenance. Added root `.env.example` documenting the `CONTENT_DIR=../mylifeindigital.content/content` convention ahead of the `CR-020` split.
+
 - Added `scripts/sync-stories.ts` (`npm run sync:stories`) to generate a `content/stories/` section from the sibling `story-crafter` repository, mapping frontmatter and flattening seasons into season-ordered slugs. The output is a git-ignored build artifact, not committed content, consistent with the split-content direction in `CR-007`/`CR-019`/`CR-020`; story-crafter remains the canonical source.
 
 ## 2026-07-04

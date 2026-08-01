@@ -27,6 +27,13 @@ import {
     ImageGeneratorProcessor,
 } from './processors/index.js';
 import type { ContentItem, Section, SiteContent } from '../src/utils/markdown.js';
+import { resolveContentDir, describeContentDirSource } from '../../scripts/content/content-dir.js';
+
+// Capture CONTENT_DIR from the real environment BEFORE dotenv loads web/.env,
+// so web/.env can never become a competing source for the content path (CR-021;
+// the repository-root .env is the canonical local content-tooling config and is
+// read by resolveContentDir itself).
+const contentDirFromEnvironment = process.env.CONTENT_DIR;
 
 // Load environment variables from .env file
 dotenvConfig();
@@ -258,11 +265,16 @@ export const postsData: ContentItem[] = siteContent.allItems;
 
 // Main execution
 async function main(): Promise<void> {
-    const contentDir = join(__dirname, '../../content');
+    const repositoryRoot = join(__dirname, '../..');
+    const resolution = resolveContentDir({
+        repositoryRoot,
+        env: { CONTENT_DIR: contentDirFromEnvironment },
+    });
+    const contentDir = resolution.contentDir;
     const outputPath = join(__dirname, '../src/utils/posts-data.ts');
 
     console.log('📦 Building content data...');
-    console.log(`  Source: ${contentDir}`);
+    console.log(`  Source: ${contentDir} — ${describeContentDirSource(resolution)}`);
     console.log(`  Output: ${outputPath}`);
     if (generateImages) {
         console.log(`  🎨 Image generation: enabled${dryRun ? ' (dry run)' : ''}${forceRegenerate ? ' (force regenerate)' : ''}`);

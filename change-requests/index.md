@@ -34,11 +34,17 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-018 | Decide web admin role after content repository split | Proposed | Medium | Web Admin | 2026-05-29 | [CR-018-decide-web-admin-role-after-content-repository-split.md](./CR-018-decide-web-admin-role-after-content-repository-split.md) |
 | CR-019 | Implement split-repository GitHub Actions CI/CD | Proposed | High | Deployment | 2026-06-14 | [CR-019-implement-split-repository-github-actions-ci-cd.md](./CR-019-implement-split-repository-github-actions-ci-cd.md) |
 | CR-020 | Create content repository and migrate files | Proposed | High | Architecture | 2026-06-16 | [CR-020-create-content-repository-and-migrate-files.md](./CR-020-create-content-repository-and-migrate-files.md) |
-| CR-021 | Add CONTENT_DIR support to content tooling | Proposed | High | Content Pipeline | 2026-06-16 | [CR-021-add-content-dir-support-to-content-tooling.md](./CR-021-add-content-dir-support-to-content-tooling.md) |
+| CR-021 | Add CONTENT_DIR support to content tooling | Done | High | Content Pipeline | 2026-06-16 | [CR-021-add-content-dir-support-to-content-tooling.md](./CR-021-add-content-dir-support-to-content-tooling.md) |
 | CR-022 | Update README, workspace, and local docs | Proposed | Medium | Documentation | 2026-06-16 | [CR-022-update-readme-workspace-and-local-docs.md](./CR-022-update-readme-workspace-and-local-docs.md) |
 | CR-023 | Establish baseline test setup | Proposed | Medium | Quality | 2026-06-16 | [CR-023-establish-baseline-test-setup.md](./CR-023-establish-baseline-test-setup.md) |
 
 ## Backlog Grooming Notes
+
+### 2026-08-01
+
+- Completed `CR-021` with a shared `CONTENT_DIR` resolver (`scripts/content/content-dir.ts`): process environment, then repository-root `.env`, then a transitional in-repo `content/` fallback to be removed once the `CR-020` split stabilizes. Wired into `build-posts`, `new-content`, `update-date`, and `sync-stories`; template output directories are now content-root-relative, and `web/.env` cannot configure the content path.
+- Verified `CR-021` end-to-end against a simulated sibling `mylifeindigital.content/content` checkout, unblocking `CR-020` (migration) and the `CR-019` GitHub Actions pipeline.
+- Sequencing note for `CR-019`/`CR-020`: validate the GitHub Actions deployment path (and disable Cloudflare's native Git build) before the `CR-020` content cutover, so the application repository can never deploy a content-empty site from its placeholder `content/` directory.
 
 ### 2026-06-20
 

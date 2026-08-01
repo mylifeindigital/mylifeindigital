@@ -8,9 +8,15 @@ import {
 export interface CreateContentFileOptions {
   templateId: string;
   title: string;
+  /** Application repository root; templates always resolve from here. */
   repositoryRoot: string;
+  /**
+   * The content directory the new file is written into (the directory that
+   * contains `posts/`, `pages/`, ...). Resolve it with `resolveContentDir`
+   * (CR-021) rather than assuming the application repository's `content/`.
+   */
+  contentRoot: string;
   now?: Date;
-  outputRoot?: string;
   templateRoot?: string;
 }
 
@@ -46,11 +52,11 @@ export function createContentFile(options: CreateContentFileOptions): CreatedCon
   }
 
   const now = options.now ?? new Date();
-  const outputRoot = options.outputRoot ?? options.repositoryRoot;
+  const contentRoot = options.contentRoot;
   const templateRoot = options.templateRoot ?? options.repositoryRoot;
   const { filename, slug } = getOutputIdentity(template, title);
   const templatePath = path.resolve(templateRoot, template.templatePath);
-  const outputPath = path.resolve(outputRoot, template.outputDirectory, filename);
+  const outputPath = path.resolve(contentRoot, template.outputDirectory, filename);
   const templateContent = fs.readFileSync(templatePath, "utf8");
   const content = renderTemplate(templateContent, {
     date: formatDate(now),
@@ -71,7 +77,7 @@ export function createContentFile(options: CreateContentFileOptions): CreatedCon
     title,
     slug,
     outputPath,
-    relativeOutputPath: path.relative(outputRoot, outputPath),
+    relativeOutputPath: path.relative(contentRoot, outputPath),
     content,
   };
 }

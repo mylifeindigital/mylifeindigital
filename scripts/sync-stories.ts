@@ -14,7 +14,10 @@
  *   cd web && npm run build:posts
  *
  * Source location defaults to a sibling `../story-crafter`; override with the
- * STORY_CRAFTER_PATH environment variable.
+ * STORY_CRAFTER_PATH environment variable. Output goes to `stories/` inside the
+ * content directory resolved per CR-021 (CONTENT_DIR environment variable, root
+ * `.env`, or the transitional in-repo `content/` fallback). The generated
+ * section is a build artifact, never committed content.
  */
 
 import {
@@ -28,6 +31,7 @@ import {
 } from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveContentDir, describeContentDirSource } from "./content/content-dir.js";
 
 type FrontmatterValue = string | number | string[];
 type Frontmatter = Record<string, FrontmatterValue>;
@@ -207,7 +211,8 @@ function main(): void {
   const root = repositoryRoot();
   const source = storyCrafterRoot(root);
   const storiesRoot = path.join(source, "stories");
-  const outDir = path.join(root, "content", "stories");
+  const contentDirResolution = resolveContentDir({ repositoryRoot: root });
+  const outDir = path.join(contentDirResolution.contentDir, "stories");
 
   if (!existsSync(storiesRoot) || !statSync(storiesRoot).isDirectory()) {
     throw new Error(
@@ -234,7 +239,8 @@ function main(): void {
   }
 
   console.log(
-    `Synced ${files.length} stories into ${path.relative(root, outDir)}/ ` +
+    `Synced ${files.length} stories into ${outDir} ` +
+      `— ${describeContentDirSource(contentDirResolution)} ` +
       `(source: ${path.relative(root, source) || source})`,
   );
   console.log(`Next: cd web && npm run build:posts`);

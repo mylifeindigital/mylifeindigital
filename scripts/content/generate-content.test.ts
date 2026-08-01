@@ -21,8 +21,8 @@ afterEach(() => {
 
 describe("content templates", () => {
   it("selects the MVP post and about templates", () => {
-    assert.equal(getContentTemplate("post").outputDirectory, "content/posts");
-    assert.equal(getContentTemplate("about").outputDirectory, "content/pages");
+    assert.equal(getContentTemplate("post").outputDirectory, "posts");
+    assert.equal(getContentTemplate("about").outputDirectory, "pages");
     assert.throws(() => getContentTemplate("page"), /Unknown content template/);
     assert.throws(() => getContentTemplate("toString"), /Unknown content template/);
   });
@@ -30,19 +30,19 @@ describe("content templates", () => {
 
 describe("createContentFile", () => {
   it("creates draft post content from the title slug", () => {
-    const outputRoot = createTemporaryRoot();
+    const contentRoot = createTemporaryRoot();
     const result = createContentFile({
       templateId: "post",
       title: 'Learning "ESM"',
       repositoryRoot,
-      outputRoot,
+      contentRoot,
       now: new Date("2026-05-21T12:00:00"),
     });
 
     assert.equal(result.slug, "learning-esm");
     assert.equal(
       result.relativeOutputPath,
-      path.join("content", "posts", "learning-esm.md")
+      path.join("posts", "learning-esm.md")
     );
     assert.match(result.content, /title: "Learning \\"ESM\\""/);
     assert.match(result.content, /date: "2026-05-21"/);
@@ -52,18 +52,18 @@ describe("createContentFile", () => {
   });
 
   it("creates the standalone About draft at its fixed MVP path", () => {
-    const outputRoot = createTemporaryRoot();
+    const contentRoot = createTemporaryRoot();
     const result = createContentFile({
       templateId: "about",
       title: "About My Life In Digital",
       repositoryRoot,
-      outputRoot,
+      contentRoot,
     });
 
     assert.equal(result.slug, "about");
     assert.equal(
       result.relativeOutputPath,
-      path.join("content", "pages", "about.md")
+      path.join("pages", "about.md")
     );
     assert.match(result.content, /slug: "about"/);
     assert.match(result.content, /draft: true/);
@@ -71,12 +71,12 @@ describe("createContentFile", () => {
   });
 
   it("refuses to overwrite an existing generated file", () => {
-    const outputRoot = createTemporaryRoot();
+    const contentRoot = createTemporaryRoot();
     const options = {
       templateId: "post",
       title: "Existing Draft",
       repositoryRoot,
-      outputRoot,
+      contentRoot,
     };
 
     createContentFile(options);
