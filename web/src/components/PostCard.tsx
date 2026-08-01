@@ -12,6 +12,7 @@ function getGradientColors(section: string, slug: string): { from: string; to: s
     const gradients: Record<string, { from: string; to: string }> = {
         'posts': { from: '#7c3aed', to: '#00d4ff' },
         'technical-sessions': { from: '#00d4ff', to: '#06b6d4' },
+        'stories': { from: '#c98f38', to: '#e6ac52' },
     };
     
     return gradients[section] || { from: '#7c3aed', to: '#00d4ff' };

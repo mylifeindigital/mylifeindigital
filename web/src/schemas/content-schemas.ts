@@ -39,6 +39,14 @@ export const contentSchemas: Record<string, DisplaySchema> = {
     headerStyle: 'minimal',
     cssPrefix: 'article',
   },
+  'stories': {
+    layout: 'article',
+    showTags: false,
+    showDate: false,
+    showAuthor: false,
+    headerStyle: 'minimal',
+    cssPrefix: 'article',
+  },
   'technical-sessions': {
     layout: 'technical-session',
     showTags: true,

@@ -140,3 +140,7 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Generated story content — synced at build time from the story-crafter repo
+# (npm run sync:stories). Not committed; see CR-019/CR-020.
+content/stories/

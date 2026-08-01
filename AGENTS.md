@@ -9,7 +9,7 @@ This file is the canonical guide for coding agents working in this repository. T
 ## Repository Structure
 
 - `web/` - Main Cloudflare Workers web app using Hono and TypeScript.
-- `content/` - Markdown content organized by section, including `posts/` and `technical-sessions/`.
+- `content/` - Markdown content organized by section, including `posts/` and `technical-sessions/`. `content/stories/` is a git-ignored build artifact generated from the sibling `story-crafter` repository via `npm run sync:stories`; do not edit or commit it.
 - `experiments/` - Isolated technical explorations, including the `ts-core-utils` workspace.
 - `scripts/` - Root-level utilities such as session creation and date updates.
 - `docs/` - Git-backed LLM wiki for non-published repository knowledge, with raw sources in `docs/raw/` and maintained pages in `docs/wiki/`.

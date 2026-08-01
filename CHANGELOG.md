@@ -2,6 +2,12 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-08-01
+
+### Added
+
+- Added `scripts/sync-stories.ts` (`npm run sync:stories`) to generate a `content/stories/` section from the sibling `story-crafter` repository, mapping frontmatter and flattening seasons into season-ordered slugs. The output is a git-ignored build artifact, not committed content, consistent with the split-content direction in `CR-007`/`CR-019`/`CR-020`; story-crafter remains the canonical source.
+
 ## 2026-07-04
 
 ### Changed
