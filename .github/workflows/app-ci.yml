@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out application repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           # Full history: the content pipeline's GitDateProcessor derives
           # created/updated dates from git log; a shallow clone would degrade
@@ -43,7 +43,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
