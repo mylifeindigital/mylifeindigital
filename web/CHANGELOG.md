@@ -2,6 +2,16 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.3.4] - 2026-08-01
+
+### Added
+
+- Added a `stories` display schema (article layout, no date/author/tags) and a golden card gradient so the Golden Valley stories section renders as a proper collection at `/stories`
+
+### Changed
+
+- Undated section items now sort by slug instead of title, keeping ordered collections such as season/episode stories in reading order
+
 ## [0.3.3] - 2026-05-23
 
 ### Changed

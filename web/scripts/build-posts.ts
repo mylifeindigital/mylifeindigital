@@ -140,12 +140,13 @@ async function getSectionContent(
         }
     }
 
-    // Sort by date if available, otherwise by title
+    // Sort by date (newest first) when dated; otherwise by slug, which keeps
+    // ordered collections like the season/episode stories in reading order.
     return items.sort((a, b) => {
         if (a.metadata.date && b.metadata.date) {
             return new Date(b.metadata.date).getTime() - new Date(a.metadata.date).getTime();
         }
-        return a.metadata.title.localeCompare(b.metadata.title);
+        return a.slug.localeCompare(b.slug);
     });
 }
 
