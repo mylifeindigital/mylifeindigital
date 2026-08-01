@@ -4,6 +4,7 @@ import * as path from "node:path";
 import * as readline from "node:readline";
 import { fileURLToPath } from "node:url";
 import { createContentFile } from "./content/generate-content.js";
+import { resolveContentDir, describeContentDirSource } from "./content/content-dir.js";
 import {
   contentTemplateIds,
   getContentTemplate,
@@ -26,13 +27,19 @@ async function main(): Promise<void> {
 
   const template = await selectTemplate(args.templateId);
   const title = args.title ?? await prompt(getTitlePrompt(template));
+  const repositoryRoot = getRepositoryRoot();
+  const contentDirResolution = resolveContentDir({ repositoryRoot });
   const result = createContentFile({
     templateId: template.id,
     title,
-    repositoryRoot: getRepositoryRoot(),
+    repositoryRoot,
+    contentRoot: contentDirResolution.contentDir,
   });
 
-  console.log(`\nCreated ${result.template.label} draft: ${result.relativeOutputPath}\n`);
+  console.log(
+    `\nCreated ${result.template.label} draft: ${result.relativeOutputPath}\n` +
+      `In: ${contentDirResolution.contentDir} — ${describeContentDirSource(contentDirResolution)}\n`,
+  );
 }
 
 function parseArguments(args: string[]): CliArguments {

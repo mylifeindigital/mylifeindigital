@@ -2,6 +2,12 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.3.5] - 2026-08-01
+
+### Changed
+
+- `build-posts` now resolves its content source through the shared `CONTENT_DIR` support (CR-021): environment variable, repository-root `.env`, then the transitional in-repo `content/` fallback, logging the resolved path and provenance. `CONTENT_DIR` is captured before `web/.env` is loaded so the web env file cannot become a competing source for the content path.
+
 ## [0.3.4] - 2026-08-01
 
 ### Added

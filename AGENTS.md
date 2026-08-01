@@ -64,6 +64,7 @@ Section rendering is schema-driven through `web/src/schemas/content-schemas.ts`.
 - TypeScript strict mode is used throughout.
 - Web commands should run from `web/` unless using a root npm workspace command.
 - After modifying content in `content/`, run `npm run build:posts` from `web/`.
+- Content tooling locates the publishable content directory through `scripts/content/content-dir.ts` (CR-021): `CONTENT_DIR` environment variable, then the repository-root `.env`, then a transitional fallback to the in-repo `content/`. New tools that read or write publishable Markdown must use this resolver rather than hardcoding `content/`; `web/.env` must not configure the content path.
 - `web/src/utils/posts-data.ts` is generated and should not be edited manually.
 - Local development secrets belong in `web/.dev.vars`.
 - Worker environment variables are defined in `web/wrangler.toml` under `[vars]`.

@@ -1,6 +1,6 @@
 # CR-021: Add CONTENT_DIR Support To Content Tooling
 
-Status: Proposed  
+Status: Done  
 Priority: High  
 Area: Content Pipeline  
 Created: 2026-06-16
@@ -44,15 +44,15 @@ Tools should resolve the content directory in this order:
 
 ## Acceptance Criteria
 
-- [ ] `web/scripts/build-posts.ts` can read publishable Markdown from `CONTENT_DIR`.
-- [ ] Root content creation scripts can write new publishable Markdown to `CONTENT_DIR`.
-- [ ] Local tooling can load `CONTENT_DIR` from the process environment or root `.env`.
-- [ ] The transitional fallback to the application repository `content/` path is explicit and documented.
-- [ ] The implementation identifies when the fallback should be removed after the split stabilizes.
-- [ ] Missing or invalid `CONTENT_DIR` produces a clear actionable error when fallback is disabled or unavailable.
-- [ ] The implementation avoids treating `web/.env` as a competing source for the content repository path.
-- [ ] Local build and content-creation commands are verified against a sibling content checkout or a documented test path.
-- [ ] Generated `web/src/utils/posts-data.ts` remains generated-only and is not edited manually.
+- [x] `web/scripts/build-posts.ts` can read publishable Markdown from `CONTENT_DIR`.
+- [x] Root content creation scripts can write new publishable Markdown to `CONTENT_DIR`.
+- [x] Local tooling can load `CONTENT_DIR` from the process environment or root `.env`.
+- [x] The transitional fallback to the application repository `content/` path is explicit and documented.
+- [x] The implementation identifies when the fallback should be removed after the split stabilizes.
+- [x] Missing or invalid `CONTENT_DIR` produces a clear actionable error when fallback is disabled or unavailable.
+- [x] The implementation avoids treating `web/.env` as a competing source for the content repository path.
+- [x] Local build and content-creation commands are verified against a sibling content checkout or a documented test path.
+- [x] Generated `web/src/utils/posts-data.ts` remains generated-only and is not edited manually.
 
 ## Implementation Notes
 
@@ -67,3 +67,15 @@ Tools should resolve the content directory in this order:
 ## Outcome
 
 Pending implementation.
+
+## Outcome
+
+Implemented on 2026-08-01.
+
+- Added `scripts/content/content-dir.ts` as the shared resolver: `CONTENT_DIR` from the process environment, then `CONTENT_DIR` from the repository-root `.env` (parsed directly, no root dotenv dependency), then the transitional fallback to the application repository `content/`. Explicitly configured paths that do not exist fail with an actionable error; the fallback also fails with guidance when absent.
+- Wired the resolver into `web/scripts/build-posts.ts`, `scripts/new-content.ts` (via a now-required `contentRoot` option on `createContentFile`), `scripts/update-date.ts`, and `scripts/sync-stories.ts`. Each tool logs the resolved directory and its provenance.
+- `web/scripts/build-posts.ts` captures `CONTENT_DIR` from the real environment before dotenv loads `web/.env`, so `web/.env` cannot become a competing source for the content path.
+- Content templates' `outputDirectory` is now relative to the resolved content directory (`posts`, `pages`), keeping all tooling dependent only on the content directory itself, never its parent.
+- Added root `.env.example` documenting `CONTENT_DIR=../mylifeindigital.content/content`.
+- Covered by `scripts/content/content-dir.test.ts` and verified end-to-end against a simulated sibling content checkout (build, sync, create, update-date, and the invalid-path error case).
+- Remove the fallback and require `CONTENT_DIR` once the CR-020 migration has stabilized; the resolver documents this condition.

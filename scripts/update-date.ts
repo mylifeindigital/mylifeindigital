@@ -3,9 +3,12 @@
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
+import { resolveContentDir, describeContentDirSource } from "./content/content-dir.js";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
-const CONTENT_DIR = path.join(SCRIPT_DIR, "..", "content");
+const REPOSITORY_ROOT = path.resolve(SCRIPT_DIR, "..");
+const contentDirResolution = resolveContentDir({ repositoryRoot: REPOSITORY_ROOT });
+const CONTENT_DIR = contentDirResolution.contentDir;
 
 function getToday(): string {
   const now = new Date();
@@ -100,6 +103,7 @@ async function main() {
   }
 
   console.log("\n📅 Update Date Tool\n");
+  console.log(`Content: ${CONTENT_DIR} — ${describeContentDirSource(contentDirResolution)}\n`);
 
   if (args.includes("--all")) {
     // Update all markdown files

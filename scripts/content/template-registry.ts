@@ -20,6 +20,7 @@ export interface ContentTemplateDefinition {
   id: ContentTemplateId;
   label: string;
   templatePath: string;
+  /** Relative to the resolved content directory (CR-021), e.g. "posts". */
   outputDirectory: string;
   promptFields: ContentTemplatePromptField[];
   filenameStrategy: ContentTemplateFilenameStrategy;
@@ -33,7 +34,7 @@ export const contentTemplates = {
     id: "post",
     label: "Post",
     templatePath: "scripts/templates/post.md",
-    outputDirectory: "content/posts",
+    outputDirectory: "posts",
     promptFields: [
       {
         key: "title",
@@ -65,7 +66,7 @@ export const contentTemplates = {
     id: "about",
     label: "About",
     templatePath: "scripts/templates/about.md",
-    outputDirectory: "content/pages",
+    outputDirectory: "pages",
     promptFields: [
       {
         key: "title",
