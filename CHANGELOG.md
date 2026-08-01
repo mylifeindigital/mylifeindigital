@@ -6,6 +6,8 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ### Added
 
+- Started `CR-020` (step 1): created the private `mylifeindigital.content` repository and migrated a copy of the publishable Markdown source tree (`content/index.md`, `pages/`, `posts/`, `technical-sessions/` — 20 files), verified the application builds from the new checkout via `CONTENT_DIR`, and documented the dual-period rule: this repository stays canonical until the `CR-019` deployment workflow is validated, Cloudflare's native Git build is disabled, and the placeholder cutover completes.
+
 - Started `CR-019` (phase 1): added `.github/workflows/app-ci.yml`, a no-deploy GitHub Actions validation workflow for pull requests, `main` pushes, and manual dispatch — locked dependency install, script tests, both type checks, `build:posts` content generation, and a credential-free `wrangler deploy --dry-run` bundle proof. Production deployment remains with the existing Cloudflare path until the phase-3 `deploy.yml` is validated.
 
 - Completed `CR-021`: content tooling now resolves the publishable content directory through shared `CONTENT_DIR` support (`scripts/content/content-dir.ts`) — process environment first, then the repository-root `.env`, then a transitional fallback to the in-repo `content/` directory. Wired into `web/scripts/build-posts.ts`, `scripts/new-content.ts`, `scripts/update-date.ts`, and `scripts/sync-stories.ts`, each logging the resolved path and its provenance. Added root `.env.example` documenting the `CONTENT_DIR=../mylifeindigital.content/content` convention ahead of the `CR-020` split.

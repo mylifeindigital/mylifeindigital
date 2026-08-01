@@ -1,6 +1,6 @@
 # CR-020: Create Content Repository And Migrate Files
 
-Status: Proposed  
+Status: In Progress  
 Priority: High  
 Area: Architecture  
 Created: 2026-06-16
@@ -51,17 +51,17 @@ Protect `main` in both repositories before automated GitHub Actions production d
 
 ## Acceptance Criteria
 
-- [ ] A local `mylifeindigital.content` repository exists.
-- [ ] A GitHub repository exists for `mylifeindigital.content`.
-- [ ] Publishable Markdown is migrated to `mylifeindigital.content/content/`.
-- [ ] `content/index.md`, `content/pages/`, `content/posts/`, and `content/technical-sessions/` are present in the content repository.
-- [ ] Technical sessions are migrated because they are rendered publishable content.
-- [ ] Non-content application files, docs, change requests, build scripts, generated artifacts, and image manifest state remain in `mylifeindigital`.
+- [x] A local `mylifeindigital.content` repository exists.
+- [x] A GitHub repository exists for `mylifeindigital.content`.
+- [x] Publishable Markdown is migrated to `mylifeindigital.content/content/`.
+- [x] `content/index.md`, `content/pages/`, `content/posts/`, and `content/technical-sessions/` are present in the content repository.
+- [x] Technical sessions are migrated because they are rendered publishable content.
+- [x] Non-content application files, docs, change requests, build scripts, generated artifacts, and image manifest state remain in `mylifeindigital`.
 - [ ] The application repository `content/` directory contains only a README placeholder after cutover.
-- [ ] The content repository includes a minimal `.gitignore`.
-- [ ] The content repository includes a README that explains its purpose, folder structure, and relationship to the application repository.
+- [x] The content repository includes a minimal `.gitignore`.
+- [x] The content repository includes a README that explains its purpose, folder structure, and relationship to the application repository.
 - [ ] `main` branch protection expectations are documented for both repositories before automated production deployment is enabled.
-- [ ] The migration does not require GitHub Actions production deployment to be enabled in the same change.
+- [x] The migration does not require GitHub Actions production deployment to be enabled in the same change.
 
 ## Implementation Notes
 
@@ -77,4 +77,9 @@ Protect `main` in both repositories before automated GitHub Actions production d
 
 ## Outcome
 
-Pending implementation.
+In progress — step 1 (dual period) completed on 2026-08-01.
+
+- Created the local and GitHub `mylifeindigital.content` repository (private) and migrated a copy of `content/index.md`, `content/pages/`, `content/posts/`, and `content/technical-sessions/` (20 files). The repository includes a README documenting purpose, structure, the CONTENT_DIR convention, and the dual-period rule, plus a `.gitignore` that also excludes the build-time `content/stories/` artifact.
+- Verified the application build end-to-end from the new checkout: `build:posts` with `CONTENT_DIR=../mylifeindigital.content/content` builds 2 sections, 16 items, and 1 standalone page.
+- The application repository remains canonical: its `content/` tree is unchanged and Cloudflare still deploys from it. The placeholder-README cutover happens only after the CR-019 deployment workflow is validated and Cloudflare's native Git build is disabled.
+- Branch protection on the content repository is pending a GitHub plan upgrade (branch protection on private repositories requires GitHub Pro); the decision to keep the repository private was explicit. Cross-repository checkout in CR-019 workflows will therefore need a fine-grained read-only PAT scoped to `mylifeindigital.content` and `story-crafter`.
