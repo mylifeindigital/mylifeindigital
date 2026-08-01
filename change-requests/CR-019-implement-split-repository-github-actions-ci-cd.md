@@ -1,6 +1,6 @@
 # CR-019: Implement Split-Repository GitHub Actions CI/CD
 
-Status: Proposed  
+Status: In Progress  
 Priority: High  
 Area: Deployment  
 Created: 2026-06-14
@@ -119,4 +119,7 @@ Generated `posts-data.ts` remains a build artifact rather than canonical content
 
 ## Outcome
 
-Pending implementation.
+In progress.
+
+- **Phase 1 (2026-08-01):** Added `.github/workflows/app-ci.yml` — no-deploy validation on pull requests, `main` pushes, and manual dispatch. It installs locked root-workspace dependencies, runs script tests and both type checks, generates `web/src/utils/posts-data.ts` (plain `build:posts`, no image generation, so validation never depends on OpenAI credentials), and proves the Worker bundles via `wrangler deploy --dry-run`. Least-privilege (`contents: read`), no secrets, per-ref concurrency cancellation, full-depth checkout so `GitDateProcessor` dates stay correct. Until the CR-020 split, content resolves through the CR-021 transitional fallback; the content-repository checkout and `CONTENT_DIR` wiring land with phases 2–3, and the stories section is intentionally absent from CI until the deploy workflow assembles it.
+- Remaining: phase 2 (content CI in `mylifeindigital.content`) and phase 3 (`deploy.yml` as the single production deployment owner, then disable Cloudflare's native Git build).

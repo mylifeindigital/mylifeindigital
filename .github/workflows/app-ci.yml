@@ -1,0 +1,72 @@
+# App CI — CR-019 phase 1 (validation only, never deploys).
+#
+# Proves that a checkout of this repository can install locked dependencies,
+# pass tests and type checks, generate web/src/utils/posts-data.ts, and bundle
+# the Worker — without deploying and without any credentials or secrets.
+#
+# Content source: until the CR-020 split, publishable Markdown lives in this
+# repository and the CR-021 resolver uses its transitional fallback (content/).
+# When mylifeindigital.content exists, phase 2/3 add a second checkout here and
+# set CONTENT_DIR to it. The stories section (content/stories/) is a build-time
+# artifact synced from the story-crafter repository; it is intentionally absent
+# in CI until the deploy workflow (phase 3) assembles it.
+#
+# Production deployment is owned exclusively by deploy.yml (phase 3, not yet
+# implemented). This workflow must never receive deployment credentials.
+
+name: App CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: app-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate (no deploy)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out application repository
+        uses: actions/checkout@v4
+        with:
+          # Full history: the content pipeline's GitDateProcessor derives
+          # created/updated dates from git log; a shallow clone would degrade
+          # them silently.
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies (root workspaces)
+        run: npm ci
+
+      - name: Type-check root scripts
+        run: npm run typecheck:scripts
+
+      - name: Run script tests
+        run: npm run test:scripts
+
+      - name: Generate content data (posts-data.ts)
+        working-directory: web
+        # Plain build:posts — no --generate-images, so ordinary validation
+        # never depends on OpenAI credentials or credits (CR-019).
+        run: npm run build:posts
+
+      - name: Type-check web app
+        working-directory: web
+        run: npx tsc --noEmit
+
+      - name: Prove the Worker bundles (wrangler dry run)
+        working-directory: web
+        run: npx wrangler deploy --dry-run --outdir=.wrangler-ci-dist

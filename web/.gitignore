@@ -26,3 +26,6 @@ src/utils/posts-data.ts
 .DS_Store
 Thumbs.db
 
+
+# CI wrangler dry-run output (app-ci.yml)
+.wrangler-ci-dist/
