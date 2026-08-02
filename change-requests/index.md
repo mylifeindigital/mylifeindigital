@@ -38,10 +38,13 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-022 | Update README, workspace, and local docs | Done | Medium | Documentation | 2026-06-16 | [CR-022-update-readme-workspace-and-local-docs.md](./CR-022-update-readme-workspace-and-local-docs.md) |
 | CR-023 | Establish baseline test setup | Proposed | Medium | Quality | 2026-06-16 | [CR-023-establish-baseline-test-setup.md](./CR-023-establish-baseline-test-setup.md) |
 | CR-024 | Section-specific content styling | Proposed | Medium | Web Content | 2026-08-02 | [CR-024-section-specific-content-styling.md](./CR-024-section-specific-content-styling.md) |
+| CR-025 | Retire local deployment paths | Proposed | Medium | Deployment | 2026-08-02 | [CR-025-retire-local-deployment-paths.md](./CR-025-retire-local-deployment-paths.md) |
 
 ## Backlog Grooming Notes
 
 ### 2026-08-02
+
+- Added `CR-025` to retire the pre-Actions deployment scripts, which survived `CR-019` and `CR-020` unchanged and have become misleading rather than merely redundant. Root `npm run deploy` chains `update-date --all`, so it now rewrites frontmatter across the *content* repository checkout; and the `web` deploy script omits `sync:stories`, so a local deploy publishes a different artifact than `deploy.yml` produces — silently, using the operator's own Wrangler credentials. No workflow depends on either script, so removal cannot affect CI or production. The open decision is whether a break-glass local deploy should exist at all, given `workflow_dispatch` already takes explicit refs for recovery.
 
 - Reconciled `CR-019` and `CR-021` after a review pass against `SKILL.md`. `CR-019` had been marked `Done` with two unchecked acceptance criteria, which the completion rule does not allow. Both are now genuinely satisfied rather than merely ticked: content-requested deployment is proven by successful `repository_dispatch` runs from real content and story merges, and the missing operational documentation landed as `.github/DEPLOYMENT.md` — normal deployment, manual redeployment, rollback by redeploying known-good SHAs, and failure handling. The stale dual-period comment in the `deploy.yml` header was corrected in the same pass. `CR-021` carried a leftover `## Outcome / Pending implementation.` block above its real outcome, so the file read as complete and pending at once; the duplicate is removed.
 
