@@ -37,10 +37,13 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-021 | Add CONTENT_DIR support to content tooling | Done | High | Content Pipeline | 2026-06-16 | [CR-021-add-content-dir-support-to-content-tooling.md](./CR-021-add-content-dir-support-to-content-tooling.md) |
 | CR-022 | Update README, workspace, and local docs | Done | Medium | Documentation | 2026-06-16 | [CR-022-update-readme-workspace-and-local-docs.md](./CR-022-update-readme-workspace-and-local-docs.md) |
 | CR-023 | Establish baseline test setup | Proposed | Medium | Quality | 2026-06-16 | [CR-023-establish-baseline-test-setup.md](./CR-023-establish-baseline-test-setup.md) |
+| CR-024 | Section-specific content styling | Proposed | Medium | Web Content | 2026-08-02 | [CR-024-section-specific-content-styling.md](./CR-024-section-specific-content-styling.md) |
 
 ## Backlog Grooming Notes
 
 ### 2026-08-02
+
+- Added `CR-024` to give each content section its own visual identity, starting with a story theme derived from the `story-crafter` reading app. Two findings shaped its phasing: the display schema's `cssPrefix` field is declared but read nowhere, so the per-section styling hook exists in name only; and the reader's palette is already container-scoped and token-driven, so it ports onto a section scope without a parallel stylesheet. The work is staged so the mechanical token pass over `main.css` lands with no visual change before any theme is introduced.
 
 - Completed `CR-022`: added the committed `mylifeindigital.code-workspace` (application, content, and story repositories as sibling folders in one VS Code window) and brought local documentation in line with the completed cutover — the application README is now a profile and orientation document instead of a content catalog, `AGENTS.md` and the `content/` placeholder describe `CONTENT_DIR` as required with publishable Markdown in `mylifeindigital.content`, the wiki's authoring-surface decision records the split-repository workspace, and the content repository README replaced its dual-period status with the live one. The content repository's `DEPLOY_DISPATCH_TOKEN` secret is configured, closing the operational item left open below.
 
