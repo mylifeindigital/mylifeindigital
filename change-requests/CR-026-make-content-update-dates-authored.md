@@ -1,6 +1,6 @@
 # CR-026: Make Content Update Dates Authored
 
-Status: Proposed  
+Status: Done  
 Priority: High  
 Area: Content Pipeline  
 Created: 2026-08-02
@@ -53,14 +53,14 @@ The rejected alternative is keeping git as the source of truth and repairing the
 
 ## Acceptance Criteria
 
-- [ ] The build no longer overwrites an authored `updated` value.
-- [ ] Published posts display their authored update dates, not the migration date.
-- [ ] Content with no authored `updated` value renders no update line rather than a derived one.
-- [ ] An update line appears only when `updated` differs from `date`.
-- [ ] No tooling can stamp an update date across many files at once.
-- [ ] The `update-date` help text describes only flags that exist.
-- [ ] Preview and parity tooling stay consistent with the build pipeline.
-- [ ] The authoring rule for `updated` is documented where authors will find it.
+- [x] The build no longer overwrites an authored `updated` value.
+- [x] Published posts display their authored update dates, not the migration date.
+- [x] Content with no authored `updated` value renders no update line rather than a derived one.
+- [x] An update line appears only when `updated` differs from `date`.
+- [x] No tooling can stamp an update date across many files at once.
+- [x] The `update-date` help text describes only flags that exist.
+- [x] Preview and parity tooling stay consistent with the build pipeline.
+- [x] The authoring rule for `updated` is documented where authors will find it.
 
 ## Implementation Notes
 
@@ -75,4 +75,14 @@ The rejected alternative is keeping git as the source of truth and repairing the
 
 ## Outcome
 
-Pending implementation.
+Implemented on 2026-08-02.
+
+- Deleted `web/scripts/processors/GitDateProcessor.ts` and unwired it from `build-posts.ts`, `run-preview-worker-poc.ts`, `compare-preview-parity.ts`, and `scripts/processors/index.ts`. `updated` now comes from frontmatter only.
+- Verified against the generated artifact rather than by inspection: `web/src/utils/posts-data.ts` previously carried `2026-08-01` for every file and now carries none — the authored values (`2025-12-30`, `2026-01-02`, `2026-01-08`, `2026-01-20`, `2026-05-06`, and others) are back.
+- `ArticleLayout` shows `(Updated: ...)` only when the value differs from `date`, so an unrevised post carries no update line.
+- `update-date` lost `--all`. Passing it — or the never-implemented `--recent` — now exits non-zero explaining that stamping every file asserts revisions that did not happen, rather than silently doing nothing.
+- The parity script's note claiming `updated` differences are expected was false once the processor left; it now states that `updated` is frontmatter-only and should match everywhere.
+- The root `deploy` script's `update-date -- --all &&` prefix was removed, since it would otherwise call a flag that now exits non-zero. Whether the script survives at all remains `CR-025`'s decision; this change only removes the half this request invalidated.
+- Documented the authoring rule in the README and in the tool's own help text.
+- Checks: script typecheck, 10/10 script tests, and `tsc --noEmit` in `web` all clean.
+- Not done here: the three files without an authored `updated` (two drafts and `content/pages/about.md`) now render no update line, which is correct. If any of them has genuinely been revised, the value should be added by hand in the content repository.
