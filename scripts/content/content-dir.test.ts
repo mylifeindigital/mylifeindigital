@@ -14,18 +14,10 @@ afterEach(() => {
 });
 
 describe("resolveContentDir", () => {
-  it("uses the transitional fallback when nothing is configured", () => {
+  it("requires CONTENT_DIR: fails with actionable guidance when nothing is configured", () => {
+    // Even when a legacy content/ directory exists (post-cutover placeholder),
+    // resolution must fail rather than silently build from it.
     const repositoryRoot = createRepositoryRoot({ withFallbackContent: true });
-
-    const resolution = resolveContentDir({ repositoryRoot, env: {} });
-
-    assert.equal(resolution.source, "fallback");
-    assert.equal(resolution.contentDir, path.join(repositoryRoot, "content"));
-    assert.match(describeContentDirSource(resolution), /fallback/);
-  });
-
-  it("fails with actionable guidance when nothing is configured and no fallback exists", () => {
-    const repositoryRoot = createRepositoryRoot({ withFallbackContent: false });
 
     assert.throws(
       () => resolveContentDir({ repositoryRoot, env: {} }),
@@ -73,11 +65,15 @@ describe("resolveContentDir", () => {
   });
 
   it("treats an empty environment value as unset", () => {
-    const repositoryRoot = createRepositoryRoot({ withFallbackContent: true });
+    const repositoryRoot = createRepositoryRoot({ withFallbackContent: false });
+    const contentDir = createContentCheckout(repositoryRoot, "checkout/content");
+    fs.writeFileSync(path.join(repositoryRoot, ".env"), `CONTENT_DIR=${contentDir}\n`);
 
     const resolution = resolveContentDir({ repositoryRoot, env: { CONTENT_DIR: "  " } });
 
-    assert.equal(resolution.source, "fallback");
+    assert.equal(resolution.source, "root-env-file");
+    assert.equal(resolution.contentDir, contentDir);
+    assert.match(describeContentDirSource(resolution), /repository-root/);
   });
 
   it("fails loudly when a configured directory does not exist", () => {

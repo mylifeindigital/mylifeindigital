@@ -4,12 +4,13 @@
 # pass tests and type checks, generate web/src/utils/posts-data.ts, and bundle
 # the Worker — without deploying and without any credentials or secrets.
 #
-# Content source: until the CR-020 split, publishable Markdown lives in this
-# repository and the CR-021 resolver uses its transitional fallback (content/).
-# When mylifeindigital.content exists, phase 2/3 add a second checkout here and
-# set CONTENT_DIR to it. The stories section (content/stories/) is a build-time
-# artifact synced from the story-crafter repository; it is intentionally absent
-# in CI until the deploy workflow (phase 3) assembles it.
+# Content source: publishable Markdown lives in mylifeindigital.content
+# (CR-020 cutover complete); this workflow checks it out and sets CONTENT_DIR.
+# The checkout uses the read-only CONTENT_CHECKOUT_TOKEN secret, which is
+# available to same-repository pull requests but not to fork pull requests —
+# acceptable for a single-maintainer repository. The stories section is a
+# build-time artifact assembled only by the deploy workflow; it is
+# intentionally absent here.
 #
 # Production deployment is owned exclusively by deploy.yml (phase 3, not yet
 # implemented). This workflow must never receive deployment credentials.
@@ -36,10 +37,16 @@ jobs:
     steps:
       - name: Check out application repository
         uses: actions/checkout@v5
+
+      - name: Check out content repository
+        uses: actions/checkout@v5
         with:
-          # Full history: the content pipeline's GitDateProcessor derives
-          # created/updated dates from git log; a shallow clone would degrade
-          # them silently.
+          repository: mylifeindigital/mylifeindigital.content
+          ref: main
+          path: content-repo
+          token: ${{ secrets.CONTENT_CHECKOUT_TOKEN }}
+          # Full history: GitDateProcessor derives updated dates from the
+          # content repository's git log.
           fetch-depth: 0
 
       - name: Set up Node.js
@@ -59,6 +66,8 @@ jobs:
 
       - name: Generate content data (posts-data.ts)
         working-directory: web
+        env:
+          CONTENT_DIR: ${{ github.workspace }}/content-repo/content
         # Plain build:posts — no --generate-images, so ordinary validation
         # never depends on OpenAI credentials or credits (CR-019).
         run: npm run build:posts

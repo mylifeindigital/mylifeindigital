@@ -1,6 +1,6 @@
 # CR-020: Create Content Repository And Migrate Files
 
-Status: In Progress  
+Status: Done  
 Priority: High  
 Area: Architecture  
 Created: 2026-06-16
@@ -57,10 +57,10 @@ Protect `main` in both repositories before automated GitHub Actions production d
 - [x] `content/index.md`, `content/pages/`, `content/posts/`, and `content/technical-sessions/` are present in the content repository.
 - [x] Technical sessions are migrated because they are rendered publishable content.
 - [x] Non-content application files, docs, change requests, build scripts, generated artifacts, and image manifest state remain in `mylifeindigital`.
-- [ ] The application repository `content/` directory contains only a README placeholder after cutover.
+- [x] The application repository `content/` directory contains only a README placeholder after cutover.
 - [x] The content repository includes a minimal `.gitignore`.
 - [x] The content repository includes a README that explains its purpose, folder structure, and relationship to the application repository.
-- [ ] `main` branch protection expectations are documented for both repositories before automated production deployment is enabled.
+- [x] `main` branch protection expectations are documented for both repositories before automated production deployment is enabled.
 - [x] The migration does not require GitHub Actions production deployment to be enabled in the same change.
 
 ## Implementation Notes
@@ -77,7 +77,11 @@ Protect `main` in both repositories before automated GitHub Actions production d
 
 ## Outcome
 
-In progress — step 1 (dual period) completed on 2026-08-01.
+Completed. Step 1 (dual period) on 2026-08-01; cutover on 2026-08-02.
+
+- **Cutover (2026-08-02):** After the CR-019 deployment workflow was validated with a real production deployment and Cloudflare's native Git build was disconnected, the publishable Markdown tree was removed from the application repository and `content/` now contains only the placeholder README (pointing at `mylifeindigital.content`, the `CONTENT_DIR` convention, and the deploy workflow). `app-ci.yml` now checks out the content repository and sets `CONTENT_DIR`. The CR-021 transitional fallback was removed in the same change — with only a placeholder present, falling back would silently build an empty site, so `CONTENT_DIR` is now required and missing configuration fails with actionable guidance.
+
+Step 1 record (2026-08-01):
 
 - Created the local and GitHub `mylifeindigital.content` repository (private) and migrated a copy of `content/index.md`, `content/pages/`, `content/posts/`, and `content/technical-sessions/` (20 files). The repository includes a README documenting purpose, structure, the CONTENT_DIR convention, and the dual-period rule, plus a `.gitignore` that also excludes the build-time `content/stories/` artifact.
 - Verified the application build end-to-end from the new checkout: `build:posts` with `CONTENT_DIR=../mylifeindigital.content/content` builds 2 sections, 16 items, and 1 standalone page.
