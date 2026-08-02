@@ -6,6 +6,8 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ### Added
 
+- Added `.github/DEPLOYMENT.md`, the production deployment runbook: the three triggers and how concurrent deployments queue, manual redeployment, rollback by redeploying known-good SHAs from a run summary, failure handling and the common failure modes, and where each credential lives. Linked from `README.md`, `AGENTS.md`, and the `deploy.yml` header. This satisfies the last open `CR-019` acceptance criterion, which `CR-022` had been expected to cover but did not — that request scoped the README to orientation, which left failure handling and rollback undocumented.
+
 - Completed `CR-022` (workspace): added `mylifeindigital.code-workspace`, committed in this repository, which opens `mylifeindigital`, `mylifeindigital.content`, and `story-crafter` as sibling folders in one VS Code window with shared search excludes for generated artifacts. Sibling checkouts under one parent directory are now the documented local layout; an uncloned sibling degrades to an unavailable folder rather than breaking the workspace.
 
 ### Changed
@@ -14,9 +16,11 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 - Completed the `CR-020` cutover: publishable Markdown was removed from this repository (`content/` is now a placeholder README pointing at `mylifeindigital.content`), `app-ci.yml` validates against a checkout of the content repository, and the `CR-021` transitional fallback was removed — `CONTENT_DIR` is now required and unconfigured content tooling fails with actionable guidance instead of silently building an empty site. `CR-019` and `CR-020` are Done: production deploys exclusively through the GitHub Actions Deploy workflow, verified live with Cloudflare's native Git build disconnected.
 
-### Added
-
 - Advanced `CR-019` to phase 3: added `.github/workflows/deploy.yml` as the single production deployment owner — triggered by application `main` merges, content-repository dispatch, or manual dispatch with explicit refs — assembling the application, `mylifeindigital.content`, and `story-crafter` repositories, syncing stories at build time, and recording all resolved SHAs per deployment. Phase 2 (`content-ci.yml`) and `request-deploy.yml` live in the content repository.
+
+### Fixed
+
+- Reconciled `CR-019` and `CR-021` after a change-request review pass. `CR-019` was marked `Done` with two unchecked acceptance criteria; both are now satisfied — content-requested deployment is proven by successful `repository_dispatch` runs from real content and story merges, and the deployment documentation exists. `CR-021` had a leftover `## Outcome / Pending implementation.` block above its real outcome. Corrected the `deploy.yml` header comment, which still described the pre-cutover dual period and an active Cloudflare Git build.
 
 ## 2026-08-01
 
