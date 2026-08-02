@@ -1,6 +1,6 @@
 # CR-019: Implement Split-Repository GitHub Actions CI/CD
 
-Status: In Progress  
+Status: Done  
 Priority: High  
 Area: Deployment  
 Created: 2026-06-14
@@ -89,22 +89,22 @@ Generated `posts-data.ts` remains a build artifact rather than canonical content
 
 ## Acceptance Criteria
 
-- [ ] GitHub Actions implementation is phased so no-deploy validation is working before production deployment is enabled.
-- [ ] Application pull requests run build-only CI and never deploy.
-- [ ] Content pull requests run content validation and never deploy.
-- [ ] The application repository contains the only workflow that runs `wrangler deploy`.
-- [ ] A trusted application `main` merge can trigger production deployment with a selected content commit.
+- [x] GitHub Actions implementation is phased so no-deploy validation is working before production deployment is enabled.
+- [x] Application pull requests run build-only CI and never deploy.
+- [x] Content pull requests run content validation and never deploy.
+- [x] The application repository contains the only workflow that runs `wrangler deploy`.
+- [x] A trusted application `main` merge can trigger production deployment with a selected content commit.
 - [ ] A trusted content `main` merge can request production deployment through the application repository workflow.
-- [ ] Manual deployment supports explicit application and content refs for recovery or controlled redeployment.
-- [ ] The deployment workflow checks out both repositories and passes a configured content path to `web/scripts/build-posts.ts`.
-- [ ] The deployment workflow validates, generates `web/src/utils/posts-data.ts`, builds, and deploys the combined Worker artifact.
-- [ ] Every deployment records the resolved application SHA and content SHA.
-- [ ] Cross-repository checkout and dispatch credentials are documented and use least privilege.
-- [ ] Cloudflare credentials are stored as protected secrets and are unavailable to untrusted pull-request workflows.
-- [ ] Production deployment uses concurrency protection to prevent competing deployments.
-- [ ] Required CI checks are compatible with branch protection in both repositories.
-- [ ] OpenAI-backed image generation is optional/separate unless publication explicitly requires generated images.
-- [ ] Cloudflare's native Git deployment path is disabled or constrained after GitHub Actions deployment is verified.
+- [x] Manual deployment supports explicit application and content refs for recovery or controlled redeployment.
+- [x] The deployment workflow checks out both repositories and passes a configured content path to `web/scripts/build-posts.ts`.
+- [x] The deployment workflow validates, generates `web/src/utils/posts-data.ts`, builds, and deploys the combined Worker artifact.
+- [x] Every deployment records the resolved application SHA and content SHA.
+- [x] Cross-repository checkout and dispatch credentials are documented and use least privilege.
+- [x] Cloudflare credentials are stored as protected secrets and are unavailable to untrusted pull-request workflows.
+- [x] Production deployment uses concurrency protection to prevent competing deployments.
+- [x] Required CI checks are compatible with branch protection in both repositories.
+- [x] OpenAI-backed image generation is optional/separate unless publication explicitly requires generated images.
+- [x] Cloudflare's native Git deployment path is disabled or constrained after GitHub Actions deployment is verified.
 - [ ] Documentation explains normal deployment, manual redeployment, failure handling, and rollback using explicit refs.
 
 ## Implementation Notes
@@ -124,4 +124,5 @@ In progress.
 - **Phase 1 (2026-08-01):** Added `.github/workflows/app-ci.yml` — no-deploy validation on pull requests, `main` pushes, and manual dispatch. It installs locked root-workspace dependencies, runs script tests and both type checks, generates `web/src/utils/posts-data.ts` (plain `build:posts`, no image generation, so validation never depends on OpenAI credentials), and proves the Worker bundles via `wrangler deploy --dry-run`. Least-privilege (`contents: read`), no secrets, per-ref concurrency cancellation, full-depth checkout so `GitDateProcessor` dates stay correct. Until the CR-020 split, content resolves through the CR-021 transitional fallback; the content-repository checkout and `CONTENT_DIR` wiring land with phases 2–3, and the stories section is intentionally absent from CI until the deploy workflow assembles it.
 - **Phase 2 (2026-08-01):** Added `content-ci.yml` to `mylifeindigital.content` — on content pull requests and `main` pushes it checks out the public application repository (no credential), installs locked dependencies, and runs `build:posts` with `CONTENT_DIR` pointing at the content checkout, so frontmatter and pipeline incompatibilities fail before merge. Manual dispatch accepts an `app_ref` input. Validated live on the content repository's first pull request.
 - **Phase 3 (2026-08-02):** Added `deploy.yml` as the single production deployment owner — triggers on trusted application `main` merges, `repository_dispatch` (`deploy-content`) from the content repository, and manual dispatch with explicit `app_ref`/`content_ref`/`story_ref` inputs for recovery and rollback. It assembles three repositories (application + `mylifeindigital.content` + `story-crafter` via a read-only fine-grained PAT), validates, syncs stories, generates `posts-data.ts`, type-checks, deploys with Wrangler (`CLOUDFLARE_API_TOKEN`/`CLOUDFLARE_ACCOUNT_ID` secrets, used only by the deploy step), and records all three resolved SHAs in the workflow summary. Production concurrency queues deployments without cancelling in-flight runs; the job uses the `production` environment. Added `request-deploy.yml` to the content repository (requires a `DEPLOY_DISPATCH_TOKEN` secret there: fine-grained PAT, Contents read-write on the application repository).
-- Remaining: validate `deploy.yml` with a real production deployment, disable Cloudflare's native Git build, then complete the CR-020 cutover.
+- **Validation and completion (2026-08-02):** `deploy.yml` was validated with a real production deployment (all steps green; the three resolved SHAs recorded in the workflow summary), and the live site was verified serving the assembled artifact — including the stories section — at mylifeindigital.co.za. Cloudflare's native Git build was then disconnected, making the Deploy workflow the only production path, and a manual `workflow_dispatch` deployment confirmed the assembled artifact is definitively live. The CR-020 cutover completed afterwards; `app-ci.yml` now validates against a checkout of the content repository.
+- Open items, tracked but not blocking: the content repository's `request-deploy.yml` needs its `DEPLOY_DISPATCH_TOKEN` secret before trusted content merges can request deployment automatically (until then, deploys trigger from application merges or manual dispatch), and broader operational documentation is owned by `CR-022`.

@@ -79,3 +79,4 @@ Implemented on 2026-08-01.
 - Added root `.env.example` documenting `CONTENT_DIR=../mylifeindigital.content/content`.
 - Covered by `scripts/content/content-dir.test.ts` and verified end-to-end against a simulated sibling content checkout (build, sync, create, update-date, and the invalid-path error case).
 - Remove the fallback and require `CONTENT_DIR` once the CR-020 migration has stabilized; the resolver documents this condition.
+- **Addendum (2026-08-02):** The transitional fallback was removed with the CR-020 cutover. With the application repository's `content/` reduced to a placeholder, the fallback would have silently built an empty site; `CONTENT_DIR` is now required and unconfigured tooling fails with actionable guidance.

@@ -14,10 +14,11 @@ import * as path from "node:path";
  *   2. `CONTENT_DIR` from the repository-root `.env` file — the canonical
  *      local content-tooling configuration. `web/.env` is intentionally never
  *      consulted so it cannot become a competing source for the content path.
- *   3. Transitional fallback: `<repositoryRoot>/content`. This exists only
- *      while publishable Markdown still lives in the application repository.
- *      Remove the fallback (and require CONTENT_DIR) once the CR-020 content
- *      repository split has stabilized.
+ *
+ * CONTENT_DIR is required. The pre-cutover transitional fallback to the
+ * in-repo `content/` directory was removed with the CR-020 cutover: the
+ * application repository's `content/` is a placeholder, and silently building
+ * from it would produce an empty site.
  *
  * `CONTENT_DIR` points at the directory that directly contains the section
  * folders (`pages/`, `posts/`, `technical-sessions/`) and `index.md`, e.g.:
@@ -27,7 +28,7 @@ import * as path from "node:path";
  * Relative values resolve against the application repository root.
  */
 
-export type ContentDirSource = "environment" | "root-env-file" | "fallback";
+export type ContentDirSource = "environment" | "root-env-file";
 
 export interface ContentDirResolution {
   /** Absolute path to the content directory. */
@@ -57,18 +58,14 @@ export function resolveContentDir(options: ResolveContentDirOptions): ContentDir
     return validated(repositoryRoot, fromRootEnvFile, "root-env-file");
   }
 
-  // Transitional fallback while content still lives in this repository.
-  const fallback = path.join(repositoryRoot, "content");
-  if (!isDirectory(fallback)) {
-    throw new Error(
-      `Content directory not found. No CONTENT_DIR is configured and the ` +
-        `transitional fallback ${fallback} does not exist.\n` +
-        `Set CONTENT_DIR (environment variable, or CONTENT_DIR=... in the ` +
-        `repository-root .env) to your content checkout, for example:\n` +
-        `  CONTENT_DIR=../mylifeindigital.content/content`,
-    );
-  }
-  return { contentDir: fallback, source: "fallback" };
+  throw new Error(
+    `CONTENT_DIR is not configured. Publishable Markdown lives in the ` +
+      `mylifeindigital.content repository (CR-020), so content tooling needs ` +
+      `a content checkout to work against.\n` +
+      `Set CONTENT_DIR (environment variable, or CONTENT_DIR=... in the ` +
+      `repository-root .env) to your content checkout, for example:\n` +
+      `  CONTENT_DIR=../mylifeindigital.content/content`,
+  );
 }
 
 /** Human-readable provenance for build logs. */
@@ -78,15 +75,13 @@ export function describeContentDirSource(resolution: ContentDirResolution): stri
       return "CONTENT_DIR (environment)";
     case "root-env-file":
       return "CONTENT_DIR (repository-root .env)";
-    case "fallback":
-      return "transitional fallback (repository content/)";
   }
 }
 
 function validated(
   repositoryRoot: string,
   value: string,
-  source: Exclude<ContentDirSource, "fallback">,
+  source: ContentDirSource,
 ): ContentDirResolution {
   const contentDir = path.isAbsolute(value) ? value : path.resolve(repositoryRoot, value);
   if (!isDirectory(contentDir)) {

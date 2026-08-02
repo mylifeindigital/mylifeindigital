@@ -4,6 +4,10 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ## 2026-08-02
 
+### Changed
+
+- Completed the `CR-020` cutover: publishable Markdown was removed from this repository (`content/` is now a placeholder README pointing at `mylifeindigital.content`), `app-ci.yml` validates against a checkout of the content repository, and the `CR-021` transitional fallback was removed — `CONTENT_DIR` is now required and unconfigured content tooling fails with actionable guidance instead of silently building an empty site. `CR-019` and `CR-020` are Done: production deploys exclusively through the GitHub Actions Deploy workflow, verified live with Cloudflare's native Git build disconnected.
+
 ### Added
 
 - Advanced `CR-019` to phase 3: added `.github/workflows/deploy.yml` as the single production deployment owner — triggered by application `main` merges, content-repository dispatch, or manual dispatch with explicit refs — assembling the application, `mylifeindigital.content`, and `story-crafter` repositories, syncing stories at build time, and recording all resolved SHAs per deployment. Phase 2 (`content-ci.yml`) and `request-deploy.yml` live in the content repository.

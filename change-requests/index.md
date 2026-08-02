@@ -32,8 +32,8 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-016 | Render standalone About content | Done | High | Web Content | 2026-05-21 | [CR-016-render-standalone-about-content.md](./CR-016-render-standalone-about-content.md) |
 | CR-017 | Convert docs to LLM wiki | Done | Medium | Process | 2026-05-23 | [CR-017-convert-docs-to-llm-wiki.md](./CR-017-convert-docs-to-llm-wiki.md) |
 | CR-018 | Decide web admin role after content repository split | Proposed | Medium | Web Admin | 2026-05-29 | [CR-018-decide-web-admin-role-after-content-repository-split.md](./CR-018-decide-web-admin-role-after-content-repository-split.md) |
-| CR-019 | Implement split-repository GitHub Actions CI/CD | In Progress | High | Deployment | 2026-06-14 | [CR-019-implement-split-repository-github-actions-ci-cd.md](./CR-019-implement-split-repository-github-actions-ci-cd.md) |
-| CR-020 | Create content repository and migrate files | In Progress | High | Architecture | 2026-06-16 | [CR-020-create-content-repository-and-migrate-files.md](./CR-020-create-content-repository-and-migrate-files.md) |
+| CR-019 | Implement split-repository GitHub Actions CI/CD | Done | High | Deployment | 2026-06-14 | [CR-019-implement-split-repository-github-actions-ci-cd.md](./CR-019-implement-split-repository-github-actions-ci-cd.md) |
+| CR-020 | Create content repository and migrate files | Done | High | Architecture | 2026-06-16 | [CR-020-create-content-repository-and-migrate-files.md](./CR-020-create-content-repository-and-migrate-files.md) |
 | CR-021 | Add CONTENT_DIR support to content tooling | Done | High | Content Pipeline | 2026-06-16 | [CR-021-add-content-dir-support-to-content-tooling.md](./CR-021-add-content-dir-support-to-content-tooling.md) |
 | CR-022 | Update README, workspace, and local docs | Proposed | Medium | Documentation | 2026-06-16 | [CR-022-update-readme-workspace-and-local-docs.md](./CR-022-update-readme-workspace-and-local-docs.md) |
 | CR-023 | Establish baseline test setup | Proposed | Medium | Quality | 2026-06-16 | [CR-023-establish-baseline-test-setup.md](./CR-023-establish-baseline-test-setup.md) |
@@ -41,6 +41,8 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 ## Backlog Grooming Notes
 
 ### 2026-08-02
+
+- Completed `CR-019` and `CR-020`: the production Deploy workflow was validated with a real deployment (live site verified serving the assembled three-repository artifact, stories included), Cloudflare's native Git build was disconnected, and the cutover removed publishable Markdown from the application repository — `content/` is now the placeholder README and `app-ci.yml` validates against a checkout of `mylifeindigital.content`. The `CR-021` transitional fallback was removed in the same change: `CONTENT_DIR` is required, and missing configuration fails loudly instead of silently building an empty site. Remaining operational item: the content repository's `DEPLOY_DISPATCH_TOKEN` secret for automatic deploys on content merges; documentation follow-ups belong to `CR-022`.
 
 - Advanced `CR-019` through phases 2 and 3: `content-ci.yml` validates content pull requests against the application pipeline (proven live), and `deploy.yml` now owns production deployment — three-repository assembly (app, content, story-crafter), stories synced at build time, all resolved SHAs recorded per deployment, manual dispatch with explicit refs for rollback. `request-deploy.yml` in the content repository awaits its `DEPLOY_DISPATCH_TOKEN` secret. Remaining: validate a real production deployment, disable Cloudflare's native Git build, then complete the `CR-020` cutover.
 
