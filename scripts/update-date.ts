@@ -84,12 +84,15 @@ Updates the 'updated' field in markdown frontmatter.
 
 Usage:
   npm run update-date                     # Interactive - shows files to choose from
-  npm run update-date -- <file>           # Update specific file
+  npm run update-date -- <file>           # Update specific file (path relative to your cwd)
   npm run update-date -- --all            # Update all content files
   npm run update-date -- --recent         # Update files modified today (via git)
 
+Publishable content lives in the mylifeindigital.content repository (CR-020),
+so an explicit file path points at that checkout, not at this repository:
+
 Examples:
-  npm run update-date -- content/posts/my-post.md
+  npm run update-date -- ../mylifeindigital.content/content/posts/my-post.md
   npm run update-date -- --all
 `);
 }

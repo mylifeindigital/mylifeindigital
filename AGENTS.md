@@ -6,10 +6,18 @@ This file is the canonical guide for coding agents working in this repository. T
 
 `mylifeindigital` is a personal technical growth platform built as a Hono-based blog deployed on Cloudflare Workers. Content is authored as Markdown with YAML frontmatter, processed at build time, and embedded into the Worker bundle because Workers have no filesystem access at runtime.
 
+The site is assembled from three repositories (CR-007, CR-020):
+
+- `mylifeindigital` (this repository) - application code, content pipeline, deployment, docs wiki, change requests.
+- `mylifeindigital.content` - publishable Markdown (`index.md`, `pages/`, `posts/`, `technical-sessions/`).
+- `story-crafter` - source of the site's `stories` section.
+
+Local work assumes sibling checkouts under one parent directory; `mylifeindigital.code-workspace` opens all three in one VS Code window. Never add publishable Markdown to this repository, and never commit application code to the content repository.
+
 ## Repository Structure
 
 - `web/` - Main Cloudflare Workers web app using Hono and TypeScript.
-- `content/` - Markdown content organized by section, including `posts/` and `technical-sessions/`. `content/stories/` is a git-ignored build artifact generated from the sibling `story-crafter` repository via `npm run sync:stories`; do not edit or commit it.
+- `content/` - Placeholder only (see `content/README.md`). Publishable Markdown lives in `mylifeindigital.content`, resolved through `CONTENT_DIR`. `stories/` inside the resolved content directory is a git-ignored build artifact generated from the sibling `story-crafter` repository via `npm run sync:stories`; do not edit or commit it.
 - `experiments/` - Isolated technical explorations, including the `ts-core-utils` workspace.
 - `scripts/` - Root-level utilities such as session creation and date updates.
 - `docs/` - Git-backed LLM wiki for non-published repository knowledge, with raw sources in `docs/raw/` and maintained pages in `docs/wiki/`.
@@ -20,6 +28,10 @@ This file is the canonical guide for coding agents working in this repository. T
 Run commands from the repo root unless the command says otherwise.
 
 ```bash
+# Local setup (once)
+npm install
+cp .env.example .env          # set CONTENT_DIR to your mylifeindigital.content checkout
+
 # Development
 cd web && npm run dev
 
@@ -29,20 +41,25 @@ npm run build:web
 cd web && npm run build:posts
 cd web && npm run build:posts:images
 
-# Deploying
-npm run deploy
-
 # Content utilities
+npm run new-content -- --type post --title "My New Post"
 npm run new-session
 npm run update-date
+npm run sync:stories          # regenerate stories/ from the sibling story-crafter
+
+# Checks
+npm run test:scripts
+npm run typecheck:scripts
 
 # Image generation
 cd web && npm run generate:images
 ```
 
+Production is deployed only by `.github/workflows/deploy.yml` (CR-019), which assembles all three repositories. The local `npm run deploy` script is a direct Wrangler path, not the production release path; do not use it to publish unless the user explicitly asks.
+
 ## Web App Architecture
 
-The build-time content pipeline reads Markdown files from `content/`, processes them through `web/scripts/`, and generates `web/src/utils/posts-data.ts`. That generated file embeds all content for runtime use.
+The build-time content pipeline reads Markdown files from the resolved `CONTENT_DIR` (the `mylifeindigital.content` checkout), processes them through `web/scripts/`, and generates `web/src/utils/posts-data.ts`. That generated file embeds all content for runtime use.
 
 Pipeline processor order:
 
@@ -63,8 +80,8 @@ Section rendering is schema-driven through `web/src/schemas/content-schemas.ts`.
 
 - TypeScript strict mode is used throughout.
 - Web commands should run from `web/` unless using a root npm workspace command.
-- After modifying content in `content/`, run `npm run build:posts` from `web/`.
-- Content tooling locates the publishable content directory through `scripts/content/content-dir.ts` (CR-021): `CONTENT_DIR` environment variable, then the repository-root `.env`, then a transitional fallback to the in-repo `content/`. New tools that read or write publishable Markdown must use this resolver rather than hardcoding `content/`; `web/.env` must not configure the content path.
+- After modifying content in the resolved content directory, run `npm run build:posts` from `web/`.
+- Content tooling locates the publishable content directory through `scripts/content/content-dir.ts` (CR-021): `CONTENT_DIR` environment variable, then the repository-root `.env`. `CONTENT_DIR` is required and unresolvable configuration fails loudly; the pre-cutover fallback to the in-repo `content/` was removed with CR-020. New tools that read or write publishable Markdown must use this resolver rather than hardcoding `content/`; `web/.env` must not configure the content path.
 - `web/src/utils/posts-data.ts` is generated and should not be edited manually.
 - Local development secrets belong in `web/.dev.vars`.
 - Worker environment variables are defined in `web/wrangler.toml` under `[vars]`.
