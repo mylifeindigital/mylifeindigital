@@ -55,7 +55,7 @@ npm run typecheck:scripts
 cd web && npm run generate:images
 ```
 
-Production is deployed only by `.github/workflows/deploy.yml` (CR-019), which assembles all three repositories. The local `npm run deploy` script is a direct Wrangler path, not the production release path; do not use it to publish unless the user explicitly asks.
+Production is deployed only by `.github/workflows/deploy.yml` (CR-019), which assembles all three repositories; `.github/DEPLOYMENT.md` is the runbook for deploying, redeploying, rolling back, and diagnosing failures. The local `npm run deploy` script is a direct Wrangler path, not the production release path; do not use it to publish unless the user explicitly asks.
 
 ## Web App Architecture
 

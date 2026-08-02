@@ -20,12 +20,13 @@
 #   CONTENT_CHECKOUT_TOKEN — fine-grained PAT, Contents: Read-only on
 #     mylifeindigital.content and story-crafter
 #
-# During the dual period (until CR-020 cutover) mylifeindigital.content@main is
-# a maintained copy of this repository's content/; this workflow already builds
-# from the content repository so the assembled path is exercised before cutover.
-# Cloudflare's native Git build remains active until this workflow has been
-# validated in production; disable it before the CR-020 cutover (sequencing
-# note in change-requests/index.md).
+# The CR-020 cutover is complete: mylifeindigital.content is the sole source of
+# publishable Markdown, and Cloudflare's native Git build is disconnected, so
+# this workflow is the only path to production.
+#
+# Operating this workflow — normal deployment, manual redeployment, rollback
+# with explicit refs, and failure handling — is documented in
+# .github/DEPLOYMENT.md.
 
 name: Deploy
 

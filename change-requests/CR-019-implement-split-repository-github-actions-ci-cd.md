@@ -94,7 +94,7 @@ Generated `posts-data.ts` remains a build artifact rather than canonical content
 - [x] Content pull requests run content validation and never deploy.
 - [x] The application repository contains the only workflow that runs `wrangler deploy`.
 - [x] A trusted application `main` merge can trigger production deployment with a selected content commit.
-- [ ] A trusted content `main` merge can request production deployment through the application repository workflow.
+- [x] A trusted content `main` merge can request production deployment through the application repository workflow.
 - [x] Manual deployment supports explicit application and content refs for recovery or controlled redeployment.
 - [x] The deployment workflow checks out both repositories and passes a configured content path to `web/scripts/build-posts.ts`.
 - [x] The deployment workflow validates, generates `web/src/utils/posts-data.ts`, builds, and deploys the combined Worker artifact.
@@ -105,7 +105,7 @@ Generated `posts-data.ts` remains a build artifact rather than canonical content
 - [x] Required CI checks are compatible with branch protection in both repositories.
 - [x] OpenAI-backed image generation is optional/separate unless publication explicitly requires generated images.
 - [x] Cloudflare's native Git deployment path is disabled or constrained after GitHub Actions deployment is verified.
-- [ ] Documentation explains normal deployment, manual redeployment, failure handling, and rollback using explicit refs.
+- [x] Documentation explains normal deployment, manual redeployment, failure handling, and rollback using explicit refs.
 
 ## Implementation Notes
 
@@ -126,3 +126,7 @@ In progress.
 - **Phase 3 (2026-08-02):** Added `deploy.yml` as the single production deployment owner — triggers on trusted application `main` merges, `repository_dispatch` (`deploy-content`) from the content repository, and manual dispatch with explicit `app_ref`/`content_ref`/`story_ref` inputs for recovery and rollback. It assembles three repositories (application + `mylifeindigital.content` + `story-crafter` via a read-only fine-grained PAT), validates, syncs stories, generates `posts-data.ts`, type-checks, deploys with Wrangler (`CLOUDFLARE_API_TOKEN`/`CLOUDFLARE_ACCOUNT_ID` secrets, used only by the deploy step), and records all three resolved SHAs in the workflow summary. Production concurrency queues deployments without cancelling in-flight runs; the job uses the `production` environment. Added `request-deploy.yml` to the content repository (requires a `DEPLOY_DISPATCH_TOKEN` secret there: fine-grained PAT, Contents read-write on the application repository).
 - **Validation and completion (2026-08-02):** `deploy.yml` was validated with a real production deployment (all steps green; the three resolved SHAs recorded in the workflow summary), and the live site was verified serving the assembled artifact — including the stories section — at mylifeindigital.co.za. Cloudflare's native Git build was then disconnected, making the Deploy workflow the only production path, and a manual `workflow_dispatch` deployment confirmed the assembled artifact is definitively live. The CR-020 cutover completed afterwards; `app-ci.yml` now validates against a checkout of the content repository.
 - Open items, tracked but not blocking: the content repository's `request-deploy.yml` needs its `DEPLOY_DISPATCH_TOKEN` secret before trusted content merges can request deployment automatically (until then, deploys trigger from application merges or manual dispatch), and broader operational documentation is owned by `CR-022`.
+- **Closed out (2026-08-02):** the two criteria left unchecked when this request was first marked `Done` are now genuinely satisfied.
+  - Content-requested deployment is proven, not just configured. `DEPLOY_DISPATCH_TOKEN` was added to `mylifeindigital.content` and `story-crafter`, and the `Deploy` workflow records successful `repository_dispatch` (`deploy-content`) runs triggered by real content and story merges.
+  - Operational documentation landed as `.github/DEPLOYMENT.md` rather than through `CR-022`. `CR-022` scoped the repository README to orientation, which covered normal deployment and manual dispatch but not failure handling or a rollback procedure — so the runbook is its own document, linked from the README, `AGENTS.md`, and the workflow header. It covers the three triggers and deployment queuing, manual redeployment, rollback by redeploying known-good SHAs from a run summary, and the failure modes worth recognising, including the fact that a pre-deploy failure leaves the previous Worker serving.
+  - The `deploy.yml` header comment still described the pre-cutover dual period and an active Cloudflare Git build; it now reflects the completed cutover.

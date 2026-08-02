@@ -206,6 +206,10 @@ disconnected; there is one deployment path.
 Pull requests are validated by `.github/workflows/app-ci.yml` here and
 `content-ci.yml` in the content repository, both without deploy credentials.
 
+[`.github/DEPLOYMENT.md`](./.github/DEPLOYMENT.md) is the runbook: normal
+deployment, manual redeployment, rollback with explicit refs, and what to do
+when a deployment fails.
+
 ---
 
 ## 📅 Current Focus

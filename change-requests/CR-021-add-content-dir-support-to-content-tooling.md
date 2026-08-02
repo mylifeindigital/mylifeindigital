@@ -66,10 +66,6 @@ Tools should resolve the content directory in this order:
 
 ## Outcome
 
-Pending implementation.
-
-## Outcome
-
 Implemented on 2026-08-01.
 
 - Added `scripts/content/content-dir.ts` as the shared resolver: `CONTENT_DIR` from the process environment, then `CONTENT_DIR` from the repository-root `.env` (parsed directly, no root dotenv dependency), then the transitional fallback to the application repository `content/`. Explicitly configured paths that do not exist fail with an actionable error; the fallback also fails with guidance when absent.
