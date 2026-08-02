@@ -59,6 +59,13 @@ The application README should be repurposed as a profile/showcase and repository
 - The README should continue to support the application repository as a showcase of thinking, code experiments, docs/wiki workflow, and change-request workflow.
 - Related source notes: `docs/raw/repo-migration-notes.md`, `docs/raw/content-split.md`, and `docs/raw/authoring-flows.md`.
 
+Changed assumptions during implementation (2026-08-02):
+
+- The workspace is a third repository wider than planned. `CR-019` made `story-crafter` a build input after this request was written, so the local workspace and the documented repository map cover three repositories, not two.
+- The workspace file is committed in the application repository instead of sitting loose in `projects/` as the Proposed Implementation sketch showed. VS Code resolves a workspace file's relative folder paths from the file's own location, so the one-window result is identical while the file stays version-controlled and reproducible.
+- Documentation drift was wider than README/workspace/local-docs: `AGENTS.md` and the `update-date` help text still described the pre-cutover in-repo `content/`. Both were corrected here rather than deferred, since they are the same class of error this request exists to fix.
+- `story-crafter/README.md` gained a short section on how stories reach the site. Outside this request's original scope, but the workspace now spans three repositories and that link was undocumented.
+
 ## Outcome
 
 Documentation now describes the post-cutover, three-repository reality.
