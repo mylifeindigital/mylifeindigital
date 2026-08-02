@@ -40,6 +40,10 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 
 ## Backlog Grooming Notes
 
+### 2026-08-02
+
+- Advanced `CR-019` through phases 2 and 3: `content-ci.yml` validates content pull requests against the application pipeline (proven live), and `deploy.yml` now owns production deployment — three-repository assembly (app, content, story-crafter), stories synced at build time, all resolved SHAs recorded per deployment, manual dispatch with explicit refs for rollback. `request-deploy.yml` in the content repository awaits its `DEPLOY_DISPATCH_TOKEN` secret. Remaining: validate a real production deployment, disable Cloudflare's native Git build, then complete the `CR-020` cutover.
+
 ### 2026-08-01
 
 - Completed `CR-021` with a shared `CONTENT_DIR` resolver (`scripts/content/content-dir.ts`): process environment, then repository-root `.env`, then a transitional in-repo `content/` fallback to be removed once the `CR-020` split stabilizes. Wired into `build-posts`, `new-content`, `update-date`, and `sync-stories`; template output directories are now content-root-relative, and `web/.env` cannot configure the content path.

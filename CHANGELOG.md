@@ -2,6 +2,12 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-08-02
+
+### Added
+
+- Advanced `CR-019` to phase 3: added `.github/workflows/deploy.yml` as the single production deployment owner — triggered by application `main` merges, content-repository dispatch, or manual dispatch with explicit refs — assembling the application, `mylifeindigital.content`, and `story-crafter` repositories, syncing stories at build time, and recording all resolved SHAs per deployment. Phase 2 (`content-ci.yml`) and `request-deploy.yml` live in the content repository.
+
 ## 2026-08-01
 
 ### Added
