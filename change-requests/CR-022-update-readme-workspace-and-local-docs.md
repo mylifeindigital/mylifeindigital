@@ -1,6 +1,6 @@
 # CR-022: Update README, Workspace, And Local Docs
 
-Status: Proposed  
+Status: Done  
 Priority: Medium  
 Area: Documentation  
 Created: 2026-06-16
@@ -40,15 +40,15 @@ The application README should be repurposed as a profile/showcase and repository
 
 ## Acceptance Criteria
 
-- [ ] A VS Code workspace file or documented workspace setup shows `mylifeindigital` and `mylifeindigital.content` together.
-- [ ] Documentation explains that VS Code remains the near-term Markdown editing tool.
-- [ ] Documentation explains that the Electron/content operations app is future tooling and not required for normal near-term authoring.
-- [ ] The application repository README is updated or scoped so it no longer duplicates publishable content catalog responsibilities after the split.
-- [ ] The application repository `content/` placeholder README explains that publishable content lives in `mylifeindigital.content/content/`.
-- [ ] Local setup docs explain the root `.env` / `CONTENT_DIR` convention.
-- [ ] Local setup docs explain the normal local build/preview flow after the split.
-- [ ] Documentation distinguishes app repo docs/wiki/change requests from publishable content.
-- [ ] Links between the application repository and content repository are clear.
+- [x] A VS Code workspace file or documented workspace setup shows `mylifeindigital` and `mylifeindigital.content` together.
+- [x] Documentation explains that VS Code remains the near-term Markdown editing tool.
+- [x] Documentation explains that the Electron/content operations app is future tooling and not required for normal near-term authoring.
+- [x] The application repository README is updated or scoped so it no longer duplicates publishable content catalog responsibilities after the split.
+- [x] The application repository `content/` placeholder README explains that publishable content lives in `mylifeindigital.content/content/`.
+- [x] Local setup docs explain the root `.env` / `CONTENT_DIR` convention.
+- [x] Local setup docs explain the normal local build/preview flow after the split.
+- [x] Documentation distinguishes app repo docs/wiki/change requests from publishable content.
+- [x] Links between the application repository and content repository are clear.
 
 ## Implementation Notes
 
@@ -61,4 +61,26 @@ The application README should be repurposed as a profile/showcase and repository
 
 ## Outcome
 
-Pending implementation.
+Documentation now describes the post-cutover, three-repository reality.
+
+Workspace:
+
+- Added `mylifeindigital.code-workspace` with `mylifeindigital`, `mylifeindigital.content`, and `story-crafter` as sibling folders, plus shared search excludes for generated artifacts.
+- The file is committed in the application repository rather than sitting loose in `projects/` as the original sketch showed, so it is version-controlled and reproducible; VS Code resolves its relative paths from the file's location, giving the same one-window result. A sibling that has not been cloned shows as unavailable without breaking the workspace.
+- `story-crafter` was added as a third folder because the site's `stories` section is generated from it (`CR-019` assembly, `npm run sync:stories`); the original request predates that dependency.
+
+Application repository:
+
+- `README.md` was repurposed as a profile and orientation document. The session-log index table and `content/index.md` link were removed — they duplicated the content repository — and replaced with a repository map (roles, links, public/private), a local setup section (sibling checkouts, workspace, npm workspace install, `.env` / `CONTENT_DIR`), the local build and preview flow, authoring guidance, and how deployment works. The growth-log framing, focus, workstreams, milestones, and philosophy sections were kept.
+- `content/README.md` gained an explicit pointer to `mylifeindigital.content/content/` and the shared workspace.
+- `AGENTS.md` was corrected: the three-repository overview, `content/` as a placeholder, `CONTENT_DIR` as required (the `CR-021` transitional fallback is gone), pipeline input described as the resolved content directory, setup/checks/`sync:stories` commands, and a note that `npm run deploy` is not the production release path.
+- `scripts/update-date.ts` help text no longer suggests the removed in-repo `content/` path; explicit file paths resolve against the caller's working directory, so the example now points at the content checkout.
+- `docs/wiki/decisions/authoring-surface.md` records the split-repository workspace as part of the authoring-surface decision, with `docs/wiki/index.md` and `docs/wiki/log.md` updated.
+
+Content repository:
+
+- `mylifeindigital.content/README.md` replaced its stale dual-period status ("edit content in the application repository") with the completed cutover: this repository is canonical, and merges to `main` request a deploy through `request-deploy.yml` (its `DEPLOY_DISPATCH_TOKEN` secret is now configured). Added a local setup section covering the sibling layout, the shared workspace, and VS Code as the authoring tool.
+
+Story repository:
+
+- `story-crafter/README.md` gained a short "How stories reach the site" section explaining that the application repository syncs published stories at build time and that story-crafter stays canonical. Beyond this request's original scope, but the workspace now spans three repositories and the link was missing.
