@@ -20,6 +20,8 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ### Fixed
 
+- Completed `CR-025`: removed the `deploy` scripts from the root and `web` package manifests, so no npm script can publish and the single deployment path is structural rather than a documented convention. Also removed the redundant `web/package-lock.json`, whose only stated reason — Cloudflare builds using `web` as the project root — died with the native Git build. Corrected the documentation that still described local deployment (`web/README.md`, `AGENTS.md`, and the root README's lockfile note). Web app details in `web/CHANGELOG.md` (0.3.7).
+
 - Completed `CR-026`: content update dates are authored rather than derived. `GitDateProcessor` was overwriting `metadata.updated` with each file's last git commit date, and because the `CR-020` migration re-committed the whole tree, every published post claimed it was updated on the migration date while 16 files' authored values were discarded. The processor is deleted, `update-date` lost its bulk `--all` flag (and the never-implemented `--recent`), and the authoring rule is documented in the README. Web app changes are detailed in `web/CHANGELOG.md` (0.3.6).
 
 - Reconciled `CR-019` and `CR-021` after a change-request review pass. `CR-019` was marked `Done` with two unchecked acceptance criteria; both are now satisfied — content-requested deployment is proven by successful `repository_dispatch` runs from real content and story merges, and the deployment documentation exists. `CR-021` had a leftover `## Outcome / Pending implementation.` block above its real outcome. Corrected the `deploy.yml` header comment, which still described the pre-cutover dual period and an active Cloudflare Git build.

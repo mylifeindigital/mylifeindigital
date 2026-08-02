@@ -12,7 +12,6 @@
     "build": "npm run build --workspaces",
     "build:utils": "npm run build --workspace=ts-core-utils",
     "build:web": "npm run build --workspace=web",
-    "deploy": "npm run deploy --workspace=web",
     "compare:preview-parity": "npm run compare:preview-parity --workspace=web",
     "preview-worker:poc": "npm run preview-worker:poc --workspace=web",
     "new-content": "tsx scripts/new-content.ts",

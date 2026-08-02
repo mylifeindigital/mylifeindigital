@@ -2,6 +2,13 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.3.7] - 2026-08-02
+
+### Removed
+
+- The `deploy` script (CR-025). Production is deployed only by `.github/workflows/deploy.yml`, which assembles this app with the content and story repositories; the local script built without `sync:stories`, so it could publish a Worker whose stories section differed from the deployed artifact. Use the workflow's manual dispatch with explicit refs to redeploy or roll back — `.github/DEPLOYMENT.md` is the runbook.
+- `web/package-lock.json`. Its only stated purpose was Cloudflare builds treating `web` as the project root, and that build path is disconnected; the root workspace lockfile is now the only one.
+
 ## [0.3.6] - 2026-08-02
 
 ### Fixed

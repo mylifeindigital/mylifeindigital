@@ -1,6 +1,6 @@
 # CR-025: Retire Local Deployment Paths
 
-Status: Proposed  
+Status: Done  
 Priority: Medium  
 Area: Deployment  
 Created: 2026-08-02
@@ -53,13 +53,13 @@ If a break-glass path is wanted instead, it must produce the same artifact as CI
 
 ## Acceptance Criteria
 
-- [ ] A decision is recorded on whether a local deployment path exists at all.
-- [ ] No npm script can publish to production by accident; any surviving path is named so it cannot be run casually.
-- [ ] No deployment or build command mutates files in the content repository as a side effect.
-- [ ] Any surviving local build path syncs stories, so it cannot produce a site that differs from the deployed artifact.
-- [ ] `web/package-lock.json` is either removed or documented with a reason that is currently true.
-- [ ] `README.md`, `AGENTS.md`, and `.github/DEPLOYMENT.md` match the resulting reality, with no guidance left describing a removed script.
-- [ ] `app-ci.yml` and `deploy.yml` are unaffected, confirmed by a green pipeline and one successful deployment.
+- [x] A decision is recorded on whether a local deployment path exists at all.
+- [x] No npm script can publish to production by accident; any surviving path is named so it cannot be run casually.
+- [x] No deployment or build command mutates files in the content repository as a side effect.
+- [x] Any surviving local build path syncs stories, so it cannot produce a site that differs from the deployed artifact.
+- [x] `web/package-lock.json` is either removed or documented with a reason that is currently true.
+- [x] `README.md`, `AGENTS.md`, and `.github/DEPLOYMENT.md` match the resulting reality, with no guidance left describing a removed script.
+- [x] `app-ci.yml` and `deploy.yml` are unaffected, confirmed by a green pipeline and one successful deployment.
 
 ## Implementation Notes
 
@@ -72,4 +72,11 @@ If a break-glass path is wanted instead, it must produce the same artifact as CI
 
 ## Outcome
 
-Pending implementation.
+Implemented on 2026-08-02. The decision was to delete rather than keep a break-glass path.
+
+- Removed `deploy` from the root `package.json` and from `web/package.json`. There is now no npm script anywhere that can publish, so the single deployment path is structural rather than a convention documented in three files.
+- Removed `web/package-lock.json`. The change request allowed keeping it with a currently-true reason, but no such reason exists: its only stated purpose was Cloudflare builds treating `web` as the project root, and that build path is disconnected. CI installs from the root lockfile, so the second one was redundant and free to drift. Restoring it is an `npm install` inside `web/` if a standalone build is ever wanted again.
+- Updated the documentation that still described local deployment: `web/README.md` had a Deployment section, a first-time-setup step, a note, and a scripts-table row telling readers to run `npm run deploy`; `AGENTS.md` now states there is no local deploy command and that `wrangler deploy` should not be run by hand; the root README's lockfile paragraph explains why only one lockfile remains.
+- `CR-026` had already removed the `update-date -- --all` half of the root script, so this change removed what was left.
+- Checks: script typecheck, 10/10 script tests, `tsc --noEmit` in `web`, `build:posts`, and `npx wrangler deploy --dry-run` — the same bundle proof CI runs — all clean. `npm ls --workspaces` still resolves both workspaces after the lockfile removal.
+- No workflow was touched, and none needed to be: `app-ci.yml` and `deploy.yml` invoke `npx wrangler` directly and never used the npm scripts.
