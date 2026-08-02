@@ -19,7 +19,6 @@ import { MarkdownProcessingPipeline } from '../src/utils/pipeline/MarkdownProces
 import {
     FrontmatterProcessor,
     DraftFilterProcessor,
-    GitDateProcessor,
     AstProcessor,
     TocProcessor,
     HtmlProcessor,
@@ -65,7 +64,6 @@ function createPipeline(): MarkdownProcessingPipeline {
     const pipeline = new MarkdownProcessingPipeline()
         .use(new FrontmatterProcessor())
         .use(new DraftFilterProcessor())
-        .use(new GitDateProcessor())
         .use(new ExcludeProcessor());
 
     // Add image generation if requested

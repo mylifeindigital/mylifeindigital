@@ -172,7 +172,6 @@ npm run new-content -- --type post --title "My New Post"
 npm run new-content -- --type about --title "About"
 npm run new-session
 npm run update-date                 # interactive picker over the content directory
-npm run update-date -- --all
 ```
 
 The post template writes title-slugged drafts to `posts/`, the About template
@@ -186,6 +185,16 @@ directory rather than the content root:
 ```bash
 npm run update-date -- ../mylifeindigital.content/content/posts/my-post.md
 ```
+
+### Update dates
+
+`updated` is an editorial claim, not a filesystem fact (`CR-026`). Set it when a
+revision is substantive, on the file you actually changed, in the same commit as
+the change it describes. The build reads the value exactly as written — nothing
+derives it from git history — and an article shows an update line only when
+`updated` differs from `date`. There is deliberately no way to stamp many files
+at once: a bulk update asserts revisions that never happened, which is precisely
+how every post came to claim it was updated on the migration date.
 
 Publishing follows the workflow rules in `CR-008`: branch → author with
 `draft: true` → validate → pull request → merge to `main` in the content

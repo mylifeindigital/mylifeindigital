@@ -22,7 +22,6 @@ import type {
 import {
     FrontmatterProcessor,
     DraftFilterProcessor,
-    GitDateProcessor,
     ExcludeProcessor,
     AstProcessor,
     TocProcessor,
@@ -106,7 +105,6 @@ function createBuildPipeline(): MarkdownProcessingPipeline {
     return new MarkdownProcessingPipeline()
         .use(new FrontmatterProcessor())
         .use(new DraftFilterProcessor())
-        .use(new GitDateProcessor())
         .use(new ExcludeProcessor())
         .use(new AstProcessor())
         .use(new TocProcessor({ minLevel: 1, maxLevel: 3 }))

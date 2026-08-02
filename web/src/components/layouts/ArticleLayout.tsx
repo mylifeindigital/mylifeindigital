@@ -95,7 +95,7 @@ export function ArticleLayout({ item, section, schema, backLink }: ArticleLayout
             {schema.showDate && item.metadata.date && (
               <span class="article-date">{formatDate(item.metadata.date)}</span>
             )}
-            {item.metadata.updated && (
+            {item.metadata.updated && item.metadata.updated !== item.metadata.date && (
               <span class="article-updated">
                 (Updated: {formatDate(item.metadata.updated as string)})
               </span>

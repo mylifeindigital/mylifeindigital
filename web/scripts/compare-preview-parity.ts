@@ -14,7 +14,6 @@ import type { ContentMetadata, TocEntry } from '../src/utils/markdown.js';
 import {
     FrontmatterProcessor,
     DraftFilterProcessor,
-    GitDateProcessor,
     ExcludeProcessor,
     AstProcessor,
     TocProcessor,
@@ -86,7 +85,6 @@ function createBuildPipeline(): MarkdownProcessingPipeline {
     return new MarkdownProcessingPipeline()
         .use(new FrontmatterProcessor())
         .use(new DraftFilterProcessor())
-        .use(new GitDateProcessor())
         .use(new ExcludeProcessor())
         .use(new AstProcessor())
         .use(new TocProcessor({ minLevel: 1, maxLevel: 3 }))
@@ -247,7 +245,7 @@ async function main(): Promise<void> {
 
     console.log('Notes');
     console.log('- Differences in slug/section for admin-current are expected because the route passes preview placeholders.');
-    console.log('- Differences in metadata.updated are expected when GitDateProcessor overrides or adds the value at build time.');
+    console.log('- metadata.updated comes from frontmatter only (CR-026); the build no longer derives it, so it should match everywhere.');
     console.log('- HTML and TOC differences are the highest-signal preview parity issues for body rendering.');
 }
 

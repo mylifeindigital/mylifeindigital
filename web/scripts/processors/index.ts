@@ -10,5 +10,4 @@ export {
 } from '../../src/utils/pipeline/processors/index.js';
 
 // Build-only processors (require Node.js APIs)
-export { GitDateProcessor } from './GitDateProcessor.js';
 export { ImageGeneratorProcessor, type ImageGeneratorOptions } from './ImageGeneratorProcessor.js';
