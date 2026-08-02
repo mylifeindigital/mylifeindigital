@@ -55,7 +55,7 @@ npm run typecheck:scripts
 cd web && npm run generate:images
 ```
 
-Production is deployed only by `.github/workflows/deploy.yml` (CR-019), which assembles all three repositories; `.github/DEPLOYMENT.md` is the runbook for deploying, redeploying, rolling back, and diagnosing failures. The local `npm run deploy` script is a direct Wrangler path, not the production release path; do not use it to publish unless the user explicitly asks.
+Production is deployed only by `.github/workflows/deploy.yml` (CR-019), which assembles all three repositories; `.github/DEPLOYMENT.md` is the runbook for deploying, redeploying, rolling back, and diagnosing failures. There is no local deploy command — the `deploy` scripts were removed in CR-025 so the single deployment path is structural rather than a convention. Do not add one back, and do not run `wrangler deploy` by hand; use the workflow's manual dispatch with explicit refs instead.
 
 ## Web App Architecture
 

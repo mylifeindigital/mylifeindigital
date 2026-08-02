@@ -111,8 +111,9 @@ npm install <package> --workspace=ts-core-utils
 
 Avoid package-local installs inside `web` or `experiments/ts-core-utils`; update
 dependencies through the workspace commands above so the root
-`package-lock.json` stays in sync. The `web/package-lock.json` file is
-intentionally kept for Cloudflare builds that use `web` as the project root.
+`package-lock.json` stays in sync — it is the only lockfile. A second one used
+to live in `web/` for Cloudflare builds that treated `web` as the project root;
+that build path is gone (`CR-025`), and one lockfile cannot drift from itself.
 
 ### 4. Point content tooling at your content checkout
 

@@ -48,21 +48,15 @@ This runs two steps:
 
 ### Deployment
 
-Deploy to Cloudflare Workers:
+There is no local deploy command. Production is deployed only by
+`.github/workflows/deploy.yml`, which assembles this app with the content and
+story repositories and is the sole path to Cloudflare (`CR-019`, `CR-025`).
 
-```bash
-npm run deploy
-```
+- **Ordinary release:** merge to `main` in any of the three repositories.
+- **Redeploy or roll back:** run the Deploy workflow manually with explicit
+  refs.
 
-This will:
-1. Build the posts data
-2. Deploy the Worker and static assets to Cloudflare
-
-#### First-time Setup
-
-1. Run `npx wrangler login` to authenticate with Cloudflare
-2. Update `wrangler.toml` with your preferred worker name
-3. Run `npm run deploy`
+`../.github/DEPLOYMENT.md` is the runbook.
 
 #### Environment Variables
 
@@ -96,7 +90,7 @@ Your markdown content here...
 4. The post will appear on the home page
 5. Access it at `/posts/your-filename` (without the `.md` extension)
 
-**Note:** Posts are embedded at build time. After adding or modifying posts, you need to run `npm run build:posts` (or `npm run deploy` which includes this step).
+**Note:** Posts are embedded at build time. After adding or modifying posts, run `npm run build:posts` to see the change locally. The deployment workflow runs the same step, so production picks it up on merge.
 
 ## Project Structure
 
@@ -144,7 +138,6 @@ Your markdown content here...
 | `npm run dev` | Start local development server |
 | `npm run build` | Build posts and compile TypeScript |
 | `npm run build:posts` | Generate posts-data.ts from markdown files |
-| `npm run deploy` | Build and deploy to Cloudflare Workers |
 
 ## License
 
