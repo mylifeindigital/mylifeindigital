@@ -2,6 +2,12 @@
 
 Append-only record of docs wiki activity.
 
+## [2026-08-02] maintenance | Split-repository authoring workspace
+
+- Recorded the post-split local authoring layout on the authoring-surface decision page: sibling checkouts of `mylifeindigital`, `mylifeindigital.content`, and `story-crafter`, opened together through the committed `mylifeindigital.code-workspace`.
+- Clarified that the split changes which repository holds content, not the authoring surface: VS Code remains the near-term Markdown editor and the Electron content operations app remains future tooling no current flow depends on.
+- Linked `CR-022` as a source for the workspace and local documentation decisions.
+
 ## [2026-07-04] ingest | Golden Valley Story Crafter notes
 
 - Ingested `docs/raw/story-crafter/golden-valley/characters.md` and `docs/raw/story-crafter/golden-valley/shiny-secret.md`.

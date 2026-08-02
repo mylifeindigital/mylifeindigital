@@ -4,7 +4,13 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ## 2026-08-02
 
+### Added
+
+- Completed `CR-022` (workspace): added `mylifeindigital.code-workspace`, committed in this repository, which opens `mylifeindigital`, `mylifeindigital.content`, and `story-crafter` as sibling folders in one VS Code window with shared search excludes for generated artifacts. Sibling checkouts under one parent directory are now the documented local layout; an uncloned sibling degrades to an unavailable folder rather than breaking the workspace.
+
 ### Changed
+
+- Completed `CR-022` (documentation): rewrote `README.md` as a profile and repository-orientation document — the session-log index and content catalog links were removed as duplicates of the content repository, replaced by the three-repository map, local setup (workspace, npm workspace install, root `.env` / `CONTENT_DIR`), the local build and preview flow, authoring guidance, and the single deployment path. Corrected `AGENTS.md` (three-repository overview, `content/` as placeholder, `CONTENT_DIR` required after the `CR-021` fallback removal, `sync:stories` and check commands, `npm run deploy` is not the production release path), pointed `content/README.md` at `mylifeindigital.content/content/` and the shared workspace, fixed the stale in-repo `content/` example in the `update-date` help text, and recorded the split-repository workspace on the wiki's authoring-surface decision page. The content repository's README replaced its dual-period status with the completed cutover.
 
 - Completed the `CR-020` cutover: publishable Markdown was removed from this repository (`content/` is now a placeholder README pointing at `mylifeindigital.content`), `app-ci.yml` validates against a checkout of the content repository, and the `CR-021` transitional fallback was removed — `CONTENT_DIR` is now required and unconfigured content tooling fails with actionable guidance instead of silently building an empty site. `CR-019` and `CR-020` are Done: production deploys exclusively through the GitHub Actions Deploy workflow, verified live with Cloudflare's native Git build disconnected.
 

@@ -1,0 +1,28 @@
+{
+  "folders": [
+    {
+      "name": "mylifeindigital (app)",
+      "path": "."
+    },
+    {
+      "name": "mylifeindigital.content",
+      "path": "../mylifeindigital.content"
+    },
+    {
+      "name": "story-crafter",
+      "path": "../story-crafter"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.DS_Store": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "web/src/utils/posts-data.ts": true,
+      "reader/dist": true
+    },
+    "markdown.validate.enabled": true
+  }
+}

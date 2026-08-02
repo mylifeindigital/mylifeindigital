@@ -10,6 +10,15 @@ The intended future content authoring surface is a focused Electron app for crea
 
 Authoring logic should remain independent enough to support terminal, script-based, or other future surfaces where useful.
 
+## Local Workspace After The Repository Split
+
+The split-repository model puts publishable Markdown in `mylifeindigital.content` and story source in `story-crafter`, while the application, content pipeline, docs wiki, and change requests stay in `mylifeindigital`. Authoring now spans repositories, but not editors.
+
+- Sibling checkouts under one parent directory are the assumed local layout.
+- `mylifeindigital.code-workspace`, committed in the application repository, opens all three as folders in one VS Code window; each stays an independent Git repository with its own branches, history, and CI.
+- Content tooling runs from the application repository and reads or writes the content checkout resolved through `CONTENT_DIR` (`CR-021`), so the authoring surface is unchanged by the split: one editor, one window, three repositories.
+- The Electron content operations app remains future tooling. Nothing in the near-term authoring flow depends on it.
+
 ## Rationale
 
 - VS Code is already an effective Markdown editor and remains useful for viewing and editing source code.
@@ -38,3 +47,4 @@ Authoring logic should remain independent enough to support terminal, script-bas
 - [content-authoring.md](../../raw/content-authoring.md)
 - [CR-005: Decide Electron vs Tauri for Content Operations App](../../../change-requests/CR-005-decide-electron-vs-tauri-for-content-operations-app.md)
 - [CR-006: Define Content Operations App Scope and Workflows](../../../change-requests/CR-006-define-content-operations-app-scope-and-workflows.md)
+- [CR-022: Update README, Workspace, and Local Docs](../../../change-requests/CR-022-update-readme-workspace-and-local-docs.md)
