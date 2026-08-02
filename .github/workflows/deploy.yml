@@ -1,0 +1,140 @@
+# Production deployment — CR-019 phase 3.
+#
+# The ONLY workflow that runs `wrangler deploy`. It assembles the combined
+# Worker artifact from three repositories:
+#
+#   - this repository            → app, pipeline, wrangler configuration
+#   - mylifeindigital.content    → publishable Markdown (private; PAT checkout)
+#   - story-crafter              → Golden Valley stories, transformed at build
+#                                  time by `npm run sync:stories` (private; PAT)
+#
+# Triggers:
+#   - push to main               → trusted application merges
+#   - repository_dispatch        → deployment requested by the content
+#     (type: deploy-content)       repository after a trusted content merge
+#   - workflow_dispatch          → manual/recovery deployment with explicit
+#                                  app/content/story refs (rollback per CR-019)
+#
+# Secrets (repository Actions secrets):
+#   CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID — used only by the deploy step
+#   CONTENT_CHECKOUT_TOKEN — fine-grained PAT, Contents: Read-only on
+#     mylifeindigital.content and story-crafter
+#
+# During the dual period (until CR-020 cutover) mylifeindigital.content@main is
+# a maintained copy of this repository's content/; this workflow already builds
+# from the content repository so the assembled path is exercised before cutover.
+# Cloudflare's native Git build remains active until this workflow has been
+# validated in production; disable it before the CR-020 cutover (sequencing
+# note in change-requests/index.md).
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [deploy-content]
+  workflow_dispatch:
+    inputs:
+      app_ref:
+        description: "Application ref to deploy"
+        required: false
+        default: "main"
+      content_ref:
+        description: "mylifeindigital.content ref to build"
+        required: false
+        default: "main"
+      story_ref:
+        description: "story-crafter ref to build"
+        required: false
+        default: "main"
+
+permissions:
+  contents: read
+
+# Queue production deployments; never cancel one mid-flight.
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and deploy production Worker
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Check out application repository
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.app_ref || github.sha }}
+
+      - name: Check out content repository
+        uses: actions/checkout@v5
+        with:
+          repository: mylifeindigital/mylifeindigital.content
+          ref: ${{ inputs.content_ref || github.event.client_payload.content_ref || 'main' }}
+          path: content-repo
+          token: ${{ secrets.CONTENT_CHECKOUT_TOKEN }}
+          # Full history: GitDateProcessor derives updated dates from the
+          # content repository's git log.
+          fetch-depth: 0
+
+      - name: Check out story-crafter repository
+        uses: actions/checkout@v5
+        with:
+          repository: mylifeindigital/story-crafter
+          ref: ${{ inputs.story_ref || 'main' }}
+          path: story-crafter
+          token: ${{ secrets.CONTENT_CHECKOUT_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies (root workspaces)
+        run: npm ci
+
+      - name: Validate (types and script tests)
+        run: |
+          npm run typecheck:scripts
+          npm run test:scripts
+
+      - name: Sync stories into the assembled content
+        env:
+          STORY_CRAFTER_PATH: ${{ github.workspace }}/story-crafter
+          CONTENT_DIR: ${{ github.workspace }}/content-repo/content
+        run: npm run sync:stories
+
+      - name: Generate content data (posts-data.ts)
+        working-directory: web
+        env:
+          CONTENT_DIR: ${{ github.workspace }}/content-repo/content
+        run: npm run build:posts
+
+      - name: Type-check web app
+        working-directory: web
+        run: npx tsc --noEmit
+
+      - name: Deploy with Wrangler
+        working-directory: web
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler deploy
+
+      - name: Record deployed revisions
+        if: always()
+        run: |
+          {
+            echo "## Production deployment"
+            echo ""
+            echo "| Repository | Ref | Commit |"
+            echo "| --- | --- | --- |"
+            echo "| mylifeindigital | ${{ inputs.app_ref || github.ref_name }} | $(git rev-parse HEAD) |"
+            echo "| mylifeindigital.content | ${{ inputs.content_ref || github.event.client_payload.content_ref || 'main' }} | $(git -C content-repo rev-parse HEAD) |"
+            echo "| story-crafter | ${{ inputs.story_ref || 'main' }} | $(git -C story-crafter rev-parse HEAD) |"
+            echo ""
+            echo "Trigger: \`${{ github.event_name }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
