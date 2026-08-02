@@ -2,6 +2,16 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.3.6] - 2026-08-02
+
+### Fixed
+
+- Content update dates are authored again (CR-026). `GitDateProcessor` overwrote `metadata.updated` with each file's last git commit date, and the CR-020 migration re-committed the whole content tree, so every published post claimed it was updated on 1 August 2026 while the authored values in 16 of 19 files were read and discarded. The processor is removed from the build, preview-worker, and parity pipelines and deleted; `updated` now comes from frontmatter only.
+
+### Changed
+
+- An article shows `(Updated: ...)` only when the value differs from its publish date, so a post that has never been revised no longer carries an update line.
+
 ## [0.3.5] - 2026-08-01
 
 ### Changed

@@ -82,18 +82,20 @@ function showHelp() {
 
 Updates the 'updated' field in markdown frontmatter.
 
+'updated' is an editorial claim — set it when a revision is substantive, in
+the same commit as the change it describes (CR-026). The build reads the
+value as written; nothing derives it, so there is deliberately no way to
+stamp many files at once.
+
 Usage:
   npm run update-date                     # Interactive - shows files to choose from
   npm run update-date -- <file>           # Update specific file (path relative to your cwd)
-  npm run update-date -- --all            # Update all content files
-  npm run update-date -- --recent         # Update files modified today (via git)
 
 Publishable content lives in the mylifeindigital.content repository (CR-020),
 so an explicit file path points at that checkout, not at this repository:
 
-Examples:
+Example:
   npm run update-date -- ../mylifeindigital.content/content/posts/my-post.md
-  npm run update-date -- --all
 `);
 }
 
@@ -108,14 +110,19 @@ async function main() {
   console.log("\n📅 Update Date Tool\n");
   console.log(`Content: ${CONTENT_DIR} — ${describeContentDirSource(contentDirResolution)}\n`);
 
-  if (args.includes("--all")) {
-    // Update all markdown files
-    const files = findMarkdownFiles(CONTENT_DIR);
-    console.log(`Updating ${files.length} files...\n`);
-    for (const file of files) {
-      updateFile(file);
-    }
-  } else if (args.length > 0 && !args[0].startsWith("-")) {
+  const removed = args.find((arg) => arg === "--all" || arg === "--recent");
+  if (removed) {
+    console.error(
+      `❌ ${removed} was removed (CR-026).\n\n` +
+        `'updated' is an editorial claim, not a derived value: stamping every file\n` +
+        `with today's date asserts revisions that did not happen. Update the file\n` +
+        `you actually changed:\n\n` +
+        `  npm run update-date -- <file>\n`,
+    );
+    process.exit(1);
+  }
+
+  if (args.length > 0 && !args[0].startsWith("-")) {
     // Update specific file
     const filepath = path.isAbsolute(args[0])
       ? args[0]
