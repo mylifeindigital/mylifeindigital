@@ -24,7 +24,7 @@ Let each content section carry its own visual identity, starting with a story th
 
 ## Proposed Implementation
 
-Three phases, each independently shippable and independently revertible.
+Four phases, each independently shippable and independently revertible.
 
 **Phase 1 — make the section scope real.** Replace the schema's unread `cssPrefix` with a `theme` field, and emit it as a `data-theme` attribute on `<body>` in `Layout.tsx`, so the whole page is addressable in CSS. `[section]/[slug].tsx` already resolves the schema before it renders `Layout` and can pass the theme straight through; `[section]/index.tsx` needs one added `getSchemaForContent` call so the section listing themes with its stories. No visual change; every section still resolves to the default theme.
 
@@ -32,7 +32,7 @@ Three phases, each independently shippable and independently revertible.
 
 **Phase 3 — add the story theme.** Define the story token values under `body[data-theme="story"]`, ported from the reader's night palette and serif reading stack. Because both sides are token-driven by then, this is one block of custom-property declarations rather than a parallel stylesheet.
 
-Optionally, once the theme lands: a `StoryLayout` component registered in `web/src/components/layouts/index.ts` for the reader's structural furniture — episode eyebrow, cast line, lead drop cap, section dividers, endmark — if stories should differ in shape and not only in palette.
+**Phase 4 — the reader's structure.** Add a `StoryLayout` component, registered in `web/src/components/layouts/index.ts` with `'story'` added to `DisplayLayout`, carrying the reader's structural furniture: episode eyebrow, cast line, lead drop cap, endmark. Stories then differ in shape, not only in palette. This phase is why the section's schema entry changes `layout` from `article` to `story`; phases 1–3 leave it on `article`.
 
 ## Acceptance Criteria
 
@@ -42,13 +42,18 @@ Optionally, once the theme lands: a `StoryLayout` component registered in `web/s
 - [ ] Content-container styling resolves through semantic tokens with the existing appearance as the default theme.
 - [ ] Phases 1 and 2 produce no visual change to `posts` or `technical-sessions`, verified by comparing rendered output before and after.
 - [ ] The `stories` section renders with its own theme, recognisably derived from the reader.
+- [ ] A story page carries the reader's structure: episode eyebrow, cast line, lead drop cap, endmark.
+- [ ] The synced story metadata the site currently drops — `season`, `episode`, `characters` — is rendered rather than discarded.
 - [ ] Story text meets WCAG AA contrast at normal body size.
 - [ ] Adding a future section theme requires only new token values, not new layout or stylesheet plumbing.
 - [ ] Any port from `story-crafter` records where the values came from, so later divergence is a visible decision.
 
 ## Implementation Notes
 
-- Relevant files: `web/public/styles/main.css`, `web/src/schemas/content-schemas.ts`, `web/src/components/Layout.tsx`, `web/src/routes/[section]/[slug].tsx`, `web/src/routes/[section]/index.tsx`, and `web/src/components/layouts/index.ts` if the optional `StoryLayout` lands.
+- Relevant files: `web/public/styles/main.css`, `web/src/schemas/content-schemas.ts`, `web/src/components/Layout.tsx`, `web/src/routes/[section]/[slug].tsx`, `web/src/routes/[section]/index.tsx`, `web/src/components/layouts/index.ts`, and a new `web/src/components/layouts/StoryLayout.tsx`.
+- The structural data is already synced and thrown away. `scripts/sync-stories.ts` maps `season`, `episode`, `main_character`, `characters`, `locations`, and `theme` into the story's frontmatter, but the `stories` schema sets `showDate`, `showAuthor`, and `showTags` all false, so `ArticleLayout` renders an empty `<div class="article-meta"></div>` on every story page in production today. The eyebrow and cast line need no pipeline change — only a layout that reads what is already there.
+- Structure that needs no markup: the drop cap is `::first-letter` on the content container's first paragraph, and the endmark can style the last one, since the `AGENTS.md` story contract requires every story to end with `**The End.**`. Both are CSS-only, which keeps `StoryLayout` to the header furniture.
+- The read-aloud estimate is the reader's `Math.max(1, Math.round(words / 135))`. The site has no reading-time utility, so this arrives as a new one; port the 135 wpm rather than reaching for a silent-reading rate, and say in a comment that it is a read-aloud pace.
 - `cssPrefix` cannot be the theme key: `posts` and `stories` both declare `article`, so it does not distinguish the two sections it would have to separate. It duplicates `layout` rather than extending it, which is likely why nothing ever read it. Replacing it with `theme` satisfies the criterion above by removal.
 - Full-page theming is *less* plumbing than container-only theming, not more. `Layout.tsx` is the sole owner of `<html>` and `<body>` and every route funnels through it, so one optional prop themes both the section listing and the story pages; scoping to the container instead would mean adding the hook separately to `ArticleLayout.tsx` and `TechnicalSessionLayout.tsx`.
 - Source of the story treatment: the inline stylesheet in `story-crafter/scripts/build-reader.mjs`.
@@ -66,10 +71,12 @@ Decisions:
 
 - **2026-08-09 — the theme applies to story routes as a whole page, not to the content container alone.** This reverses the request's original assumption. Chrome is themed along with the prose, so a story page is a reading surface end to end; the scope is the `stories` section, so `/stories` and its story pages theme together and nothing else changes.
 
-Open questions to settle before phase 3:
+- **2026-08-09 — stories take the reader's structure, not only its palette and type.** The deciding fact is that the metadata is already synced and discarded: a story page renders an empty meta row while `season`, `episode`, and `characters` sit unused in its frontmatter. Palette-only would have left a post page in warmer colours. This adds phase 4 and the `StoryLayout` component that was previously optional.
 
-- Should stories adopt the reader's structure (eyebrow, cast, drop cap, endmark), or only its palette and type?
+Open questions:
+
 - Should `technical-sessions` also get a distinct theme in this request, or stay on the default until the pattern proves itself on one section?
+- What happens to the header logo under a story theme — themed variant, `currentColor`, or left as is? Needed before phase 3 ships, not before phase 1.
 
 ## Outcome
 
