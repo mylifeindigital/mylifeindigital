@@ -15,7 +15,10 @@ import { join, dirname, extname, basename } from 'path';
 import { fileURLToPath } from 'url';
 import { config as dotenvConfig } from 'dotenv';
 
-import { MarkdownProcessingPipeline } from '../src/utils/pipeline/MarkdownProcessingPipeline.js';
+import {
+    MarkdownProcessingPipeline,
+    type PipelineOutcome,
+} from '../src/utils/pipeline/MarkdownProcessingPipeline.js';
 import {
     FrontmatterProcessor,
     DraftFilterProcessor,
@@ -93,24 +96,47 @@ function slugToTitle(slug: string): string {
 }
 
 /**
- * Parse a single markdown file using the pipeline
+ * Files the pipeline could not process. Collected across the whole run rather
+ * than thrown on first sight, so one build reports every broken file instead
+ * of forcing a fix-one-rerun-repeat loop over the content tree (CR-028).
+ */
+interface BuildFailure {
+    filePath: string;
+    processor: string;
+    message: string;
+}
+
+const failures: BuildFailure[] = [];
+
+/**
+ * Parse a single markdown file using the pipeline.
+ *
+ * Returns the pipeline's outcome unchanged so callers can tell a deliberate
+ * draft skip from a processing failure; failures are also recorded for the
+ * end-of-build report.
  */
 async function parseMarkdownFile(
     pipeline: MarkdownProcessingPipeline,
     filePath: string,
     slug: string,
     sectionSlug: string
-): Promise<ContentItem | null> {
+): Promise<PipelineOutcome> {
     const content = readFileSync(filePath, 'utf-8');
-    const result = await pipeline.process(content, filePath, slug, sectionSlug);
+    const outcome = await pipeline.process(content, filePath, slug, sectionSlug);
 
-    if (result === null) return null;
-
-    if (result.warnings.length > 0) {
-        result.warnings.forEach(w => console.warn(`      ⚠️ ${w}`));
+    if (outcome.warnings.length > 0) {
+        outcome.warnings.forEach(w => console.warn(`      ⚠️ ${w}`));
     }
 
-    return result.item;
+    if (outcome.status === 'failed') {
+        failures.push({
+            filePath,
+            processor: outcome.processor,
+            message: outcome.error.message,
+        });
+    }
+
+    return outcome;
 }
 
 /**
@@ -135,12 +161,14 @@ async function getSectionContent(
 
         if (stat.isFile() && extname(file) === '.md') {
             const slug = basename(file, '.md');
-            const item = await parseMarkdownFile(pipeline, filePath, slug, sectionSlug);
-            if (item === null) {
+            const outcome = await parseMarkdownFile(pipeline, filePath, slug, sectionSlug);
+            if (outcome.status === 'ok') {
+                items.push(outcome.item);
+                console.log(`    📄 ${file}`);
+            } else if (outcome.status === 'skipped') {
                 console.log(`    📝 [draft] ${file}`);
             } else {
-                items.push(item);
-                console.log(`    📄 ${file}`);
+                console.log(`    ❌ ${file} — [${outcome.processor}] ${outcome.error.message}`);
             }
         }
     }
@@ -214,19 +242,26 @@ async function getStandalonePages(
             continue;
         }
 
-        const item = await parseMarkdownFile(
+        const outcome = await parseMarkdownFile(
             pipeline,
             filePath,
             page.slug,
             page.section
         );
 
-        if (item === null) {
+        if (outcome.status === 'skipped') {
             console.log(`  📝 [draft] Standalone page: ${page.relativePath}`);
             continue;
         }
 
-        pages.push(item);
+        if (outcome.status === 'failed') {
+            console.log(
+                `  ❌ Standalone page: ${page.relativePath} — [${outcome.processor}] ${outcome.error.message}`
+            );
+            continue;
+        }
+
+        pages.push(outcome.item);
         console.log(`  📄 Standalone page: ${page.relativePath}`);
     }
 
@@ -290,9 +325,25 @@ async function main(): Promise<void> {
         standalonePages,
     };
 
-    // Save image manifest if we generated images
+    // Save image manifest if we generated images. Done before the failure gate
+    // below so that images already paid for are not regenerated on the retry.
     if (imageGeneratorProcessor) {
         imageGeneratorProcessor.saveManifestIfDirty();
+    }
+
+    // A file the pipeline could not process must not reach the site, and must
+    // not leave the build reporting success (CR-028). posts-data.ts is left
+    // untouched so a failed build never publishes a partial content set.
+    if (failures.length > 0) {
+        console.error('');
+        console.error(`❌ Build failed: ${failures.length} file(s) could not be processed.`);
+        failures.forEach(failure => {
+            console.error(`   ${failure.filePath}`);
+            console.error(`     [${failure.processor}] ${failure.message}`);
+        });
+        console.error('');
+        console.error('   posts-data.ts was not regenerated.');
+        process.exit(1);
     }
 
     generateContentDataFile(siteContent, outputPath);

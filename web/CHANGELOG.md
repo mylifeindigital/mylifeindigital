@@ -2,6 +2,21 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.6.0] - 2026-08-09
+
+### Fixed
+
+- **A file with malformed frontmatter is no longer published** (CR-028). `gray-matter` throws on invalid YAML, and `MarkdownProcessingPipeline` caught that into `warnings` and ran the rest of the chain anyway. `context.metadata` kept the valid-looking default `{ title: slug }` seeded by `createContext`, so `DraftFilterProcessor` saw no `draft: true` and the file published as an empty page titled with its slug — from a build that reported success and exited 0. No body leaked, but only because `FrontmatterProcessor` throws before assigning `context.body`; reordering two statements would have leaked it.
+
+### Changed
+
+- **BREAKING (internal API):** `MarkdownProcessingPipeline.process()` returns `PipelineOutcome` instead of `PipelineResult | null`. Three variants — `ok`, `skipped`, `failed` — because a draft skipped on purpose and a processor that threw are different events and callers must be able to tell them apart. `PipelineResult` remains as the shape of the `ok` variant.
+- A processor that throws now ends processing for that item. Previously every downstream processor ran against a context the failed processor never populated.
+- `build:posts` collects failures across the whole run, prints each with its path and the processor that failed, leaves `posts-data.ts` untouched, and exits 1. Collected rather than fail-fast so one build reports every broken file. The image manifest is still saved first, so generated images already paid for survive a failed run.
+- Preview surfaces keep the tolerant behaviour deliberately: `browser-preview.ts` reports a failure as `ok: false` naming the processor, and the two parity harnesses fold it into `warnings`. Authors mid-edit produce malformed input constantly; the build is where it has to be fatal.
+
+Generated output is unchanged — `posts-data.ts` built with the old and new pipelines over the real content tree is byte-identical at 3,561,563 bytes across 81 items. 44 tests pass (34 web, 10 scripts), all three type-check programs clean.
+
 ## [0.5.1] - 2026-08-09
 
 ### Removed
