@@ -11,6 +11,8 @@ Questions that matter to future repository work.
 
 ## Content Pipeline
 
+- When the Electron content operations app needs a preview surface, does browser-safe frontmatter keep the `fs.readFileSync` shim for `gray-matter`, replace the library for that path, or run preview in a Node process instead? Deferred from `CR-011` through `CR-012` with that trigger named; see [Markdown Parser](./decisions/markdown-parser.md).
+
 - When should the project move from embedded generated content to split generated files, KV, R2, D1, or a hybrid model?
 - What is the minimum domain content model needed before rendering?
 - Which validation failures should block local draft creation, preview, or publish readiness?

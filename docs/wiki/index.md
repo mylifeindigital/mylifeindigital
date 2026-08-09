@@ -33,3 +33,4 @@ Catalog of LLM-maintained wiki pages. Read this first when querying or maintaini
 | --- | --- |
 | [Authoring Surface](./decisions/authoring-surface.md) | Current decision to use VS Code near term and a focused Electron app for future content operations, including the single-window workspace across the split repositories. |
 | [Branching Workflow](./decisions/branching-workflow.md) | Branch-per-CR application workflow, short-lived content branches, and protected production-linked `main` branches. |
+| [Markdown Parser](./decisions/markdown-parser.md) | `marked` and `gray-matter` as the single parsing implementation, why each, what would trigger reconsidering, and the deferred browser-safe frontmatter question. |

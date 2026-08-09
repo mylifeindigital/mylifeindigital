@@ -2,6 +2,21 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.5.1] - 2026-08-09
+
+### Removed
+
+- The duplicate frontmatter parser (CR-012). `web/src/utils/markdown.ts` exported `extractFrontmatter` and `parseMarkdownContent` — a hand-rolled regex-and-line-split implementation with no callers, and **not equivalent to the live one**. It performed no type coercion, so `draft: true` parsed as the string `"true"` while `DraftFilterProcessor` tests `metadata.draft === true`. Anything adopting it believing it matched the build pipeline would have silently published drafts. The file is now a types-only module: 122 lines down to 55, with the `marked` import gone.
+- Six unused exports from `web/src/utils/post-cache.ts`: `getSiteContent`, `getItemsBySection`, `getItemCount`, `getAllPostsFromCache`, `getPostBySlugFromCache`, and `getPostCount`. Eleven exports down to five, all of which have callers. The last three were pre-section `Post` vocabulary that would have returned the wrong shape of answer to anyone reaching for them by name. The orphaned `itemsBySectionCache` map went with them.
+- The `PostMetadata` type alias, which had no callers. Its sibling `Post` remains, with a comment saying why, because `post-cache.ts` uses it.
+- `@types/marked`, from both the manifest and the lockfile. `marked` declares `"types": "./lib/marked.d.ts"` and the stub package publishes itself deprecated: *"marked provides its own type definitions, so you do not need this installed."*
+
+### Changed
+
+- `post-cache.ts` now states in its header that "cache" means an in-memory lookup index built once at module load, not an HTTP or CDN cache. The name had already caused that confusion once, and the site's actual caching policy is a separate open question (CR-031).
+
+No behaviour changed. All 13 public routes render identically to the pre-change baseline, verified by rendering and comparing rather than asserted. 41 tests pass, all three type-check programs are clean, and the Worker bundles.
+
 ## [0.5.0] - 2026-08-09
 
 ### Removed

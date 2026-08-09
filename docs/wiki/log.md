@@ -2,6 +2,14 @@
 
 Append-only record of docs wiki activity.
 
+## [2026-08-09] decision | Markdown parser recorded, duplicate parser removed
+
+- Added [Markdown Parser](./decisions/markdown-parser.md) recording what `CR-012` found already decided in code: `gray-matter` for frontmatter, `marked` for tokenising, TOC extraction, and HTML rendering, one implementation each.
+- The page exists because the choice had held for months while `CR-012` sat open as "decide parser roadmap" — a decision made in code and never written down, which is precisely the gap a `decisions/` page closes.
+- Recorded three reconsideration triggers rather than leaving the choice open-ended: a second consumer needing browser-safe frontmatter, plugin needs outgrowing `marked`'s token model, or a section needing structurally different HTML.
+- Answered the question `CR-011` deferred here: browser-safe frontmatter is **deferred with a named trigger** — the Electron content operations app needing a preview surface. Its previous consumer, the admin preview, was deleted by `CR-029`, so there is nothing to design for today.
+- Cross-linked from [Markdown Processing](./concepts/markdown-processing.md), which described the direction but named no library.
+
 ## [2026-08-09] decision | Admin becomes a read-only operations console
 
 - `CR-018` decided: browser-based content editing is removed entirely and the admin's remaining role is deployment and content-health observability.

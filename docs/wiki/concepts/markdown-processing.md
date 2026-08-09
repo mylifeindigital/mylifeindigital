@@ -22,6 +22,7 @@ Future work should preserve this separation and make browser-safe content-core l
 
 ## Related Pages
 
+- [Markdown Parser](../decisions/markdown-parser.md) — which libraries implement this direction, and what would change them
 - [Content Pipeline](../projects/content-pipeline.md)
 - [Git-Backed Content](./git-backed-content.md)
 
