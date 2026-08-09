@@ -2,6 +2,17 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.3.10] - 2026-08-09
+
+### Changed
+
+- `main.css` resolves colour, type, and reading measure through semantic tokens instead of hardcoded values (CR-024, phase 2). Borders, surfaces, tints, the page gradient, the body font stack, and the 800px reading measure now name their role; alpha variants are built with `rgba()` from channel tokens (`--accent-cyan-rgb`, `--accent-purple-rgb`, `--shade-rgb`) rather than repeating the literal channels, so a theme that redefines the palette carries its tints, borders, and glows with it. This is what makes phase 3 a block of custom-property declarations instead of a specificity fight.
+- `.post-content` names its font stack (`--font-reading`) rather than inheriting it, so a section theme can swap the reading face. It resolves to the same stack it already inherited, so nothing changes today.
+
+Deliberately left literal: the hero scrim and the card fallback icon tint, which sit over photographs and must hold text legible against an arbitrary image rather than express the palette; and the technical-session category colours, which are a categorical scale for a section that keeps the default treatment.
+
+No visual change, verified rather than asserted. The stylesheet was flattened to its applied declarations with every `var()` expanded back to a literal, before and after: all 901 declarations resolve identically apart from the one intentional `.post-content` addition above.
+
 ## [0.3.9] - 2026-08-09
 
 ### Added

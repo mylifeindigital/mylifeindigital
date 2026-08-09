@@ -39,8 +39,8 @@ Four phases, each independently shippable and independently revertible.
 - [x] The section a page belongs to is addressable in CSS, driven by the display schema rather than hardcoded per route.
 - [x] `cssPrefix` is either consumed or removed; the schema does not keep a field nothing reads.
 - [ ] The story theme applies to the whole page — chrome included — on `/stories` and every story page, and on no other route.
-- [ ] Content-container styling resolves through semantic tokens with the existing appearance as the default theme.
-- [ ] Phases 1 and 2 produce no visual change to `posts` or `technical-sessions`, verified by comparing rendered output before and after.
+- [x] Content-container styling resolves through semantic tokens with the existing appearance as the default theme.
+- [x] Phases 1 and 2 produce no visual change to `posts` or `technical-sessions`, verified by comparing rendered output before and after.
 - [ ] The `stories` section renders with its own theme, recognisably derived from the reader.
 - [ ] A story page carries the reader's structure: episode eyebrow, cast line, lead drop cap, endmark.
 - [ ] The synced story metadata the site currently drops — `season`, `episode`, `characters` — is rendered rather than discarded.
@@ -58,6 +58,7 @@ Four phases, each independently shippable and independently revertible.
 - `cssPrefix` cannot be the theme key: `posts` and `stories` both declare `article`, so it does not distinguish the two sections it would have to separate. It duplicates `layout` rather than extending it, which is likely why nothing ever read it. Replacing it with `theme` satisfies the criterion above by removal.
 - Full-page theming is *less* plumbing than container-only theming, not more. `Layout.tsx` is the sole owner of `<html>` and `<body>` and every route funnels through it, so one optional prop themes both the section listing and the story pages; scoping to the container instead would mean adding the hook separately to `ArticleLayout.tsx` and `TechnicalSessionLayout.tsx`.
 - Source of the story treatment: the inline stylesheet in `story-crafter/scripts/build-reader.mjs`.
+- Two kinds of colour deliberately stayed literal in phase 2. The hero scrim and the card fallback icon tint sit over photographs, and their job is to hold text legible against an arbitrary image rather than to express the palette, so a theme must not move them. The technical-session category colours are a categorical scale, not palette, and that section keeps the default treatment by decision.
 - Alternatives considered and set aside:
   - *A second stylesheet per section, conditionally linked.* Simple and well isolated, but duplicates base rules across files and guarantees drift as they age separately.
   - *A shared design-token package consumed by both the site and the reader generator.* The most correct-looking option and the wrong one for now: `story-crafter` is a separate private repository and the reader is a self-contained generated bundle with no build dependency on this repository. Publishing or vendoring a token package costs more than it saves while there is exactly one shared theme. Revisit if the palettes must stay in lockstep.
@@ -68,7 +69,8 @@ Four phases, each independently shippable and independently revertible.
 - The reader's gold-on-warm-dark is tuned for a dimmed phone in a dark room. It needs a contrast check before it ships on the web, and may need adjusted values rather than a literal copy.
 - Stories reach the site through `npm run sync:stories` as a build artifact, so this work does not touch story source files or `story-crafter` itself.
 - Per `AGENTS.md`, implementation bumps `web/package.json` and `web/src/version.ts` and adds a `web/CHANGELOG.md` entry.
-- How the no-visual-change phases are verified: render every public route to HTML through the route functions directly (home, about, each section listing, two items per section, and both 404 branches), once before the change and once after, then compare. Phase 1's only diff was `data-theme="story"` on three files. Phase 2 should be checked the same way. One trap — the home page cannot be compared byte for byte, because its hero slider builds an element id from `Date.now()`, so two renders of unchanged code already differ; ignore that id and the script that references it.
+- How the no-visual-change phases were verified. Phase 1 changed markup, so every public route was rendered to HTML through the route functions directly — home, about, each section listing, two items per section, and both 404 branches — before and after; the only diff was `data-theme="story"` on three files. One trap there: the home page cannot be compared byte for byte, because its hero slider builds an element id from `Date.now()`, so two renders of unchanged code already differ.
+- Phase 2 changed only CSS, where an HTML diff proves nothing, so it was checked by flattening the stylesheet instead: parse it into applied declarations, expand every `var()` back to a literal, drop the custom-property definitions themselves, and compare. All 901 declarations resolved identically except one intentional addition (`font-family` on `.post-content`, resolving to the stack it already inherited). Phase 3 should be flattened the same way — there the diff is expected to be non-empty, and it is the reviewable list of exactly what the theme changes.
 
 Decisions:
 
