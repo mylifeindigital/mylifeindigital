@@ -4,12 +4,24 @@ import { createContext } from './types/MarkdownProcessingContext.js';
 import type { ContentItem, TocEntry } from '../markdown.js';
 
 /**
- * Result returned from pipeline processing.
+ * A successfully processed item.
  */
 export interface PipelineResult {
     item: ContentItem;
     warnings: string[];
 }
+
+/**
+ * The three ways processing can end.
+ *
+ * `skipped` and `failed` are deliberately distinct: a draft is excluded on
+ * purpose and the build should carry on, whereas a processor that threw left
+ * the context half-built and the build must not publish or succeed (CR-028).
+ */
+export type PipelineOutcome =
+    | ({ status: 'ok' } & PipelineResult)
+    | { status: 'skipped'; processor: string; warnings: string[] }
+    | { status: 'failed'; processor: string; error: Error; warnings: string[] };
 
 /**
  * Orchestrates markdown processing through a chain of processors.
@@ -34,17 +46,29 @@ export class MarkdownProcessingPipeline {
         filePath: string,
         slug: string,
         section: string
-    ): Promise<PipelineResult | null> {
+    ): Promise<PipelineOutcome> {
         const context = createContext(rawContent, filePath, slug, section);
 
         for (const processor of this.processors) {
             try {
                 await processor.process(context);
             } catch (error) {
-                const message = error instanceof Error ? error.message : String(error);
-                context.warnings.push(`[${processor.name}] Error: ${message}`);
+                // Stop here rather than warning and continuing. Once a processor
+                // throws, the context is half-built -- FrontmatterProcessor
+                // failing leaves `metadata` at its seeded default, which reads
+                // as valid and hides `draft: true` from DraftFilterProcessor.
+                // A processor that can survive its own failure catches it
+                // internally, as ImageGeneratorProcessor does.
+                return {
+                    status: 'failed',
+                    processor: processor.name,
+                    error: error instanceof Error ? error : new Error(String(error)),
+                    warnings: context.warnings,
+                };
             }
-            if (context.skip) return null;
+            if (context.skip) {
+                return { status: 'skipped', processor: processor.name, warnings: context.warnings };
+            }
         }
 
         const item: ContentItem = {
@@ -57,6 +81,7 @@ export class MarkdownProcessingPipeline {
         };
 
         return {
+            status: 'ok',
             item,
             warnings: context.warnings,
         };

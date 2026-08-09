@@ -82,18 +82,32 @@ export async function processBrowserPreview(
     const identity = resolveIdentity(request);
 
     try {
-        const result = await createBrowserPreviewPipeline().process(
+        const outcome = await createBrowserPreviewPipeline().process(
             request.content,
             identity.filePath,
             identity.slug,
             identity.section
         );
 
+        // A preview reports a processing failure rather than aborting: the
+        // author is mid-edit and malformed input is expected. The build is
+        // where a failure has to be fatal (CR-028).
+        if (outcome.status === 'failed') {
+            return {
+                ok: false,
+                identity,
+                item: null,
+                warnings: outcome.warnings,
+                error: `[${outcome.processor}] ${outcome.error.message}`,
+                knownBuildOnlyDifferences: getKnownBuildOnlyDifferences(identity),
+            };
+        }
+
         return {
             ok: true,
             identity,
-            item: result?.item ?? null,
-            warnings: result?.warnings ?? [],
+            item: outcome.status === 'ok' ? outcome.item : null,
+            warnings: outcome.warnings,
             knownBuildOnlyDifferences: getKnownBuildOnlyDifferences(identity),
         };
     } catch (error) {

@@ -121,14 +121,17 @@ async function processFixture(
         ? createBuildPipeline()
         : createAdminPreviewPipeline();
 
-    const result = await pipeline.process(
+    const outcome = await pipeline.process(
         content,
         identity.filePath,
         identity.slug,
         identity.section
     );
 
-    if (result === null) {
+    // A parity comparison treats a skip and a failure alike: neither produces
+    // comparable output. The failure is surfaced through `warnings` so a
+    // fixture that stops processing cannot read as a clean match (CR-028).
+    if (outcome.status !== 'ok') {
         return {
             skipped: true,
             slug: null,
@@ -136,18 +139,20 @@ async function processFixture(
             metadata: null,
             toc: undefined,
             html: null,
-            warnings: [],
+            warnings: outcome.status === 'failed'
+                ? [...outcome.warnings, `[${outcome.processor}] ${outcome.error.message}`]
+                : outcome.warnings,
         };
     }
 
     return {
         skipped: false,
-        slug: result.item.slug,
-        section: result.item.section,
-        metadata: result.item.metadata,
-        toc: result.item.toc,
-        html: result.item.html,
-        warnings: result.warnings,
+        slug: outcome.item.slug,
+        section: outcome.item.section,
+        metadata: outcome.item.metadata,
+        toc: outcome.item.toc,
+        html: outcome.item.html,
+        warnings: outcome.warnings,
     };
 }
 

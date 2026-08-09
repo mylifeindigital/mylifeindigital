@@ -114,14 +114,16 @@ function createBuildPipeline(): MarkdownProcessingPipeline {
 async function processBuildFixture(fixture: Fixture): Promise<ComparableOutput> {
     const filePath = join(repoRoot, fixture.relativePath);
     const content = readFileSync(filePath, 'utf-8');
-    const result = await createBuildPipeline().process(
+    const outcome = await createBuildPipeline().process(
         content,
         filePath,
         fixture.slug,
         fixture.section
     );
 
-    if (result === null) {
+    // Neither a skip nor a failure yields comparable output; a failure carries
+    // its cause into `warnings` so it cannot pass as a clean skip (CR-028).
+    if (outcome.status !== 'ok') {
         return {
             skipped: true,
             slug: null,
@@ -129,11 +131,13 @@ async function processBuildFixture(fixture: Fixture): Promise<ComparableOutput> 
             metadata: null,
             toc: undefined,
             html: null,
-            warnings: [],
+            warnings: outcome.status === 'failed'
+                ? [...outcome.warnings, `[${outcome.processor}] ${outcome.error.message}`]
+                : outcome.warnings,
         };
     }
 
-    return toComparableOutput(result.item, result.warnings);
+    return toComparableOutput(outcome.item, outcome.warnings);
 }
 
 function toComparableOutput(
