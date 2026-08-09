@@ -2076,10 +2076,50 @@ body[data-theme="story"] {
 }
 
 /*
- * Prose is the full ink in the reader, while this site's --text-secondary
- * carries both prose and metadata. A token cannot separate the two, so the
- * split needs this one rule.
+ * Story reading furniture (CR-024 phase 4)
+ *
+ * Ported from story-crafter's reading app. The drop cap and the endmark need
+ * no markup: the lead is the first paragraph, and every story closes with
+ * "The End." by the story contract in that repository's AGENTS.md, so the
+ * endmark is the last one.
  */
-body[data-theme="story"] .post-content p {
+.story-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+}
+
+.story-cast {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: var(--spacing-sm);
+}
+
+/* Prose is the full ink here; --text-secondary carries metadata elsewhere. */
+.story-prose p {
     color: var(--text-primary);
+}
+
+.story-prose > p:first-of-type::first-letter {
+    font-size: 3.1em;
+    float: left;
+    line-height: 0.78;
+    padding: 0.05em 0.12em 0 0;
+    color: var(--accent-purple);
+    font-weight: 600;
+}
+
+.story-prose > p:last-child {
+    text-align: center;
+    margin: var(--spacing-xl) 0 var(--spacing-sm);
+    color: var(--accent-cyan);
+    font-size: 1.15rem;
+    font-style: italic;
+}
+
+.story-prose > p:last-child strong {
+    font-weight: 400;
 }

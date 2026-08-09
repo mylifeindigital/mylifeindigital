@@ -6,7 +6,7 @@
  * content items can override via frontmatter.
  */
 
-export type DisplayLayout = 'article' | 'technical-session';
+export type DisplayLayout = 'article' | 'story' | 'technical-session';
 
 export interface DisplaySchema {
   /** The layout component to use */
@@ -43,7 +43,7 @@ export const contentSchemas: Record<string, DisplaySchema> = {
     headerStyle: 'minimal',
   },
   'stories': {
-    layout: 'article',
+    layout: 'story',
     showTags: false,
     showDate: false,
     showAuthor: false,

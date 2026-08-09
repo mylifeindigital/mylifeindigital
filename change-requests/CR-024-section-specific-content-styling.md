@@ -1,6 +1,6 @@
 # CR-024: Section-Specific Content Styling
 
-Status: In Progress  
+Status: Done  
 Priority: Medium  
 Area: Web Content  
 Created: 2026-08-02
@@ -42,11 +42,11 @@ Four phases, each independently shippable and independently revertible.
 - [x] Content-container styling resolves through semantic tokens with the existing appearance as the default theme.
 - [x] Phases 1 and 2 produce no visual change to `posts` or `technical-sessions`, verified by comparing rendered output before and after.
 - [x] The `stories` section renders with its own theme, recognisably derived from the reader.
-- [ ] A story page carries the reader's structure: episode eyebrow, cast line, lead drop cap, endmark.
-- [ ] The synced story metadata the site currently drops — `season`, `episode`, `characters` — is rendered rather than discarded.
+- [x] A story page carries the reader's structure: episode eyebrow, cast line, lead drop cap, endmark.
+- [x] The synced story metadata the site currently drops — `season`, `episode`, `characters` — is rendered rather than discarded.
 - [x] Story text meets WCAG AA contrast at normal body size.
 - [x] `technical-sessions` renders unchanged throughout; `stories` is the only section that diverges in this request.
-- [ ] Adding a future section theme requires only new token values, not new layout or stylesheet plumbing.
+- [x] Adding a future section theme requires only new token values, not new layout or stylesheet plumbing.
 - [x] Any port from `story-crafter` records where the values came from, so later divergence is a visible decision.
 
 ## Implementation Notes
@@ -60,7 +60,8 @@ Four phases, each independently shippable and independently revertible.
 - Source of the story treatment: the inline stylesheet in `story-crafter/scripts/build-reader.mjs`.
 - Phase 3 found one contrast failure the token swap created: `.btn:hover` set `color: white` on an accent fill, which is 5.7:1 on the default purple but 2.8:1 on the story gold — and every story page ends with a `.btn` ("← Back to Stories"), so it was reachable rather than theoretical. The label colour became `--on-accent`, `white` by default and the page ink (6.6:1) under the story theme. Named colours were the gap: phase 2's inventory searched for hex and `rgba()` and never saw `white`.
 - Unrelated and not fixed here: `.hero-cta` also sets white on a cyan-to-purple gradient, and white on `#00d4ff` is about 1.9:1. That is a pre-existing default-theme issue on the home page, which is never themed, so it is out of this request's scope.
-- After phase 3 a second section theme is a block of token values plus one rule: this site's `--text-secondary` carries both prose and metadata, while the reader gives prose the full ink, and no token can separate the two. Phase 4's `StoryLayout` is expected to absorb that rule.
+- Phase 4 absorbed the one rule phase 3 could not express as a token. Story prose takes the full ink where this site's `--text-secondary` carries both prose and metadata; that rule now hangs off `.story-prose` rather than the theme selector, because the difference belongs to stories rather than to warmth. A second section theme is therefore token values only.
+- The CSS-only drop cap and endmark were checked against the corpus rather than assumed: all 64 published stories start with a paragraph and end with `<p><strong>The End.</strong></p>`, so `::first-letter` on the first paragraph and the styling of the last one hold everywhere.
 - Two kinds of colour deliberately stayed literal in phase 2. The hero scrim and the card fallback icon tint sit over photographs, and their job is to hold text legible against an arbitrary image rather than to express the palette, so a theme must not move them. The technical-session category colours are a categorical scale, not palette, and that section keeps the default treatment by decision.
 - Alternatives considered and set aside:
   - *A second stylesheet per section, conditionally linked.* Simple and well isolated, but duplicates base rules across files and guarantees drift as they age separately.
@@ -89,4 +90,12 @@ No open questions remain.
 
 ## Outcome
 
-Pending implementation.
+Delivered in four phases, `0.3.9` through `0.4.0`, each shipped and deployed on its own.
+
+Phase 1 replaced the unread `cssPrefix` with a `theme` field and emitted it as `data-theme` on `<body>`. Phase 2 routed `main.css` through semantic tokens; the values that had resisted tokenisation were alpha variants with the accent channels inlined, so they are built from channel tokens and keep their exact alphas. Phase 3 added the story theme from the reader's night palette. Phase 4 added `StoryLayout` with the episode eyebrow, cast line, drop cap, and endmark.
+
+Three findings changed the plan as it ran. Full-page theming turned out to be *less* plumbing than container-only, because `Layout.tsx` owns `<body>` and every route funnels through it. `cssPrefix` could never have been the theme key, since `posts` and `stories` both declared `article`. And the structural metadata was already synced and discarded — `season`, `episode`, and `characters` reached every story's frontmatter while the schema suppressed the whole meta row.
+
+Two defects surfaced and were fixed. The header logo could not follow a theme, because its colours were `stop-color` attributes in the inline SVG rather than CSS; its tile also matched the page background closely enough to look like camouflage and would have shown as a cool-navy square on any other palette. And `.btn:hover` put white on the accent fill — 5.7:1 on the default purple, 2.8:1 on the story gold, reachable on every story page through "← Back to Stories" — now resolved through `--on-accent`.
+
+Each no-visual-change claim was verified rather than asserted: route renders compared before and after for the markup phases, and the stylesheet flattened to its applied declarations with every `var()` expanded for the CSS ones.

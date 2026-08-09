@@ -2,6 +2,20 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.4.0] - 2026-08-09
+
+### Added
+
+- `StoryLayout`, the reading furniture from `story-crafter`'s bedtime reading app (CR-024, phase 4). A story page now opens with its episode eyebrow (`Season 4 · Episode 4`), its cast, and how long it takes to read aloud, then sets the lead paragraph with a drop cap and closes on a centred italic endmark. The drop cap and endmark need no markup: the lead is the first paragraph, and every story ends with "The End." by the story contract — checked against all 64 published stories, which start with a paragraph and end with the endmark without exception.
+- `readAloudMinutes`, pacing stories at 135 words per minute. That is a read-aloud rate, not a silent-reading one, and it is the rate the reading app uses.
+
+### Changed
+
+- `season`, `episode`, and `characters` are rendered rather than discarded. They have been carried into every story's frontmatter by the content sync all along, while the `stories` schema suppressed the whole meta row — a story page shipped an empty `<div class="article-meta">` over metadata it already had.
+- Story prose colour moved from the theme onto the layout (`.story-prose`), so a section theme costs token values only. Prose takes the full ink where `--text-secondary` carries both prose and metadata elsewhere; that difference belongs to stories rather than to warmth.
+
+This completes CR-024. Only story pages changed: every other route renders byte-identically.
+
 ## [0.3.11] - 2026-08-09
 
 ### Added
