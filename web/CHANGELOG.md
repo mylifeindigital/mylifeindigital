@@ -2,6 +2,23 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.7.0] - 2026-08-09
+
+### Added
+
+- **Content validation against per-container schemas** (CR-013). `web/src/schemas/content-validation-schemas.ts` declares a base schema every content container extends — `title` required and non-empty, `draft` typed boolean, `date` typed but optional — with `posts` adding required `date` and `author`, and `technical-sessions` adding required `date` and non-empty `tags`. Violations are **warnings**: they name the container, file, field, and rule, and never block a build. CR-028's fatal bar stays where it is, at input the pipeline cannot process.
+- `ValidationProcessor`, running after `DraftFilterProcessor` so a draft is never held to publication rules. It records structured issues rather than formatted strings, because the same issue has to reach the build console, a GitHub annotation, and a job summary, each formatting it differently.
+- `build:posts` reports issues to GitHub Actions: inline annotations on the changed files when `CONTENT_VALIDATION_ANNOTATIONS=true`, and a job summary table whenever `GITHUB_STEP_SUMMARY` is set. Annotations are opt-in because their paths must resolve inside the repository under review — true in the content repository's CI, which checks content out at the workspace root, and false in this repository's, which checks it out under `content-repo/`.
+
+### Notes
+
+- Content and display schemas are deliberately separate modules. `showDate: false` means "do not render a date", not "a date is not required"; deriving requirements from display flags would let a cosmetic edit silently switch a validation rule off.
+- `stories` declares no schema and is held to the base alone. `scripts/sync-stories.ts` already enforces eight fields more strictly, with a hard error on any frontmatter line outside three accepted shapes, before a story is written into the content tree — a second declaration would be a competing source of truth.
+- An undeclared container falls back to the base, not to `posts`, and the lookup is an own-property check so a directory named `constructor` cannot resolve a schema.
+- `description` is deliberately not a rule. No post or technical session has ever carried one, and nothing in `web/src` renders it.
+
+Today's content produces **zero** validation issues, and `posts-data.ts` is byte-identical to the pre-change output. 69 tests pass (59 web, 10 scripts), all three type-check programs clean.
+
 ## [0.6.0] - 2026-08-09
 
 ### Fixed

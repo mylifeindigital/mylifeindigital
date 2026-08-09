@@ -26,7 +26,7 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-010 | Add admin validation panel and author-facing warnings | Dropped | High | Web Admin | 2026-05-06 | [CR-010-add-admin-validation-panel-and-author-facing-warnings.md](./CR-010-add-admin-validation-panel-and-author-facing-warnings.md) |
 | CR-011 | Spike browser-worker preview pipeline | Done | Medium | Content Pipeline | 2026-05-06 | [CR-011-spike-browser-worker-preview-pipeline.md](./CR-011-spike-browser-worker-preview-pipeline.md) |
 | CR-012 | Retire duplicate Markdown parsing | Done | Medium | Content Pipeline | 2026-05-06 | [CR-012-retire-duplicate-markdown-parsing.md](./CR-012-retire-duplicate-markdown-parsing.md) |
-| CR-013 | Validate content semantics the pipeline accepts | Planned | Medium | Quality | 2026-05-06 | [CR-013-validate-content-semantics-the-pipeline-accepts.md](./CR-013-validate-content-semantics-the-pipeline-accepts.md) |
+| CR-013 | Validate content semantics the pipeline accepts | Done | Medium | Quality | 2026-05-06 | [CR-013-validate-content-semantics-the-pipeline-accepts.md](./CR-013-validate-content-semantics-the-pipeline-accepts.md) |
 | CR-014 | Reassess generated content artifact strategy | Proposed | Medium | Architecture | 2026-05-06 | [CR-014-reassess-generated-content-artifact-strategy.md](./CR-014-reassess-generated-content-artifact-strategy.md) |
 | CR-015 | Template-driven content generator | Done | High | Content Operations | 2026-05-21 | [CR-015-template-driven-content-generator.md](./CR-015-template-driven-content-generator.md) |
 | CR-016 | Render standalone About content | Done | High | Web Content | 2026-05-21 | [CR-016-render-standalone-about-content.md](./CR-016-render-standalone-about-content.md) |

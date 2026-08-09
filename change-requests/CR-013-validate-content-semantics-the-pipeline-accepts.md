@@ -1,10 +1,11 @@
 # CR-013: Validate Content Semantics the Pipeline Accepts
 
-Status: Planned  
+Status: Done  
 Priority: Medium  
 Area: Quality  
 Created: 2026-05-06  
-Reviewed: 2026-08-09
+Reviewed: 2026-08-09  
+Completed: 2026-08-09
 
 ## Context
 
@@ -63,7 +64,7 @@ Content that the pipeline accepts but the site cannot render correctly is report
 - [x] Does a semantic violation fail the build, or warn? **Warn.**
 - [x] Do stories participate? **Not as new rules.** A stories schema already exists in imperative form and is stricter than anything proposed here; see `Decisions`. Whether to converge on it is deferred, and the pre-merge gap it exposes is `CR-033`.
 - [x] Is `description` a rule at all, given 17 items lack one? **Yes**, as a warning. Resolved as a consequence of the severity decision.
-- [ ] Where do warnings go? Choosing `warn` makes this request depend on warnings having a destination. `build-posts.ts` currently prints them with `console.warn` and discards them, so a warning-only validator is CI log noise nobody reads. Named as a question rather than assumed, because it is the difference between this request working and merely existing.
+- [x] Where do warnings go? **GitHub annotations on the changed files, plus a job summary table.** Annotations are opt-in per workflow; see `Decisions`.
 
 Implementation does not start while any box here is unchecked.
 
@@ -142,24 +143,48 @@ So `sync-stories.ts` **is** a stories content schema, written imperatively, and 
 
 What the trace did expose is a timing gap, and it belongs to `CR-019`'s territory rather than this one: `story-crafter` has no CI workflow and no required status check, so that strict validation first runs inside `deploy.yml`, after merge. Filed as `CR-033`.
 
+**2026-08-09 — Warnings surface as GitHub annotations plus a job summary, with annotations opt-in per workflow.** Two surfaces because they do different jobs: annotations put issues on the pull request's Files changed tab where the author already is, and GitHub caps how many it displays per step, so the summary carries the complete list.
+
+Annotations are gated on `CONTENT_VALIDATION_ANNOTATIONS` rather than emitted whenever Actions is detected, because an annotation's path must resolve inside the repository under review. `content-ci.yml` checks the content repository out at the workspace root, so `content/posts/x.md` anchors to the diff; `app-ci.yml` checks it out under `content-repo/`, a path that does not exist in the application repository, and the same annotation would render unanchored. The job summary has no such constraint and is written by both.
+
+**2026-08-09 — `description` is not a rule, reversing the earlier decision on this request.** That decision rested on a misreading of the audit: "17 items lack a description" counted across all 82 items and hid the distribution. Per container it is 8 of 8 posts and 9 of 9 technical sessions — every item that would carry the rule — while all 64 stories have one, supplied by `sync-stories.ts`. And nothing renders it: `metadata.description` is declared in `FrontmatterProcessor` and read nowhere in `web/src`. Requiring a field the site ignores would have put a permanent 17-line wall of warnings in front of every build, which is how a warning surface becomes worth ignoring. Recorded rather than quietly dropped, because the reversal is the useful part: an aggregate count concealed a per-container split, and this request is entirely about per-container rules.
+
 **2026-08-09 — No migration is required.** Every schema-derived rule passes on all 82 items today, so the check can be fatal from the day it lands rather than needing a warn-only period. This is a fact about current content, not a permanent property; it is recorded because it is what makes the simple option available, and it expires if content lands before this request does.
 
 ## Acceptance Criteria
 
-- [ ] A base schema exists that every content container extends, and no container can opt out of it.
-- [ ] `posts` and `technical-sessions` each declare a distinct schema above the base, and both validate. `stories` deliberately declares none; a story reaching the pipeline has already passed `sync-stories.ts`.
-- [ ] A container declaring no schema is held to the base alone — not to the `posts` rules.
-- [ ] A file missing a field its container requires produces a warning naming the container, file, field, and rule.
-- [ ] `draft: "true"` as a string is reported; a boolean `draft` is not.
-- [ ] A date that does not parse is reported.
-- [ ] Warnings are distinguishable from processor failures in both shape and exit code — a violation leaves the build at 0.
-- [ ] The real content tree passes unchanged — `build:posts` exits 0 and `posts-data.ts` is byte-identical to the pre-change output.
-- [ ] Content and display schemas are separate modules; changing `showDate` on a section changes nothing about what that section requires.
-- [ ] `content-ci.yml`'s header describes what is actually checked.
+- [x] A base schema exists that every content container extends, and no container can opt out of it.
+- [x] `posts` and `technical-sessions` each declare a distinct schema above the base, and both validate. `stories` deliberately declares none; a story reaching the pipeline has already passed `sync-stories.ts`.
+- [x] A container declaring no schema is held to the base alone — not to the `posts` rules.
+- [x] A file missing a field its container requires produces a warning naming the container, file, field, and rule.
+- [x] `draft: "true"` as a string is reported; a boolean `draft` is not.
+- [x] A date that does not parse is reported.
+- [x] Warnings are distinguishable from processor failures in both shape and exit code — a violation leaves the build at 0.
+- [x] The real content tree passes unchanged — `build:posts` exits 0 and `posts-data.ts` is byte-identical to the pre-change output.
+- [x] Content and display schemas are separate modules; changing `showDate` on a section changes nothing about what that section requires.
+- [x] `content-ci.yml`'s header describes what is actually checked.
 
 ## Implementation Notes
 
+**`title` needed a special case, and it is the one rule that is a heuristic.** `FrontmatterProcessor` substitutes the slug when no title is given, so `metadata.title` is always set by the time validation runs and a plain presence check could never fire. Absence is inferred from the title equalling the slug. A file whose real title matches its slug exactly would be reported too; there are none today, and the fix either way is to write a title. Every other field is present in metadata exactly when it was in the frontmatter, because `FrontmatterProcessor` spreads the parsed data.
+
+**Issues accumulate on the processor instance, not in the pipeline context.** This avoids widening `MarkdownProcessingContext` and `PipelineOutcome` for a build-time concern, and follows the shape `ImageGeneratorProcessor` already uses for its manifest. A readable line still goes to `context.warnings` so local `build:posts` output is unchanged in character.
+
+**Both date spellings are accepted.** YAML parses an unquoted `date: 2026-08-09` into a `Date` and a quoted one into a string, and both are legitimate in the content tree today. The rule accepts either, provided a string actually parses.
+
+**The reporter runs after `posts-data.ts` is written.** A validation issue never blocks publication, so it describes content that is already live and incomplete — reporting before writing would imply a gate that does not exist.
+
 ## Outcome
+
+Content validation is live in both CI workflows, and silent on today's content.
+
+`web/src/schemas/content-validation-schemas.ts` declares a base schema every container extends: `title` required and non-empty, `draft` typed boolean, `date` typed but optional. `posts` adds required `date` and `author`; `technical-sessions` adds required `date` and non-empty `tags`. `stories` declares nothing and is held to the base, because `sync-stories.ts` already enforces eight fields more strictly. An undeclared container gets the base alone, and the lookup is an own-property check, so a directory named `constructor` cannot resolve a schema.
+
+`ValidationProcessor` runs after `DraftFilterProcessor`, so a draft is never held to publication rules, and records structured issues rather than formatted strings — the same issue reaches the build console, a GitHub annotation, and a job summary, each formatting it differently.
+
+Verified end to end: a fixture with four faults produced five annotations and a five-row summary table with the build still at exit 0, and dropping `CONTENT_VALIDATION_ANNOTATIONS` suppressed the annotations while still writing the summary. The real content tree produces **zero issues** and a byte-identical `posts-data.ts`. 69 tests pass, all three type-check programs clean.
+
+The content repository's `content-ci.yml` opts into annotations and its header now describes both outcomes — fail for unprocessable input, warn for incomplete content — without restating the rules, which is how the previous comment went stale.
 
 ## Notes
 

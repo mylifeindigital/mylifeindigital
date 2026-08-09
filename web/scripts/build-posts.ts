@@ -10,8 +10,8 @@
  *   npm run build:posts:images    # Build with AI image generation
  */
 
-import { readFileSync, readdirSync, writeFileSync, existsSync, mkdirSync, statSync } from 'fs';
-import { join, dirname, extname, basename } from 'path';
+import { readFileSync, readdirSync, writeFileSync, existsSync, mkdirSync, statSync, appendFileSync } from 'fs';
+import { join, dirname, extname, basename, relative } from 'path';
 import { fileURLToPath } from 'url';
 import { config as dotenvConfig } from 'dotenv';
 
@@ -22,6 +22,8 @@ import {
 import {
     FrontmatterProcessor,
     DraftFilterProcessor,
+    ValidationProcessor,
+    type ValidationIssue,
     AstProcessor,
     TocProcessor,
     HtmlProcessor,
@@ -51,6 +53,7 @@ const dryRun = args.includes('--dry-run');
 
 // Track ImageGeneratorProcessor for manifest saving
 let imageGeneratorProcessor: ImageGeneratorProcessor | null = null;
+let validationProcessor: ValidationProcessor | null = null;
 
 const standalonePageSources = [
     {
@@ -64,9 +67,14 @@ const standalonePageSources = [
  * Create the markdown processing pipeline.
  */
 function createPipeline(): MarkdownProcessingPipeline {
+    // Validation runs after the draft filter on purpose: a draft is unfinished
+    // by definition and is never held to publication rules (CR-013).
+    validationProcessor = new ValidationProcessor();
+
     const pipeline = new MarkdownProcessingPipeline()
         .use(new FrontmatterProcessor())
         .use(new DraftFilterProcessor())
+        .use(validationProcessor)
         .use(new ExcludeProcessor());
 
     // Add image generation if requested
@@ -93,6 +101,72 @@ function slugToTitle(slug: string): string {
         .split('-')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
+}
+
+/**
+ * Escape a value for a GitHub Actions workflow command. Property values need
+ * more escaping than the message body, because a comma or colon would end the
+ * property list early.
+ */
+function escapeCommand(value: string, isProperty = false): string {
+    const escaped = value.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
+    return isProperty ? escaped.replace(/:/g, '%3A').replace(/,/g, '%2C') : escaped;
+}
+
+/**
+ * Report validation issues to GitHub Actions (CR-013).
+ *
+ * Two surfaces, because they do different jobs. Inline annotations put the
+ * first few issues on the pull request's Files changed tab, where the author
+ * already is; GitHub caps how many it displays per step, so the job summary
+ * carries the complete list.
+ *
+ * Annotations are opt-in via CONTENT_VALIDATION_ANNOTATIONS because their file
+ * paths must resolve inside the repository being reviewed. That holds in the
+ * content repository's CI, which checks content out at the workspace root, and
+ * does not in the application repository's, which checks it out under
+ * content-repo/ — the same annotation there would point at a path that does not
+ * exist in the pull request and render unanchored.
+ */
+function reportValidationIssues(issues: readonly ValidationIssue[]): void {
+    if (issues.length === 0) return;
+
+    const workspace = process.env.GITHUB_WORKSPACE;
+    const relativeTo = (filePath: string): string =>
+        workspace ? relative(workspace, filePath) : filePath;
+
+    if (process.env.CONTENT_VALIDATION_ANNOTATIONS === 'true') {
+        for (const issue of issues) {
+            const file = escapeCommand(relativeTo(issue.filePath), true);
+            const title = escapeCommand(`Content validation: ${issue.field}`, true);
+            const message = escapeCommand(`"${issue.field}" ${issue.message}`);
+            console.log(`::warning file=${file},title=${title}::${message}`);
+        }
+    }
+
+    const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+    if (!summaryPath) return;
+
+    const rows = issues.map(
+        issue =>
+            `| \`${relativeTo(issue.filePath)}\` | ${issue.container} | \`${issue.field}\` | ${issue.rule} | ${issue.message} |`
+    );
+
+    appendFileSync(
+        summaryPath,
+        [
+            '',
+            `## Content validation — ${issues.length} issue(s)`,
+            '',
+            'These do not block the build. Each names the rule its container declares.',
+            '',
+            '| File | Container | Field | Rule | Detail |',
+            '| --- | --- | --- | --- | --- |',
+            ...rows,
+            '',
+        ].join('\n'),
+        'utf-8'
+    );
 }
 
 /**
@@ -348,6 +422,12 @@ async function main(): Promise<void> {
 
     generateContentDataFile(siteContent, outputPath);
 
+    // Reported after the artifact is written, because a validation issue never
+    // blocks publication -- it describes content that is live and incomplete
+    // (CR-013).
+    const issues = validationProcessor?.issues ?? [];
+    reportValidationIssues(issues);
+
     console.log('');
     console.log(`✅ Generated content data:`);
     console.log(`   - ${sections.length} section(s)`);
@@ -356,6 +436,11 @@ async function main(): Promise<void> {
     sections.forEach(section => {
         console.log(`   - ${section.title}: ${section.items.length} item(s)`);
     });
+
+    if (issues.length > 0) {
+        console.log('');
+        console.log(`⚠️  ${issues.length} content validation issue(s) — see above. The build still succeeded.`);
+    }
 }
 
 main().catch(err => {
