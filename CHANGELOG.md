@@ -4,6 +4,10 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ## 2026-08-09
 
+### Changed
+
+- Reshaped `CR-012` from "Decide parser roadmap for Markdown processing" to "Retire duplicate Markdown parsing", with the detail file it had lacked since 2026-05-06. The roadmap question was answered by implementation, and its one concrete deferral — the browser-safe `gray-matter` shim `CR-011` pointed here — lost its consumer when `CR-029` deleted the admin preview. Underneath it sits a real problem: a second, uncalled frontmatter parser in `web/src/utils/markdown.ts` that is not equivalent to the live one, since it coerces nothing and would leave `draft: true` as a string that `DraftFilterProcessor` does not match. The ID is stable; only the scope changed.
+
 ### Removed
 
 - Completed `CR-029`: the web admin is deleted in full, carrying out the `CR-018` decision. `AGENTS.md`'s Admin System section is replaced by an Admin Surface section recording that there is none and that reintroducing one needs a change request — including the rule that build-time credentials belong in `web/scripts/` and the local `.env`, never in `wrangler.toml` or Worker secrets. Reconnaissance is what made this a deletion rather than a trim: `utils/admin/html.ts` was an editor end to end, the read endpoints existed only to feed it, and the whole subsystem had exactly one importer. Web app details in `web/CHANGELOG.md` (0.5.0).
