@@ -31,6 +31,10 @@
     --font-body: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
     --font-reading: var(--font-body);
     --reading-measure: 800px;
+    --reading-size: 1.05rem;
+    --reading-leading: 1.6;
+    /* Label colour for text sitting on an accent fill. */
+    --on-accent: white;
     
     /* Spacing */
     --spacing-xs: 0.25rem;
@@ -408,7 +412,7 @@ a:hover {
 
 .btn:hover {
     background: var(--accent-purple);
-    color: white;
+    color: var(--on-accent);
 }
 
 /* Tag Component */
@@ -583,7 +587,8 @@ a:hover {
 .post-content p {
     margin-bottom: var(--spacing-lg);
     color: var(--text-secondary);
-    font-size: 1.05rem;
+    font-size: var(--reading-size);
+    line-height: var(--reading-leading);
 }
 
 .post-content a {
@@ -1005,7 +1010,7 @@ pre code {
     margin-top: var(--spacing-lg);
     padding: 0.75rem 1.5rem;
     background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
-    color: white;
+    color: var(--on-accent);
     font-weight: 600;
     text-decoration: none;
     border-radius: var(--radius-md);
@@ -1016,7 +1021,7 @@ pre code {
 .hero-cta:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(var(--accent-cyan-rgb), 0.4);
-    color: white;
+    color: var(--on-accent);
 }
 
 /* Hero Slider */
@@ -2023,4 +2028,58 @@ footer {
         max-height: calc(100vh - 120px);
         overflow-y: auto;
     }
+}
+
+/*
+ * Story theme (CR-024 phase 3)
+ *
+ * Ported from the night palette in story-crafter's reading app, which is
+ * designed for reading Golden Valley stories aloud at bedtime. Values come
+ * from the inline stylesheet in that repository's scripts/build-reader.mjs;
+ * where this site needs a role the reader does not have, the value is noted
+ * as extrapolated rather than ported.
+ *
+ * Emitted by the display schema as data-theme on <body>, so the whole page
+ * changes, chrome included. Contrast was checked against WCAG AA: ink on the
+ * reading surface is 12.8:1, the softer ink 7.1:1, gold 8.2:1.
+ */
+body[data-theme="story"] {
+    --bg-dark: #17120b;
+    --bg-darker: #1e180f;
+    --text-primary: #ece0cb;
+    --text-secondary: #b8a888;
+
+    /* The reader's gold takes the accent roles; nothing here stays cool. */
+    --accent-cyan: #e6ac52;
+    --accent-purple: #c98f38;
+    --accent-cyan-rgb: 230, 172, 82;
+    --accent-purple-rgb: 201, 143, 56;
+
+    /* Warm opaque panels, where the default theme darkens with black. */
+    --surface: #241d13;
+    --surface-soft: #1e180f;
+    --surface-strong: #2c2317;
+
+    /* The reader has one border weight; the two heavier steps are
+       extrapolated from it, not ported. */
+    --line: #3a2f1f;
+    --line-soft: #2c2317;
+    --line-strong: #4a3c28;
+
+    --font-reading: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --reading-measure: 34rem;
+    --reading-size: 1.16rem;
+    --reading-leading: 1.72;
+
+    /* White on gold is 2.8:1; the page ink on gold is 6.6:1. */
+    --on-accent: #17120b;
+}
+
+/*
+ * Prose is the full ink in the reader, while this site's --text-secondary
+ * carries both prose and metadata. A token cannot separate the two, so the
+ * split needs this one rule.
+ */
+body[data-theme="story"] .post-content p {
+    color: var(--text-primary);
 }
