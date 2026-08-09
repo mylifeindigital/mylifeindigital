@@ -8,6 +8,12 @@
 // the programs keeps `npx tsc --noEmit` honest about src/ while still
 // type-checking the tests.
 //
+// `include` names only the test files. tsc still follows their imports, so the
+// contract between a test and the code it covers is type-checked — but the rest
+// of src/ is left to tsconfig.json rather than checked twice. That is what keeps
+// this runnable before build:posts: post-cache.ts imports the generated
+// posts-data.ts, which does not exist until the content step has run.
+//
 // Runtime JSX config is inherited from tsconfig.json, which is what tsx reads.
 {
   "extends": "./tsconfig.json",
@@ -15,6 +21,6 @@
     "types": ["@cloudflare/workers-types", "node"],
     "noEmit": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*.test.ts", "src/**/*.test.tsx"],
   "exclude": ["node_modules", "dist", "scripts"]
 }
