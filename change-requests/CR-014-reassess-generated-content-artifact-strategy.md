@@ -65,4 +65,6 @@ Much of `Context` and `Proposed Implementation` above was written before the spl
 
 What remains genuinely open is narrower than the request suggests: the ownership of `web/scripts/image-manifest.json`, whether any generated artifact should be committed for rollback (deployment currently rolls back by redeploying known-good SHAs, which may make this moot), and the traceability story for R2-hosted images. Consider rewriting the request around those three, or dropping it in favour of a focused successor.
 
+## Outcome
+
 Pending implementation.

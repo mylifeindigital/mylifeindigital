@@ -2,7 +2,7 @@
 
 Feasibility memory for the browser admin after the repository split. This page records what the admin can and cannot do from a Cloudflare Worker, and why the discomfort with a Git-backed dashboard is about write model rather than about Git.
 
-`CR-018` remains undecided. Nothing here is a decision; it is the technical ground the decision stands on.
+> **Decided 2026-08-09 (`CR-018`).** The admin becomes a **read-only operations console**; browser-based content editing is removed entirely. The proposal-only write model described below was established as technically achievable and **deliberately not adopted** — feasibility was necessary to establish and insufficient to justify. Read the feasibility sections as the record of what was possible, not as a plan. See [Decision and why feasibility did not settle it](#decision-and-why-feasibility-did-not-settle-it).
 
 ## The Tension
 
@@ -61,13 +61,28 @@ If every admin action produces a branch, a commit, and a pull request — and ne
 - **A second credential is required.** `CONTENT_CHECKOUT_TOKEN` is read-only by design and used by CI. A pull-request-opening admin needs its own fine-grained token with `Contents: write` and `Pull requests: write` on `mylifeindigital.content`, and deliberately no access to the application repository.
 - **The admin's write surface is posts, pages, and technical sessions** — the directories the content repository actually owns.
 
-## Implications For CR-018
+## Decision And Why Feasibility Did Not Settle It
 
-`CR-018` evaluates four options: remove the admin, make content views read-only, keep non-content status functionality only, or retain a narrow emergency editing path through the GitHub API.
+The assessment above answers "can it be built." `CR-018` turned on a different question — "what would it be for" — and the answers diverge.
 
-This assessment surfaces a fifth that the request does not list: **write-capable, but only through pull requests**. It is the option most consistent with Markdown-in-Git as the source of truth, and the current code is closer to it than to any of the other four.
+A browser admin has exactly one capability VS Code lacks: it works without a checkout. Editing, preview, file creation, and validation are all better locally. So the authoring case reduces to how often content must be written from a device with no clone, which for a single technical author is rare and whose fallback is a note committed later. That does not carry an internet-facing API surface holding a write credential to the content repository. The usual justification for a CMS — non-technical authors — does not apply to a project with one author who is a developer.
 
-This does not contradict the [authoring surface decision](../decisions/authoring-surface.md), which holds that the project should not define itself by a browser admin and that VS Code is the near-term editor. A proposal-only admin is a narrow, well-defined surface rather than an ambiguous write-capable one, and it leaves the primary authoring path unchanged.
+Two related findings from the same pass:
+
+- **There is no VS Code dependency to relieve.** Nothing in the pipeline references it; `new-content`, `update-date`, `sync:stories`, `build:posts`, and `deploy.yml` are CLI, and the workspace file is a convenience. The real coupling is *a machine with a checkout and Node* — a device dependency, not an editor one.
+- **Cloudflare Artifacts is not an alternative store.** Its documentation describes "versioned storage that speaks Git." It would change the Git host, not the model, at USD 20/month, behind closed beta, and at the cost of the GitHub Actions integration that is the deployment pipeline.
+
+What survives is the read-only half. Deployment outcomes live only in GitHub Actions, and `MarkdownProcessingPipeline` collects every processor failure into `context.warnings` and continues, so those warnings reach nobody — which is exactly how `CR-028` hides. A console reporting deployed SHAs, last deploy outcome, pipeline warnings, and draft/published counts answers questions nothing else answers, and needs no write credential.
+
+Follow-up work: `CR-029` removes the write path, `CR-030` builds the console.
+
+## Outcome In CR-018
+
+`CR-018` evaluated four options: remove the admin, make content views read-only, keep non-content status functionality only, or retain a narrow emergency editing path through the GitHub API. This assessment surfaced a fifth — write-capable through pull requests only — which was the option most consistent with Markdown-in-Git and the one the code was closest to.
+
+**The third option was chosen: non-content status functionality only.** The write path goes, including the emergency one, and with it the `GITHUB_TOKEN` write credential rather than a scoped-down version of it.
+
+This is consistent with the [authoring surface decision](../decisions/authoring-surface.md), which holds that the project should not define itself by a browser admin and that VS Code is the near-term editor. Removing the write path costs no authoring capability, because nothing in the pipeline referenced the browser admin.
 
 ## Related Pages
 

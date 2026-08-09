@@ -1,10 +1,11 @@
 # CR-009: Add Admin Metadata Editing UI
 
-Status: Blocked  
+Status: Dropped  
 Priority: Medium  
 Area: Web Admin  
 Created: 2026-05-06  
-Reviewed: 2026-08-09
+Reviewed: 2026-08-09  
+Closed: 2026-08-09
 
 ## Context
 
@@ -86,4 +87,8 @@ If `CR-018` decides that browser-admin content editing should be removed, disabl
 
 ## Outcome
 
-Pending.
+Dropped by `CR-018`, which removed browser-based content editing entirely and made the web admin a read-only operations console. This request is a browser authoring feature and has no surface left to live on.
+
+The request anticipated this: its own `Context` warned against assuming "the browser admin remains the long-term primary write-capable authoring surface." It does not remain one.
+
+The underlying need — frontmatter that is easy to inspect and hard to mistype — is unaddressed and still real. It belongs to the authoring surface that actually exists: `scripts/content/` templates already generate correct frontmatter for new content (`CR-015`), and structured metadata editing is in scope for the Electron content operations app (`CR-006`). Neither is browser work.

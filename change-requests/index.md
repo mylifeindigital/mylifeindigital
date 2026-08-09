@@ -22,8 +22,8 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-006 | Define content operations app scope and workflows | Done | High | Content Operations | 2026-05-06 | [CR-006-define-content-operations-app-scope-and-workflows.md](./CR-006-define-content-operations-app-scope-and-workflows.md) |
 | CR-007 | Decide single repo vs split content repository | Done | High | Architecture | 2026-05-06 | [CR-007-decide-single-repo-vs-split-content-repository.md](./CR-007-decide-single-repo-vs-split-content-repository.md) |
 | CR-008 | Define publishing workflow rules | Done | High | Publishing | 2026-05-06 | [CR-008-define-publishing-workflow-rules.md](./CR-008-define-publishing-workflow-rules.md) |
-| CR-009 | Add admin metadata editing UI | Blocked | Medium | Web Admin | 2026-05-06 | [CR-009-add-admin-metadata-editing-ui.md](./CR-009-add-admin-metadata-editing-ui.md) |
-| CR-010 | Add admin validation panel and author-facing warnings | Blocked | High | Web Admin | 2026-05-06 | [CR-010-add-admin-validation-panel-and-author-facing-warnings.md](./CR-010-add-admin-validation-panel-and-author-facing-warnings.md) |
+| CR-009 | Add admin metadata editing UI | Dropped | Medium | Web Admin | 2026-05-06 | [CR-009-add-admin-metadata-editing-ui.md](./CR-009-add-admin-metadata-editing-ui.md) |
+| CR-010 | Add admin validation panel and author-facing warnings | Dropped | High | Web Admin | 2026-05-06 | [CR-010-add-admin-validation-panel-and-author-facing-warnings.md](./CR-010-add-admin-validation-panel-and-author-facing-warnings.md) |
 | CR-011 | Spike browser-worker preview pipeline | Done | Medium | Content Pipeline | 2026-05-06 | [CR-011-spike-browser-worker-preview-pipeline.md](./CR-011-spike-browser-worker-preview-pipeline.md) |
 | CR-012 | Decide parser roadmap for markdown processing | Proposed | Medium | Content Pipeline | 2026-05-06 | Pending detail |
 | CR-013 | Add CI content validation checks | Proposed | Medium | Quality | 2026-05-06 | Pending detail |
@@ -31,7 +31,7 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-015 | Template-driven content generator | Done | High | Content Operations | 2026-05-21 | [CR-015-template-driven-content-generator.md](./CR-015-template-driven-content-generator.md) |
 | CR-016 | Render standalone About content | Done | High | Web Content | 2026-05-21 | [CR-016-render-standalone-about-content.md](./CR-016-render-standalone-about-content.md) |
 | CR-017 | Convert docs to LLM wiki | Done | Medium | Process | 2026-05-23 | [CR-017-convert-docs-to-llm-wiki.md](./CR-017-convert-docs-to-llm-wiki.md) |
-| CR-018 | Decide web admin role after content repository split | Proposed | Medium | Web Admin | 2026-05-29 | [CR-018-decide-web-admin-role-after-content-repository-split.md](./CR-018-decide-web-admin-role-after-content-repository-split.md) |
+| CR-018 | Decide web admin role after content repository split | Done | Medium | Web Admin | 2026-05-29 | [CR-018-decide-web-admin-role-after-content-repository-split.md](./CR-018-decide-web-admin-role-after-content-repository-split.md) |
 | CR-019 | Implement split-repository GitHub Actions CI/CD | Done | High | Deployment | 2026-06-14 | [CR-019-implement-split-repository-github-actions-ci-cd.md](./CR-019-implement-split-repository-github-actions-ci-cd.md) |
 | CR-020 | Create content repository and migrate files | Done | High | Architecture | 2026-06-16 | [CR-020-create-content-repository-and-migrate-files.md](./CR-020-create-content-repository-and-migrate-files.md) |
 | CR-021 | Add CONTENT_DIR support to content tooling | Done | High | Content Pipeline | 2026-06-16 | [CR-021-add-content-dir-support-to-content-tooling.md](./CR-021-add-content-dir-support-to-content-tooling.md) |
@@ -42,10 +42,16 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-026 | Make content update dates authored | Done | High | Content Pipeline | 2026-08-02 | [CR-026-make-content-update-dates-authored.md](./CR-026-make-content-update-dates-authored.md) |
 | CR-027 | Schema-driven listing components | Proposed | Medium | Web Content | 2026-08-09 | Pending detail |
 | CR-028 | Fail the build on malformed frontmatter | Proposed | High | Content Pipeline | 2026-08-09 | Pending detail |
+| CR-029 | Remove the web admin write path | Proposed | High | Web Admin | 2026-08-09 | Pending detail |
+| CR-030 | Build the deployment and content-health console | Proposed | Medium | Web Admin | 2026-08-09 | Pending detail |
 
 ## Backlog Grooming Notes
 
 ### 2026-08-09
+
+- Decided `CR-018`: the web admin becomes a read-only operations console and browser-based content editing is removed entirely. Three requests close on one call — `CR-009` and `CR-010` are `Dropped`, since both are browser authoring features with no surface left to live on. Added `CR-029` (remove the write path) and `CR-030` (build the console). The deciding argument was not feasibility: a proposal-only write model was established as technically achievable from a Worker and deliberately not adopted, because a browser admin's only capability VS Code lacks is working without a checkout, and for a single technical author that does not justify an internet-facing API holding a write credential to the content repository. Two supporting findings: Cloudflare Artifacts is "versioned storage that speaks Git" and would change the Git host rather than the model, at USD 20/month and the cost of the GitHub Actions pipeline; and there is no VS Code dependency to relieve, because nothing in the pipeline references it — the real coupling is a machine with a checkout and Node. The one job nothing else does is reporting what is live, including the pipeline warnings currently collected and discarded, which is how `CR-028` hides.
+
+- Corrected a defect introduced by this morning's grooming pass: the review notes added to `CR-014` and `CR-018` had consumed each file's `## Outcome` heading, leaving their closing lines orphaned under the review section. Both headings are restored.
 
 - Added a planning workflow to `SKILL.md` and reshaped `templates/change-request.md` around it. Requests now carry `Open Questions` and `Decisions` sections and a `Reviewed` date beside `Created`. The sections were invented ad hoc in `CR-024` and again in `CR-023` before being made part of the template; the review date exists because `CR-023` asked for a test runner to be chosen months after one had been chosen and wired into required CI, which no field in the old template could have caught. Implementation is now gated on `Open Questions` being empty, and phases are expected to carry a check that can fail rather than to be merely small.
 

@@ -2,6 +2,15 @@
 
 Append-only record of docs wiki activity.
 
+## [2026-08-09] decision | Admin becomes a read-only operations console
+
+- `CR-018` decided: browser-based content editing is removed entirely and the admin's remaining role is deployment and content-health observability.
+- Annotated [Admin Dashboard](./projects/admin-dashboard.md) so the feasibility sections cannot be misread as a plan. The proposal-only write model was achievable and deliberately not adopted; feasibility was necessary to establish and insufficient to justify.
+- Deciding argument: a browser admin's only capability VS Code lacks is working without a checkout, which for a single technical author does not carry an internet-facing API holding a write credential to the content repository.
+- Recorded that there is no VS Code dependency to relieve — nothing in the pipeline references it, and the real coupling is a machine with a checkout and Node — and that Cloudflare Artifacts is "versioned storage that speaks Git", so it would change the Git host rather than the model.
+- Replaced the admin questions in [Open Questions](./questions.md): the write-model questions are resolved, and four console questions take their place, the sharpest being where deployment state is read from and whether discarded pipeline warnings need persisting as a build artifact.
+- `CR-009` and `CR-010` dropped; `CR-029` and `CR-030` added.
+
 ## [2026-08-09] ingest | Admin dashboard feasibility
 
 - Ingested `docs/raw/admin-dashboard.md`, which asks whether a Git repository is a good candidate for an admin dashboard now that publishable content lives in `mylifeindigital.content`.
