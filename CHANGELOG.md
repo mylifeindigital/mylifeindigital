@@ -4,6 +4,10 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ## 2026-08-09
 
+### Added
+
+- Ingested `docs/raw/admin-dashboard.md` into the docs wiki as `docs/wiki/projects/admin-dashboard.md`, a feasibility assessment for the browser admin after the repository split. Written against the code rather than the request's framing, which corrected two assumptions: `GitHubRepository` is already repository-agnostic (owner, repo, and branch are environment configuration) and its tree filter already matches the content repository's layout, so what the split broke is `web/.env.example`, not the service. The substantive finding is that the discomfort with a Git-backed admin is about write model, not about Git — `saveFile` commits one file directly to a branch, forfeiting review, atomicity, and revert while still paying Git's costs — and that a proposal-only admin dissolves it, including the merge-conflict capability a Worker cannot provide. Surfaces a fifth option `CR-018` does not list: write-capable through pull requests only. Five open questions filed; raw source left unchanged per `docs/WIKI.md`.
+
 ### Changed
 
 - Added a planning workflow to `change-requests/SKILL.md`, covering how an idea becomes an implementable request rather than only how a request is filed. Three gates: a one-line index row; a reconnaissance pass that writes `Context` from the code and produces `Open Questions`; and a decision pass that settles those questions, dated and with the fact that settled each, before implementation starts. Phases are expected to carry a check that can fail rather than to be merely small. `templates/change-request.md` gained matching `Open Questions` and `Decisions` sections and a `Reviewed` date beside `Created`. Both sections had already been invented ad hoc in `CR-024` and again in `CR-023`; the review date exists because `CR-023` asked for a decision that had been made months earlier, which no field in the old template could have surfaced.

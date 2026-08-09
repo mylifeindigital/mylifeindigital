@@ -14,6 +14,7 @@ Catalog of LLM-maintained wiki pages. Read this first when querying or maintaini
 
 | Page | Summary |
 | --- | --- |
+| [Admin Dashboard](./projects/admin-dashboard.md) | What a Worker-hosted, Git-backed admin can and cannot do after the repository split, and why the discomfort is about write model rather than about Git. Feeds the undecided `CR-018`. |
 | [Content Editor](./projects/content-editor.md) | Direction for the focused Electron content editor, including its boundary with VS Code, templates, planning assistance, assistant panel, and manifest questions. |
 | [Content Operations App](./projects/content-operations-app.md) | Scope and workflow memory for the local-first Electron content operations direction, with VS Code retained for source-code work. |
 | [Content Pipeline](./projects/content-pipeline.md) | Build-time Markdown processing, generated content artifacts, and scaling considerations. |

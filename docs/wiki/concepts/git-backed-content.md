@@ -35,6 +35,7 @@ Git should be treated as the durable source of truth, not as the complete produc
 
 ## Related Pages
 
+- [Admin Dashboard](../projects/admin-dashboard.md)
 - [Content Operations App](../projects/content-operations-app.md)
 - [Content Pipeline](../projects/content-pipeline.md)
 - [Story Crafter](../projects/story-crafter.md)
