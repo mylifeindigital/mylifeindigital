@@ -36,8 +36,8 @@ Four phases, each independently shippable and independently revertible.
 
 ## Acceptance Criteria
 
-- [ ] The section a page belongs to is addressable in CSS, driven by the display schema rather than hardcoded per route.
-- [ ] `cssPrefix` is either consumed or removed; the schema does not keep a field nothing reads.
+- [x] The section a page belongs to is addressable in CSS, driven by the display schema rather than hardcoded per route.
+- [x] `cssPrefix` is either consumed or removed; the schema does not keep a field nothing reads.
 - [ ] The story theme applies to the whole page — chrome included — on `/stories` and every story page, and on no other route.
 - [ ] Content-container styling resolves through semantic tokens with the existing appearance as the default theme.
 - [ ] Phases 1 and 2 produce no visual change to `posts` or `technical-sessions`, verified by comparing rendered output before and after.
@@ -68,6 +68,7 @@ Four phases, each independently shippable and independently revertible.
 - The reader's gold-on-warm-dark is tuned for a dimmed phone in a dark room. It needs a contrast check before it ships on the web, and may need adjusted values rather than a literal copy.
 - Stories reach the site through `npm run sync:stories` as a build artifact, so this work does not touch story source files or `story-crafter` itself.
 - Per `AGENTS.md`, implementation bumps `web/package.json` and `web/src/version.ts` and adds a `web/CHANGELOG.md` entry.
+- How the no-visual-change phases are verified: render every public route to HTML through the route functions directly (home, about, each section listing, two items per section, and both 404 branches), once before the change and once after, then compare. Phase 1's only diff was `data-theme="story"` on three files. Phase 2 should be checked the same way. One trap — the home page cannot be compared byte for byte, because its hero slider builds an element id from `Date.now()`, so two renders of unchanged code already differ; ignore that id and the script that references it.
 
 Decisions:
 

@@ -30,7 +30,7 @@ export function contentItemRoute(sectionSlug: string, itemSlug: string, config: 
     const ContentLayout = getLayoutComponent(schema);
     
     return (
-        <Layout title={`${item.metadata.title} | ${siteTitle}`} siteTitle={siteTitle} sections={allSections} socialLinks={socialLinks}>
+        <Layout title={`${item.metadata.title} | ${siteTitle}`} siteTitle={siteTitle} sections={allSections} socialLinks={socialLinks} theme={schema.theme}>
             <ContentLayout item={item} section={section} schema={schema} />
         </Layout>
     );

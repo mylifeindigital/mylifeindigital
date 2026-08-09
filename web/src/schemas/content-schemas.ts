@@ -23,8 +23,12 @@ export interface DisplaySchema {
   extractSections?: boolean;
   /** Section heading icons (for structured layouts) */
   sectionIcons?: Record<string, string>;
-  /** CSS class prefix for styling */
-  cssPrefix?: string;
+  /**
+   * Theme this section renders under, emitted as `data-theme` on `<body>` and
+   * resolved in `main.css`. Unset means the default treatment; a section opts
+   * out by simply not declaring one.
+   */
+  theme?: string;
 }
 
 /**
@@ -37,7 +41,6 @@ export const contentSchemas: Record<string, DisplaySchema> = {
     showDate: true,
     showAuthor: true,
     headerStyle: 'minimal',
-    cssPrefix: 'article',
   },
   'stories': {
     layout: 'article',
@@ -45,7 +48,7 @@ export const contentSchemas: Record<string, DisplaySchema> = {
     showDate: false,
     showAuthor: false,
     headerStyle: 'minimal',
-    cssPrefix: 'article',
+    theme: 'story',
   },
   'technical-sessions': {
     layout: 'technical-session',
@@ -54,7 +57,6 @@ export const contentSchemas: Record<string, DisplaySchema> = {
     showAuthor: false,
     headerStyle: 'structured',
     extractSections: true,
-    cssPrefix: 'session',
     sectionIcons: {
       'Focus Area': '🎯',
       'Objective for Today': '🎯',

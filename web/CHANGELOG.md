@@ -2,6 +2,18 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.3.9] - 2026-08-09
+
+### Added
+
+- A `theme` field on the display schema, emitted as `data-theme` on `<body>`, so the section a page belongs to is addressable in CSS (CR-024, phase 1). Only `stories` declares one; a section opts out by not declaring a theme, and the attribute is left off entirely. The `/stories` listing resolves the same schema as its story pages, so the section and its contents theme as one surface.
+
+### Removed
+
+- `cssPrefix` from the display schema. Nothing had ever read it, and it could not have served this purpose: `posts` and `stories` both declared `article`, so it did not distinguish the two sections a theme has to separate.
+
+No visual change. Every public route was rendered before and after; the only difference is `data-theme="story"` on the two story pages and the stories listing.
+
 ## [0.3.8] - 2026-08-09
 
 ### Changed
