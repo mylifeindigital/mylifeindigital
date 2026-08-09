@@ -1,6 +1,7 @@
 import { Layout } from '../../components/Layout.js';
 import { PostCard } from '../../components/PostCard.js';
 import { getSectionBySlug, getAllSections } from '../../utils/post-cache.js';
+import { getSchemaForContent } from '../../schemas/content-schemas.js';
 import type { AppConfig } from '../../config.js';
 
 export function sectionRoute(sectionSlug: string, config: AppConfig) {
@@ -20,8 +21,12 @@ export function sectionRoute(sectionSlug: string, config: AppConfig) {
         );
     }
 
+    // The listing themes with the section it lists, so /stories and a story
+    // page are one reading surface rather than two.
+    const schema = getSchemaForContent(sectionSlug);
+
     return (
-        <Layout title={`${section.title} | ${siteTitle}`} siteTitle={siteTitle} sections={allSections} socialLinks={socialLinks}>
+        <Layout title={`${section.title} | ${siteTitle}`} siteTitle={siteTitle} sections={allSections} socialLinks={socialLinks} theme={schema.theme}>
             <section class="section-page">
                 <header class="section-page-header">
                     <a href="/" class="back-link">← Home</a>

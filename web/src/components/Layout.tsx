@@ -13,10 +13,16 @@ interface LayoutProps {
     sections?: Section[];
     socialLinks?: SocialLinks;
     preloadImages?: PreloadImage[];
+    /**
+     * Section theme from the display schema, emitted on `<body>` so the whole
+     * page — chrome included — is addressable in CSS. Undefined leaves the
+     * attribute off entirely and the page on the default treatment.
+     */
+    theme?: string;
     children: any;
 }
 
-export function Layout({ title, siteTitle, sections = [], socialLinks = {}, preloadImages = [], children }: LayoutProps) {
+export function Layout({ title, siteTitle, sections = [], socialLinks = {}, preloadImages = [], theme, children }: LayoutProps) {
     const pageTitle = title || siteTitle;
 
     return (
@@ -46,7 +52,7 @@ export function Layout({ title, siteTitle, sections = [], socialLinks = {}, prel
                 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
                 <link rel="stylesheet" href="/styles/main.css" />
             </head>
-            <body>
+            <body data-theme={theme}>
                 <header>
                     <div class="container header-content">
                         <a href="/" class="logo-link">
