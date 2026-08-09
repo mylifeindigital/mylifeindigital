@@ -31,6 +31,8 @@ That claim was **false from the day it was written until 2026-08-09**. `Markdown
 | `draft: "true"` (quoted) | **published**, `draft` is the string `"true"` | the author said do not publish; the site published |
 | story with no `season`/`episode` | published into `stories` | `StoryLayout` reads both at lines 26-27; the eyebrow furniture has nothing to render |
 
+The last row is reachable only by writing directly into the content tree, which is how the fixture produced it. Real stories cannot arrive that way — see the stories decision below — so it demonstrates that the pipeline itself holds no story rules, not that stories are unguarded.
+
 The quoted-draft row is the sharpest and belongs to the same family as `CR-028`: the author's intent was "do not publish" and the site published. It differs in that the YAML is **valid**, so no amount of parse strictness reaches it — `DraftFilterProcessor` compares `metadata.draft === true` and a quoted `"true"` is a string. It is already pinned by a `CR-023` test that documents the asymmetry, which means the behaviour is known, tested, and unguarded.
 
 ### What the audit found
@@ -59,7 +61,7 @@ Content that the pipeline accepts but the site cannot render correctly is report
 ## Open Questions
 
 - [x] Does a semantic violation fail the build, or warn? **Warn.**
-- [x] Do stories participate? **Yes**, under their own schema. Resolved as a consequence of the severity decision.
+- [x] Do stories participate? **Not as new rules.** A stories schema already exists in imperative form and is stricter than anything proposed here; see `Decisions`. Whether to converge on it is deferred, and the pre-merge gap it exposes is `CR-033`.
 - [x] Is `description` a rule at all, given 17 items lack one? **Yes**, as a warning. Resolved as a consequence of the severity decision.
 - [ ] Where do warnings go? Choosing `warn` makes this request depend on warnings having a destination. `build-posts.ts` currently prints them with `console.warn` and discards them, so a warning-only validator is CI log noise nobody reads. Named as a question rather than assumed, because it is the difference between this request working and merely existing.
 
@@ -95,11 +97,8 @@ export const contentSchemasByContainer: Record<string, ContentSchema> = {
         author:      { required: true, type: 'string', nonEmpty: true },
         description: { type: 'string', nonEmpty: true },
     }),
-    stories: extend(baseContentSchema, {
-        season:     { required: true },
-        episode:    { required: true },
-        characters: { type: 'string[]', nonEmpty: true },
-    }),
+    // No `stories` entry: sync-stories.ts already enforces a stricter schema
+    // before a story is ever written into the content tree. See Decisions.
     'technical-sessions': extend(baseContentSchema, {
         date: { required: true, type: 'date' },
         tags: { required: true, type: 'string[]', nonEmpty: true },
@@ -131,16 +130,24 @@ An undeclared container falls back to **the base alone**, not to `posts`. This i
 
 **2026-08-09 — Violations warn; they do not fail the build.** `CR-028`'s fatal bar stays where it is: input the pipeline cannot process. Semantic problems are about completeness, and a half-described post is still a publishable post, so blocking a deploy over one is disproportionate.
 
-Two of the three open questions closed as consequences rather than needing separate calls. Stories can participate under their own schema, because a warning cannot block an application deploy over content that arrives from `story-crafter`. And `description` can be a rule for the 17 items that lack one, because a warning needs no migration. Both were only difficult under a fatal severity.
+`description` can now be a rule for the 17 items that lack one, because a warning needs no migration. That question was only difficult under a fatal severity.
 
 The cost is that a warning has to be seen to matter, which is now the request's remaining open question.
+
+**2026-08-09 — Stories are out of scope, because they are already validated more strictly than this request proposes.** Recorded as a correction: the stories question was originally filed here on the assumption that a synced build artifact was the weakly-checked path. Tracing it found the reverse.
+
+Stories never reach `content-ci.yml` — `content/stories/` is gitignored in the content repository and assembled at deploy time. They are parsed **twice**: first by a hand-written line parser in `scripts/sync-stories.ts` that accepts exactly `key: "quoted string"`, `key: 123`, and two-space list items, and throws on any other line; then by `gray-matter` on the output it generates. Eight fields are hard-required at `sync-stories.ts:150-157` — `title`, `season`, `episode`, `main_character`, `characters`, `locations`, `theme`, `summary`. Posts require none.
+
+So `sync-stories.ts` **is** a stories content schema, written imperatively, and it predates this request. Inventing a second one here would give stories two sources of truth that could disagree. Convergence — expressing it as a `ContentSchema` extending the base — is attractive and deliberately deferred: it is a refactor of working, stricter code, and it should not ride along with introducing validation for sections that currently have none.
+
+What the trace did expose is a timing gap, and it belongs to `CR-019`'s territory rather than this one: `story-crafter` has no CI workflow and no required status check, so that strict validation first runs inside `deploy.yml`, after merge. Filed as `CR-033`.
 
 **2026-08-09 — No migration is required.** Every schema-derived rule passes on all 82 items today, so the check can be fatal from the day it lands rather than needing a warn-only period. This is a fact about current content, not a permanent property; it is recorded because it is what makes the simple option available, and it expires if content lands before this request does.
 
 ## Acceptance Criteria
 
 - [ ] A base schema exists that every content container extends, and no container can opt out of it.
-- [ ] `posts`, `stories`, and `technical-sessions` each declare a distinct schema, and all three validate.
+- [ ] `posts` and `technical-sessions` each declare a distinct schema above the base, and both validate. `stories` deliberately declares none; a story reaching the pipeline has already passed `sync-stories.ts`.
 - [ ] A container declaring no schema is held to the base alone — not to the `posts` rules.
 - [ ] A file missing a field its container requires produces a warning naming the container, file, field, and rule.
 - [ ] `draft: "true"` as a string is reported; a boolean `draft` is not.
