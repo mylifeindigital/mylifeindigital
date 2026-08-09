@@ -43,6 +43,10 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 
 ## Backlog Grooming Notes
 
+### 2026-08-09
+
+- Settled the first of `CR-024`'s three open questions: the story theme applies to story routes as a whole page, not to the content container alone, reversing the request's original assumption. Two findings from checking what that costs. Full-page theming is *less* plumbing than container-only — `Layout.tsx` owns `<html>` and `<body>` and every route funnels through it, so one prop themes both the section listing and the story pages, where container scoping would need the hook added to two layout components. And `cssPrefix` cannot be the theme key at all: `posts` and `stories` both declare `article`, so it fails to distinguish the two sections the theme must separate, which is likely why nothing ever read it. It is replaced by a `theme` field rather than consumed. Phase 2's token pass now covers site chrome as well as the content container, and the inline logo SVG's hardcoded gradients are the one element that cannot follow the tokens unchanged.
+
 ### 2026-08-02
 
 - Completed `CR-026`. Added after finding that every published post on the live site claims it was updated on the `CR-020` migration date. `GitDateProcessor` overwrites `metadata.updated` with the file's last git commit date, and the content repository's history begins at the migration, so 16 files' authored values are read and discarded. The request makes `updated` authored rather than derived — git cannot tell a revision from a typo fix or a bulk migration, and a git-based source of truth cannot recover history that predates the repository. Found while answering where update dates should be applied after the split; it also explains why `npm run update-date` appeared to work. Implemented the same day: the processor is deleted, the update line renders only when it differs from the publish date, bulk stamping is gone, and the generated artifact went from carrying the migration date on every file to carrying none.
