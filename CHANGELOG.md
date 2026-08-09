@@ -6,6 +6,8 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ### Added
 
+- Added `CR-032`: every not-found path returns HTTP 200, so unknown URLs are indexable as real pages and monitoring cannot distinguish a broken link from a working one. Verified in production, and the check found three different not-found pages rather than one — `[section]/index.tsx`, `[section]/[slug].tsx`, and the `app.notFound` handler, the last building raw HTML outside `Layout` and so rendering with no header, nav, or footer. That handler is also nearly unreachable, since `/:section` matches any single-segment path.
+
 - Added `CR-031` to define the caching policy for HTML and static assets, after establishing what it currently is. HTML responses carry no `cache-control` header at all, so every page view executes the Worker and any downstream caching is heuristic rather than chosen; `/styles/main.css` is edge-cached but served `max-age=0, must-revalidate`, so browsers revalidate on every page load. Nothing in `web/src` sets a cache header or uses the Cache API. That default is load-bearing today — it is why the `CR-024` story theme was visible the moment the deploy finished — and it is also the constraint: the stylesheet is served from a fixed path, so it cannot be given a long TTL without risking stale CSS after a deploy. The request should decide an explicit HTML header, whether to fingerprint the stylesheet, and whether HTML is worth edge-caching given that rendering is a `Map` lookup against memory.
 
 ### Removed
