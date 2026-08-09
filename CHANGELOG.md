@@ -2,6 +2,18 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-08-09
+
+### Added
+
+- Completed `CR-023`: the repository has a documented baseline test setup. `AGENTS.md` gained a Testing section recording the runner choice, the colocation rule and why it is mechanical rather than stylistic, the split TypeScript programs, and the full list of what blocks a deploy today. Root scripts gained `test` (both suites), `test:web`, `typecheck`, `typecheck:web`, and `typecheck:tests`. `app-ci.yml` gained `Run web tests` and `Type-check web tests`, placed before the content-dependent steps because nothing in the web test import graph reaches the generated `posts-data.ts` — verified by deleting that file and re-running the suite green. Web app details in `web/CHANGELOG.md` (0.4.1).
+
+- Added `CR-028` for a defect the new pipeline tests found: malformed YAML frontmatter on a file marked `draft: true` publishes it as an empty stub, because the pipeline records the parse failure as a warning and continues with no `draft` metadata to act on. Deferred rather than fixed inside `CR-023`, since the fix is a decision about whether any processor failure should fail the build.
+
+### Notes
+
+- `CR-023` was written as though no runner had been chosen, but `test:scripts` has run `tsx --test` as a required CI step since `CR-021`. The request's real gap was `web/`, which had no tests at all. Recorded because the same staleness may affect other long-open requests: `CR-013` in particular should be re-read against what `app-ci.yml` already does before it is planned.
+
 ## 2026-08-02
 
 ### Added

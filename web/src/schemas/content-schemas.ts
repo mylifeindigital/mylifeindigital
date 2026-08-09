@@ -72,20 +72,33 @@ export const contentSchemas: Record<string, DisplaySchema> = {
 };
 
 /**
+ * Whether a name is a schema this module declares.
+ *
+ * Both lookups below are indexed by untrusted strings — a section slug comes
+ * from a directory name, and a layout override is authored frontmatter — so
+ * they must be own-property checks. A plain `contentSchemas[name]` truthiness
+ * test resolves `toString` and `constructor` to functions on Object.prototype
+ * and hands them back as though they were schemas.
+ */
+function isDeclaredSchema(name: string): boolean {
+  return Object.hasOwn(contentSchemas, name);
+}
+
+/**
  * Get the display schema for a section, with fallback to 'posts' default
  */
 export function getSchemaForSection(section: string): DisplaySchema {
-  return contentSchemas[section] ?? contentSchemas['posts'];
+  return isDeclaredSchema(section) ? contentSchemas[section] : contentSchemas['posts'];
 }
 
 /**
  * Get schema with optional frontmatter override
  */
 export function getSchemaForContent(
-  section: string, 
+  section: string,
   layoutOverride?: string
 ): DisplaySchema {
-  if (layoutOverride && contentSchemas[layoutOverride]) {
+  if (layoutOverride && isDeclaredSchema(layoutOverride)) {
     return contentSchemas[layoutOverride];
   }
   return getSchemaForSection(section);
