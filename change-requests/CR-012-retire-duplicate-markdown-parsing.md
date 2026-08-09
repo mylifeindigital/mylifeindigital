@@ -1,11 +1,12 @@
 # CR-012: Retire Duplicate Markdown Parsing
 
-Status: Proposed  
+Status: Done  
 Priority: Medium  
 Area: Content Pipeline  
 Created: 2026-05-06  
 Reviewed: 2026-08-09  
-Reshaped: 2026-08-09
+Reshaped: 2026-08-09  
+Completed: 2026-08-09
 
 ## Context
 
@@ -33,10 +34,10 @@ Leave exactly one way to parse Markdown in this repository, remove the dead surf
 
 ## Open Questions
 
-- [ ] Does this cover only the duplicate parser, or the dead `post-cache.ts` exports and the `PostMetadata` alias as well? They are one theme — dead alternatives around one content model — but they are not parsing.
-- [ ] Where does the parser choice get recorded: extend `docs/wiki/concepts/markdown-processing.md`, which describes the direction but names no library, or add a `docs/wiki/decisions/` page for the choice and what would trigger reconsidering it?
-- [ ] Is the browser-safe frontmatter question closed here as "deferred until an Electron consumer exists", or left open in `docs/wiki/questions.md`? `CR-011` points at this request for it, so it needs an answer either way.
-- [ ] Should `web/src/utils/markdown.ts` be renamed once it holds only types? It is imported as `markdown.js` in 40+ places, so the churn may exceed the clarity.
+- [x] Does this cover only the duplicate parser, or the dead `post-cache.ts` exports and the `PostMetadata` alias as well? They are one theme — dead alternatives around one content model — but they are not parsing.
+- [x] Where does the parser choice get recorded: extend `docs/wiki/concepts/markdown-processing.md`, which describes the direction but names no library, or add a `docs/wiki/decisions/` page for the choice and what would trigger reconsidering it?
+- [x] Is the browser-safe frontmatter question closed here as "deferred until an Electron consumer exists", or left open in `docs/wiki/questions.md`? `CR-011` points at this request for it, so it needs an answer either way.
+- [x] Should `web/src/utils/markdown.ts` be renamed once it holds only types? It is imported as `markdown.js` in 40+ places, so the churn may exceed the clarity.
 
 ## Proposed Implementation
 
@@ -49,16 +50,22 @@ To be finalised once the open questions are settled. The core is a deletion:
 
 ## Decisions
 
-Pending.
+**2026-08-09 — Both piles: the duplicate parser and the dead content accessors.** `web/src/utils/` is internal, not a published library, so an export with no caller is dead weight rather than available API. Anything needed later is a few lines to re-add, and the two piles share one test run and one verification pass. The deciding consideration was that the accessors are the same class of trap as the parser: `getAllPostsFromCache` and `getPostBySlugFromCache` are pre-section vocabulary that would return the wrong shape of answer to anyone who reached for them by name.
+
+**2026-08-09 — The parser choice is recorded as a `decisions/` page, not an extension of the concepts page.** `docs/wiki/concepts/markdown-processing.md` describes how Markdown *should* be treated and names no library, which is the right level for a concept. Which library implements it, and what would change that, is a decision with triggers — a different kind of claim with a different shelf life. The concepts page now links to it.
+
+**2026-08-09 — Browser-safe frontmatter is deferred with a named trigger.** `CR-011` deferred to this request whether browser-worker preview keeps the `fs.readFileSync` shim for `gray-matter`. Its consumer was the admin preview, which `CR-029` deleted; the only caller left is a spike harness. Deciding it now would design for nobody. The trigger is the Electron content operations app needing a preview surface, recorded in both the decision page and `docs/wiki/questions.md` so it resurfaces rather than being lost.
+
+**2026-08-09 — `markdown.ts` keeps its name.** It is imported as `markdown.js` in more than forty places. Renaming it to something like `content-types.ts` would be more accurate now that it holds only types, but the churn buys clarity that a one-line file comment provides just as well.
 
 ## Acceptance Criteria
 
-- [ ] Exactly one frontmatter parsing implementation exists in the repository.
-- [ ] No exported function in `web/src/utils/` is without a caller, or is documented as deliberately public API.
-- [ ] `@types/marked` is removed and the web type-check passes on `marked`'s bundled types.
-- [ ] The parser choice and its reconsideration triggers are recorded in the docs wiki.
-- [ ] The browser-safe frontmatter question is answered — closed with a reason, or filed as an open question with its trigger named — so `CR-011`'s reference to this request resolves.
-- [ ] `npm test` and all three type-check programs pass, the Worker bundles, and the public site is unchanged.
+- [x] Exactly one frontmatter parsing implementation exists in the repository.
+- [x] No exported function in `web/src/utils/` is without a caller, or is documented as deliberately public API.
+- [x] `@types/marked` is removed and the web type-check passes on `marked`'s bundled types.
+- [x] The parser choice and its reconsideration triggers are recorded in the docs wiki.
+- [x] The browser-safe frontmatter question is answered — closed with a reason, or filed as an open question with its trigger named — so `CR-011`'s reference to this request resolves.
+- [x] `npm test` and all three type-check programs pass, the Worker bundles, and the public site is unchanged.
 
 ## Implementation Notes
 
@@ -69,4 +76,18 @@ Pending.
 
 ## Outcome
 
-Pending implementation.
+Implemented in `0.5.1`. Nine exports and one dependency removed; no behaviour changed.
+
+**`web/src/utils/markdown.ts`** went from 122 lines to 55 and is now a types-only module. `extractFrontmatter`, `parseMarkdownContent`, the `PostMetadata` alias, and the `marked` import are gone. The `Post` alias stays, with a comment saying why, because `post-cache.ts` still uses it.
+
+**`web/src/utils/post-cache.ts`** went from eleven exports to five, all of which have callers. `getSiteContent`, `getItemsBySection`, `getItemCount`, `getAllPostsFromCache`, `getPostBySlugFromCache`, and `getPostCount` are removed, along with the now-orphaned `itemsBySectionCache` map that only the second of those used. The module header now states that "cache" means an in-memory lookup index built at module load, not an HTTP or CDN cache — the name had already caused that confusion once.
+
+**`@types/marked`** is removed from `web/package.json` and the lockfile. `marked` declares `"types": "./lib/marked.d.ts"`; the stub package publishes itself deprecated for exactly this reason.
+
+The parser decision is recorded at `docs/wiki/decisions/markdown-parser.md`, with three reconsideration triggers so the choice is not merely asserted.
+
+### Verification
+
+All 13 public routes were rendered and compared against the pre-change baseline: identical once the hero slider's non-deterministic element id is normalised. 41 tests pass, all three type-check programs are clean, and the Worker bundles.
+
+One deletion had a caller outside the repository: the scratchpad route-snapshot harness imported `getItemsBySection`. It was updated to read `section.items` directly. Worth recording because it is the only evidence any of the six accessors were ever used, and it was tooling rather than the application.

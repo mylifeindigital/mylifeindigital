@@ -12,6 +12,8 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ### Changed
 
+- Completed `CR-012`, and added `docs/wiki/decisions/markdown-parser.md` — the parser choice had held for months without being recorded anywhere, which is why the request could sit open as "decide parser roadmap" while the decision already existed in code. The page names `gray-matter` and `marked`, why each, and three triggers that would justify reconsidering, so the choice is recorded rather than merely asserted. It also answers what `CR-011` deferred here: browser-safe frontmatter is deferred with a named trigger — the Electron content operations app needing a preview surface — since its previous consumer, the admin preview, was deleted by `CR-029`. Filed in `docs/wiki/questions.md` so it resurfaces. Web app details in `web/CHANGELOG.md` (0.5.1).
+
 - Reshaped `CR-012` from "Decide parser roadmap for Markdown processing" to "Retire duplicate Markdown parsing", with the detail file it had lacked since 2026-05-06. The roadmap question was answered by implementation, and its one concrete deferral — the browser-safe `gray-matter` shim `CR-011` pointed here — lost its consumer when `CR-029` deleted the admin preview. Underneath it sits a real problem: a second, uncalled frontmatter parser in `web/src/utils/markdown.ts` that is not equivalent to the live one, since it coerces nothing and would leave `draft: true` as a string that `DraftFilterProcessor` does not match. The ID is stable; only the scope changed.
 
 ### Removed
