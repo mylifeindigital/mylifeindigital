@@ -116,13 +116,14 @@ What blocks a deploy today: dependency install, `typecheck:scripts`, `test:scrip
 - Add dependencies deliberately. Prefer existing dependencies or platform APIs where they fit, and verify package compatibility with the relevant runtime before changing package manifests.
 - Scale verification to the risk of the change. Run the smallest relevant existing checks first, broaden verification for shared or user-facing behavior, and state clearly when a relevant check is unavailable or was not run.
 
-## Admin System
+## Admin Surface
 
-- Auth uses the Cloudflare Access email header with a local development bypass.
-- Content editing uses the GitHub API service in `web/src/services/content/`.
-- AI transforms use the AI service in `web/src/services/ai/`.
-- Admin validation lives in `web/src/routes/admin/validation.ts`.
-- Rate limiting is applied to AI transform routes.
+There is none, and reintroducing one needs a change request. `CR-018` decided that browser-based content editing is removed and that the admin's only future role is read-only operations reporting; `CR-029` carried out the removal.
+
+- The deployed Worker holds no credentials. It renders public content from the generated `posts-data.ts` and nothing else.
+- Authoring is VS Code and the CLI now, and the Electron content operations app later (`CR-005`, `CR-006`). Content reaches the site through Git and `deploy.yml`, never through the Worker.
+- Do not add a GitHub token, a Cloudflare Access allowlist, or an OpenAI key to `wrangler.toml` or Worker secrets without a change request stating what runtime need they serve. Build-time credentials belong in `web/scripts/` and the local `.env`.
+- `CR-030` may add a read-only operations console. It reports deployment state and pipeline warnings; it does not read or write content files.
 
 ## Change Requests
 

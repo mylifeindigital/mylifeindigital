@@ -2,6 +2,26 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.5.0] - 2026-08-09
+
+### Removed
+
+- The admin dashboard, in full (CR-029, carrying out the CR-018 decision). 1,266 lines across ten files: the editor UI, the content API, the GitHub Contents client, the OpenAI transform service, request validation, rate limiting, and Cloudflare Access authentication. `/dashboard` and `/api/admin/*` no longer exist and return the site's not-found page.
+
+  Reconnaissance is why this is a removal rather than a trim. `utils/admin/html.ts` was an editor end to end — file tree, textarea, Save, New File and unsaved-changes dialogs, AI menu, preview pane — and the read endpoints existed only to feed it. Stripping the write path would have left a file browser and a read-only textarea over a private repository the browser still needed a token for. The whole subsystem had exactly one importer, three lines in `src/index.ts`, so the excision was clean.
+
+- All runtime credentials. `GITHUB_TOKEN`, `GITHUB_OWNER`, `GITHUB_REPO`, `GITHUB_BRANCH`, `ADMIN_ALLOWED_EMAILS`, `ADMIN_BYPASS_ACCESS_FOR_LOCAL`, `ADMIN_LOCAL_TEST_EMAIL`, `OPENAI_API_KEY`, and `OPENAI_MODEL` are gone from `Env`, from `web/.env.example`, and from the Worker. **The deployed Worker now holds no secrets at all** — it renders public content from the generated `posts-data.ts` and does nothing else. That is the substantive outcome: a Worker holding write access to the content repository was one access misconfiguration away from being a publish credential, and the credential no longer exists rather than being narrowed.
+
+  Build-time image generation is unaffected. It reads its own `OPENAI_API_KEY`, Cloudflare, and R2 credentials from `.env` in `web/scripts/`, never from a Worker binding.
+
+### Changed
+
+- `GITHUB_URL` is documented in `config.ts` as what it always was — a public profile link rendered in the footer, not an API credential. It is the only `GITHUB_*` value that remains.
+- `wrangler.toml` and `web/.env.example` now state that the Worker has no secrets and that adding one needs a change request explaining the runtime need.
+- `web/README.md`'s source tree drops `routes/admin/` and gains `components/layouts/` and `schemas/`, which it had never listed despite those being how sections now render.
+
+Verified: 31 tests pass, all three type-check programs are clean, the Worker bundles, and every public route renders identically before and after — home, about, all three section listings, and content pages in each section.
+
 ## [0.4.1] - 2026-08-09
 
 ### Added

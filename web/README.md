@@ -103,10 +103,11 @@ Your markdown content here...
   │   │   ├── index.tsx         # Home page route
   │   │   ├── [section]/
   │   │   │   ├── index.tsx     # Section listing route
-  │   │   │   └── [slug].tsx    # Individual content route
-  │   │   └── admin/            # Admin dashboard and API routes
+  │   │       └── [slug].tsx    # Individual content route
   │   ├── components/
-  │   │   └── Layout.tsx        # Base layout component
+  │   │   ├── Layout.tsx        # Base layout component
+  │   │   └── layouts/          # Per-section layouts (schema-driven)
+  │   ├── schemas/              # Display schemas: layout and theme per section
   │   └── utils/
   │       ├── markdown.ts       # Markdown types and parsing
   │       ├── post-cache.ts     # Post data access

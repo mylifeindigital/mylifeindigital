@@ -4,6 +4,10 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ## 2026-08-09
 
+### Removed
+
+- Completed `CR-029`: the web admin is deleted in full, carrying out the `CR-018` decision. `AGENTS.md`'s Admin System section is replaced by an Admin Surface section recording that there is none and that reintroducing one needs a change request — including the rule that build-time credentials belong in `web/scripts/` and the local `.env`, never in `wrangler.toml` or Worker secrets. Reconnaissance is what made this a deletion rather than a trim: `utils/admin/html.ts` was an editor end to end, the read endpoints existed only to feed it, and the whole subsystem had exactly one importer. Web app details in `web/CHANGELOG.md` (0.5.0).
+
 ### Decided
 
 - Completed `CR-018`: the web admin becomes a **read-only operations console** and browser-based content editing is removed entirely, including the emergency path. The `GITHUB_TOKEN` write credential leaves the Worker rather than being scoped down — a Worker holding write access to the content repository is one access misconfiguration away from being a publish credential. The deciding argument was not feasibility: a proposal-only write model (branch, commit, pull request, never a direct push) was established as achievable from a Worker and deliberately not adopted, because a browser admin's only capability VS Code lacks is working without a checkout, and for a single technical author that does not carry an internet-facing write surface. Two supporting findings: there is no VS Code dependency to relieve, since nothing in the pipeline references it and the real coupling is a machine with a checkout and Node; and Cloudflare Artifacts is "versioned storage that speaks Git", so adopting it would change the Git host rather than the model, at USD 20/month, behind closed beta, and at the cost of the GitHub Actions pipeline. What survives is the one job nothing else does — reporting what is live, including the pipeline warnings currently collected into `context.warnings` and discarded, which is precisely how `CR-028` hides.
