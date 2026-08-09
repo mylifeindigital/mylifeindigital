@@ -4,6 +4,10 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ## 2026-08-09
 
+### Changed
+
+- `deploy.yml` no longer redeploys the site for documentation-only commits. Its `push` trigger gained `paths-ignore` for `**.md`, `change-requests/**`, `docs/**`, and `LICENSE`, so a change-request or changelog commit stops spending a full three-repository assembly — checkout, `sync:stories`, `build:posts`, Worker deploy — to publish an identical site. GitHub skips a run only when every changed path matches, so a release commit touching both code and `web/CHANGELOG.md` still deploys, which is the shape AGENTS.md prescribes. Deliberately not applied to `app-ci.yml`: `Validate (no deploy)` is a required status check, and a skipped required check leaves a pull request permanently pending rather than passing it.
+
 ### Added
 
 - Completed `CR-023`: the repository has a documented baseline test setup. `AGENTS.md` gained a Testing section recording the runner choice, the colocation rule and why it is mechanical rather than stylistic, the split TypeScript programs, and the full list of what blocks a deploy today. Root scripts gained `test` (both suites), `test:web`, `typecheck`, `typecheck:web`, and `typecheck:tests`. `app-ci.yml` gained `Run web tests` and `Type-check web tests`, placed before the content-dependent steps because nothing in the web test import graph reaches the generated `posts-data.ts` — verified by deleting that file and re-running the suite green. Web app details in `web/CHANGELOG.md` (0.4.1).

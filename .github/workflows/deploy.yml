@@ -9,7 +9,9 @@
 #                                  time by `npm run sync:stories` (private; PAT)
 #
 # Triggers:
-#   - push to main               → trusted application merges
+#   - push to main               → trusted application merges, except commits
+#                                  that only touch documentation or planning
+#                                  files (see paths-ignore below)
 #   - repository_dispatch        → deployment requested by the content
 #     (type: deploy-content)       repository after a trusted content merge
 #   - workflow_dispatch          → manual/recovery deployment with explicit
@@ -33,6 +35,20 @@ name: Deploy
 on:
   push:
     branches: [main]
+    # Documentation and planning changes cannot alter the deployed Worker, so
+    # they must not spend a full three-repository assembly to republish an
+    # identical site. GitHub skips the run only when *every* changed path
+    # matches, so a commit touching both code and its changelog still deploys —
+    # which is the normal shape of a release commit under AGENTS.md.
+    #
+    # Deliberately not applied to app-ci.yml: `Validate (no deploy)` is a
+    # required status check, and a skipped required check blocks a pull request
+    # forever rather than passing it.
+    paths-ignore:
+      - "**.md"
+      - "change-requests/**"
+      - "docs/**"
+      - "LICENSE"
   repository_dispatch:
     types: [deploy-content]
   workflow_dispatch:
