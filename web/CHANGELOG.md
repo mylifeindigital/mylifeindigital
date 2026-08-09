@@ -2,6 +2,21 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.4.1] - 2026-08-09
+
+### Added
+
+- A baseline test suite for the web app (CR-023): 31 tests across the build pipeline, display-schema resolution, and story rendering. The runner is Node's built-in `node:test` through `tsx` — the same setup `test:scripts` has used since CR-021 — so no test framework was added. `npm test` from the root runs both suites; `npm run test:watch` in `web/` re-runs on change.
+- `web/tsconfig.test.json`, a second TypeScript program that type-checks the tests. The Worker program now excludes `*.test.ts(x)` and keeps `types: ["@cloudflare/workers-types"]`, which is what makes a stray `process.env` in `web/src/` a build error; the test program adds `node` so tests can import `node:test`. Verified in both directions rather than assumed.
+
+### Fixed
+
+- `getSchemaForContent` resolved inherited `Object.prototype` members as though they were display schemas. `layout` is authored frontmatter, so a Markdown file declaring `layout: toString` received `Object.prototype.toString` in place of a schema — `schema.layout` was then `undefined`, the layout registry fell through to `ArticleLayout`, and the section's theme was dropped without any error. Both the section and override lookups are now `Object.hasOwn` guarded, matching the guard `getContentTemplate` already applies in `scripts/content/`. Found by writing the schema tests.
+
+### Known
+
+- A file with malformed YAML frontmatter and `draft: true` is published as an empty stub rather than skipped, because the pipeline records the frontmatter parse failure as a warning and continues with no `draft` metadata to act on. No content leaks. Tracked as CR-028 and pinned by a characterization test so it cannot change silently.
+
 ## [0.4.0] - 2026-08-09
 
 ### Added

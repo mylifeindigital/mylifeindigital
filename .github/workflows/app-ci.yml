@@ -64,6 +64,18 @@ jobs:
       - name: Run script tests
         run: npm run test:scripts
 
+      # Web tests run before any content step on purpose: nothing in their import
+      # graph reaches the generated posts-data.ts, so they need neither the
+      # content checkout nor build:posts, and they fail fast when they fail.
+      - name: Run web tests
+        run: npm run test:web
+
+      # Tests are type-checked by their own program (web/tsconfig.test.json).
+      # The Worker program below excludes them so that it can keep admitting only
+      # workers-types — which is what makes a stray Node global in src/ an error.
+      - name: Type-check web tests
+        run: npm run typecheck:tests
+
       - name: Generate content data (posts-data.ts)
         working-directory: web
         env:

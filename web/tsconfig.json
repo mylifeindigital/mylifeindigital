@@ -17,5 +17,10 @@
     "types": ["@cloudflare/workers-types"]
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "scripts"]
+  // Tests are colocated with their source but excluded here on purpose. This
+  // program is the Worker program: `types` admits only workers-types, so a
+  // stray `process.env` in a route fails the build. Tests need Node's globals
+  // and `node:test`, so they are type-checked by tsconfig.test.json instead —
+  // which keeps the Worker guardrail intact and keeps test files out of dist/.
+  "exclude": ["node_modules", "dist", "scripts", "src/**/*.test.ts", "src/**/*.test.tsx"]
 }

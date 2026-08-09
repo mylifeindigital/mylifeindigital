@@ -1,0 +1,20 @@
+// Type-checking program for the web tests (CR-023).
+//
+// Identical to tsconfig.json except that it admits Node's type definitions and
+// stops excluding *.test.ts(x). Tests run under `tsx --test` on Node, not in a
+// Worker, so they legitimately import `node:test` and `node:assert/strict` —
+// but adding "node" to the Worker program's `types` would let Node globals
+// leak into runtime type-checking and hide a real deployment error. Splitting
+// the programs keeps `npx tsc --noEmit` honest about src/ while still
+// type-checking the tests.
+//
+// Runtime JSX config is inherited from tsconfig.json, which is what tsx reads.
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["@cloudflare/workers-types", "node"],
+    "noEmit": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "scripts"]
+}

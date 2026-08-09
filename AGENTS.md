@@ -48,8 +48,14 @@ npm run update-date
 npm run sync:stories          # regenerate stories/ from the sibling story-crafter
 
 # Checks
-npm run test:scripts
+npm test                      # both suites: root scripts and web
+npm run test:scripts          # root content tooling only
+npm run test:web              # web app only
+cd web && npm run test:watch  # re-run web tests on change
+npm run typecheck             # all three TypeScript programs
 npm run typecheck:scripts
+npm run typecheck:web
+npm run typecheck:tests
 
 # Image generation
 cd web && npm run generate:images
@@ -87,6 +93,17 @@ Section rendering is schema-driven through `web/src/schemas/content-schemas.ts`.
 - Worker environment variables are defined in `web/wrangler.toml` under `[vars]`.
 - Environment typing lives in `web/src/config.ts`.
 - JSX uses Hono's JSX runtime.
+
+## Testing
+
+The test runner is Node's built-in `node:test` executed through `tsx`. There is no test framework dependency and none should be added (CR-023).
+
+- Tests are colocated with the code they cover, named `*.test.ts` or `*.test.tsx`. Do not create a separate tests directory: `tsx` resolves the JSX transform from the nearest `tsconfig.json` whose `include` covers the file, so a `.tsx` test outside `web/src/` silently compiles to `React.createElement` and fails at runtime with `React is not defined`.
+- Web tests are type-checked by `web/tsconfig.test.json`, not `web/tsconfig.json`. The Worker program excludes `*.test.ts(x)` and admits only `@cloudflare/workers-types`, which is what makes a stray `process.env` in `web/src/` a build error; the test program adds `node` so tests can import `node:test`. Keep that split — do not add `node` to the Worker program's `types`.
+- Nothing in the web test import graph may reach `web/src/utils/posts-data.ts`. Tests must not depend on generated content or on a content-repository checkout, which is what lets them run first in CI.
+- Hono JSX renders to a string, so component tests assert on real markup without a DOM. See `web/src/components/layouts/StoryLayout.test.tsx`.
+
+What blocks a deploy today: dependency install, `typecheck:scripts`, `test:scripts`, `test:web`, `typecheck:tests`, `build:posts`, the web typecheck, and the wrangler dry run. Coverage is deliberately narrow and aimed at the highest-consequence paths — the build pipeline, schema resolution, and story rendering — rather than broad. Add tests where a silent regression would ship, not to raise a number.
 
 ## TypeScript And Node.js Changes
 
