@@ -2,6 +2,16 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.3.8] - 2026-08-09
+
+### Changed
+
+- The header logo takes its colours from `main.css` instead of hardcoded stops in the inline SVG (CR-024). The mark was the one header element a themed palette could not reach, because `stop-color` attributes in markup are invisible to the stylesheet; its gradient now resolves from `--accent-cyan` and `--accent-purple` like the wordmark beside it. The gradient id is namespaced `logo-gradient`, since ids are document-global.
+
+### Removed
+
+- The logo's background tile. Its gradient was `--bg-dark` to `--bg-darker` — the same pair as the page background — so it was near-camouflage on this palette but would have shown as a cool-navy square against any other. The mark now sits on a transparent ground. Because `header` lays `rgba(0, 0, 0, 0.3)` over the page and the tile painted on top of that overlay, it was faintly lighter than its surroundings, so this is a small visible change rather than a no-op.
+
 ## [0.3.7] - 2026-08-02
 
 ### Removed
