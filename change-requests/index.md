@@ -42,7 +42,7 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-026 | Make content update dates authored | Done | High | Content Pipeline | 2026-08-02 | [CR-026-make-content-update-dates-authored.md](./CR-026-make-content-update-dates-authored.md) |
 | CR-027 | Schema-driven listing components | Proposed | Medium | Web Content | 2026-08-09 | Pending detail |
 | CR-028 | Fail the build on malformed frontmatter | Proposed | High | Content Pipeline | 2026-08-09 | Pending detail |
-| CR-029 | Remove the web admin write path | Proposed | High | Web Admin | 2026-08-09 | Pending detail |
+| CR-029 | Remove the web admin write path | Done | High | Web Admin | 2026-08-09 | [CR-029-remove-the-web-admin-write-path.md](./CR-029-remove-the-web-admin-write-path.md) |
 | CR-030 | Build the deployment and content-health console | Proposed | Medium | Web Admin | 2026-08-09 | Pending detail |
 
 ## Backlog Grooming Notes

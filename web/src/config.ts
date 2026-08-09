@@ -5,24 +5,12 @@ export interface Env {
     SITE_TITLE?: string;
     HERO_TITLE?: string;
     HERO_SUBTITLE?: string;
+    // Public profile links rendered in the site footer. GITHUB_URL is a
+    // profile URL, not an API credential — the Worker holds no credentials
+    // at all since CR-029 removed the admin.
     GITHUB_URL?: string;
     TWITTER_URL?: string;
     LINKEDIN_URL?: string;
-
-    // GitHub API (content storage)
-    GITHUB_TOKEN?: string;
-    GITHUB_OWNER?: string;
-    GITHUB_REPO?: string;
-    GITHUB_BRANCH?: string;
-
-    // Admin auth
-    ADMIN_ALLOWED_EMAILS?: string;
-    ADMIN_BYPASS_ACCESS_FOR_LOCAL?: string;
-    ADMIN_LOCAL_TEST_EMAIL?: string;
-
-    // AI transforms
-    OPENAI_API_KEY?: string;
-    OPENAI_MODEL?: string;
 }
 
 /**
