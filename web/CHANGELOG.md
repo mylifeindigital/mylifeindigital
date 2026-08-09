@@ -2,6 +2,19 @@
 
 All notable changes to the web app will be documented in this file.
 
+## [0.3.11] - 2026-08-09
+
+### Added
+
+- The story theme (CR-024, phase 3). `/stories` and every story page render warm and serif — the night palette from `story-crafter`'s bedtime reading app, ported onto the tokens phase 2 established: `#17120b` grounds, `#ece0cb` ink, gold accents, an Iowan Old Style reading stack, a 34rem measure, and 1.16rem/1.72 reading type. Because the theming is full-page, the header, nav, logo, and footer go warm with the prose; posts and technical-sessions are untouched. The reader has one border weight where this site has three, so the two heavier steps are extrapolated rather than ported, and that is marked in the stylesheet.
+- `--on-accent`, the label colour for text on an accent fill: `white` by default, the page ink under the story theme.
+
+### Fixed
+
+- `.btn:hover` put white on the accent fill, which is 5.7:1 on the default purple but would have been 2.8:1 on the story gold — and every story page ends with a `.btn` ("← Back to Stories"). It now resolves through `--on-accent`, giving 6.6:1 on the story theme and leaving the default unchanged.
+
+Contrast was checked pair by pair against WCAG AA at body size: story prose 12.8:1, body text 8.0:1, nav 7.1:1, headings 6.6–9.2:1, buttons 4.9:1, tags 6.2:1, card text 7.2–12.9:1. The default theme is unchanged: flattening the stylesheet before and after leaves every applied declaration identical except an inert `line-height` on `.post-content p` that matches what it already inherited.
+
 ## [0.3.10] - 2026-08-09
 
 ### Changed

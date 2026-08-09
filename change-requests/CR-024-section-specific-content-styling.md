@@ -38,16 +38,16 @@ Four phases, each independently shippable and independently revertible.
 
 - [x] The section a page belongs to is addressable in CSS, driven by the display schema rather than hardcoded per route.
 - [x] `cssPrefix` is either consumed or removed; the schema does not keep a field nothing reads.
-- [ ] The story theme applies to the whole page — chrome included — on `/stories` and every story page, and on no other route.
+- [x] The story theme applies to the whole page — chrome included — on `/stories` and every story page, and on no other route.
 - [x] Content-container styling resolves through semantic tokens with the existing appearance as the default theme.
 - [x] Phases 1 and 2 produce no visual change to `posts` or `technical-sessions`, verified by comparing rendered output before and after.
-- [ ] The `stories` section renders with its own theme, recognisably derived from the reader.
+- [x] The `stories` section renders with its own theme, recognisably derived from the reader.
 - [ ] A story page carries the reader's structure: episode eyebrow, cast line, lead drop cap, endmark.
 - [ ] The synced story metadata the site currently drops — `season`, `episode`, `characters` — is rendered rather than discarded.
-- [ ] Story text meets WCAG AA contrast at normal body size.
-- [ ] `technical-sessions` renders unchanged throughout; `stories` is the only section that diverges in this request.
+- [x] Story text meets WCAG AA contrast at normal body size.
+- [x] `technical-sessions` renders unchanged throughout; `stories` is the only section that diverges in this request.
 - [ ] Adding a future section theme requires only new token values, not new layout or stylesheet plumbing.
-- [ ] Any port from `story-crafter` records where the values came from, so later divergence is a visible decision.
+- [x] Any port from `story-crafter` records where the values came from, so later divergence is a visible decision.
 
 ## Implementation Notes
 
@@ -58,6 +58,9 @@ Four phases, each independently shippable and independently revertible.
 - `cssPrefix` cannot be the theme key: `posts` and `stories` both declare `article`, so it does not distinguish the two sections it would have to separate. It duplicates `layout` rather than extending it, which is likely why nothing ever read it. Replacing it with `theme` satisfies the criterion above by removal.
 - Full-page theming is *less* plumbing than container-only theming, not more. `Layout.tsx` is the sole owner of `<html>` and `<body>` and every route funnels through it, so one optional prop themes both the section listing and the story pages; scoping to the container instead would mean adding the hook separately to `ArticleLayout.tsx` and `TechnicalSessionLayout.tsx`.
 - Source of the story treatment: the inline stylesheet in `story-crafter/scripts/build-reader.mjs`.
+- Phase 3 found one contrast failure the token swap created: `.btn:hover` set `color: white` on an accent fill, which is 5.7:1 on the default purple but 2.8:1 on the story gold — and every story page ends with a `.btn` ("← Back to Stories"), so it was reachable rather than theoretical. The label colour became `--on-accent`, `white` by default and the page ink (6.6:1) under the story theme. Named colours were the gap: phase 2's inventory searched for hex and `rgba()` and never saw `white`.
+- Unrelated and not fixed here: `.hero-cta` also sets white on a cyan-to-purple gradient, and white on `#00d4ff` is about 1.9:1. That is a pre-existing default-theme issue on the home page, which is never themed, so it is out of this request's scope.
+- After phase 3 a second section theme is a block of token values plus one rule: this site's `--text-secondary` carries both prose and metadata, while the reader gives prose the full ink, and no token can separate the two. Phase 4's `StoryLayout` is expected to absorb that rule.
 - Two kinds of colour deliberately stayed literal in phase 2. The hero scrim and the card fallback icon tint sit over photographs, and their job is to hold text legible against an arbitrary image rather than to express the palette, so a theme must not move them. The technical-session category colours are a categorical scale, not palette, and that section keeps the default treatment by decision.
 - Alternatives considered and set aside:
   - *A second stylesheet per section, conditionally linked.* Simple and well isolated, but duplicates base rules across files and guarantees drift as they age separately.
