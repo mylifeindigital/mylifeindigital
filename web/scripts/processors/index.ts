@@ -2,6 +2,8 @@
 export {
     FrontmatterProcessor,
     DraftFilterProcessor,
+    ValidationProcessor,
+    type ValidationIssue,
     ExcludeProcessor,
     AstProcessor,
     TocProcessor,
