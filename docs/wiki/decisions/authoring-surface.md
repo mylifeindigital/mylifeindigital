@@ -36,6 +36,7 @@ The split-repository model puts publishable Markdown in `mylifeindigital.content
 
 ## Related Pages
 
+- [Admin Dashboard](../projects/admin-dashboard.md)
 - [Content Editor](../projects/content-editor.md)
 - [Content Operations App](../projects/content-operations-app.md)
 - [Git-Backed Content](../concepts/git-backed-content.md)

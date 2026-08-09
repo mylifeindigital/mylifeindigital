@@ -1,10 +1,11 @@
 # CR-010: Add Admin Validation Panel and Author-Facing Warnings
 
-Status: Blocked  
+Status: Dropped  
 Priority: High  
 Area: Web Admin  
 Created: 2026-05-06  
-Reviewed: 2026-08-09
+Reviewed: 2026-08-09  
+Closed: 2026-08-09
 
 ## Context
 
@@ -95,4 +96,11 @@ If `CR-018` decides that browser-admin content editing should be removed, disabl
 
 ## Outcome
 
-Pending.
+Dropped as scoped by `CR-018`, which removed browser-based content editing and made the web admin a read-only operations console. A validation panel attached to a browser editor has no editor to attach to.
+
+The goal survives the scope. This request defined something worth keeping — that validation must distinguish blocking errors from advisory warnings (`CR-008`), and that messages should be written for authors rather than developers. That contract now has two homes, neither of them a browser editor:
+
+- **CI**, which owns blocking validation (`CR-013`), already runs on every content pull request.
+- **The operations console** (`CR-030`), which would surface the advisory half — the pipeline warnings currently collected into `context.warnings` and discarded, unseen by anyone. `CR-028` exists because of exactly that silence.
+
+Re-read this request's `Proposed Implementation` before planning either; the feedback contract it defines is the reusable part.

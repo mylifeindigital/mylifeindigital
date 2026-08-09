@@ -2,6 +2,26 @@
 
 Append-only record of docs wiki activity.
 
+## [2026-08-09] decision | Admin becomes a read-only operations console
+
+- `CR-018` decided: browser-based content editing is removed entirely and the admin's remaining role is deployment and content-health observability.
+- Annotated [Admin Dashboard](./projects/admin-dashboard.md) so the feasibility sections cannot be misread as a plan. The proposal-only write model was achievable and deliberately not adopted; feasibility was necessary to establish and insufficient to justify.
+- Deciding argument: a browser admin's only capability VS Code lacks is working without a checkout, which for a single technical author does not carry an internet-facing API holding a write credential to the content repository.
+- Recorded that there is no VS Code dependency to relieve — nothing in the pipeline references it, and the real coupling is a machine with a checkout and Node — and that Cloudflare Artifacts is "versioned storage that speaks Git", so it would change the Git host rather than the model.
+- Replaced the admin questions in [Open Questions](./questions.md): the write-model questions are resolved, and four console questions take their place, the sharpest being where deployment state is read from and whether discarded pipeline warnings need persisting as a build artifact.
+- `CR-009` and `CR-010` dropped; `CR-029` and `CR-030` added.
+
+## [2026-08-09] ingest | Admin dashboard feasibility
+
+- Ingested `docs/raw/admin-dashboard.md`, which asks whether a Git repository is a good candidate for an admin dashboard now that publishable content lives in `mylifeindigital.content`.
+- Added an [Admin Dashboard](./projects/admin-dashboard.md) project page recording the feasibility assessment against the current code rather than against the request's framing.
+- Key finding: the tension is about write model, not about Git. `saveFile` commits one file directly to a branch, which uses Git as a key-value store and forfeits review, atomicity, and revert while still paying Git's costs.
+- Correction to the `CR-018` framing: `GitHubRepository` is already repository-agnostic — owner, repo, and branch come from environment configuration, and `getTree()` already filters to `content/`, which matches the content repository's layout. What is stale is the configuration, not the code: `web/.env.example` still points at the application repository and at `main`.
+- Recorded the Worker boundary — no filesystem, no subprocess, no `git` binary — and the resulting feasibility tiers. Merge and conflict resolution are the only meaningful gaps, and a proposal-only model avoids needing them.
+- Surfaced a fifth option `CR-018` does not list: write-capable through pull requests only. Noted as compatible with the existing authoring-surface decision rather than as a contradiction of it.
+- Added five open questions covering direct-commit escape hatches, whether the admin may merge, commit granularity, pull-request status surfacing, and whether the admin has a planned end once the Electron app exists.
+- Raw source left unchanged.
+
 ## [2026-08-02] maintenance | Split-repository authoring workspace
 
 - Recorded the post-split local authoring layout on the authoring-surface decision page: sibling checkouts of `mylifeindigital`, `mylifeindigital.content`, and `story-crafter`, opened together through the committed `mylifeindigital.code-workspace`.

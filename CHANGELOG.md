@@ -4,6 +4,20 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ## 2026-08-09
 
+### Decided
+
+- Completed `CR-018`: the web admin becomes a **read-only operations console** and browser-based content editing is removed entirely, including the emergency path. The `GITHUB_TOKEN` write credential leaves the Worker rather than being scoped down — a Worker holding write access to the content repository is one access misconfiguration away from being a publish credential. The deciding argument was not feasibility: a proposal-only write model (branch, commit, pull request, never a direct push) was established as achievable from a Worker and deliberately not adopted, because a browser admin's only capability VS Code lacks is working without a checkout, and for a single technical author that does not carry an internet-facing write surface. Two supporting findings: there is no VS Code dependency to relieve, since nothing in the pipeline references it and the real coupling is a machine with a checkout and Node; and Cloudflare Artifacts is "versioned storage that speaks Git", so adopting it would change the Git host rather than the model, at USD 20/month, behind closed beta, and at the cost of the GitHub Actions pipeline. What survives is the one job nothing else does — reporting what is live, including the pipeline warnings currently collected into `context.warnings` and discarded, which is precisely how `CR-028` hides.
+
+- Three requests closed on that one decision. `CR-009` (admin metadata editing UI) and `CR-010` (admin validation panel) are `Dropped`; both are browser authoring features with no surface left to live on, and each records where its underlying goal survives — templates and the Electron app for the first, CI and the console's warning surface for the second. Added `CR-029` (remove the write path) and `CR-030` (build the deployment and content-health console).
+
+### Fixed
+
+- Restored the `## Outcome` headings in `CR-014` and `CR-018`, which this morning's grooming pass had consumed when inserting review notes, leaving each file's closing line orphaned under the review section.
+
+### Added
+
+- Ingested `docs/raw/admin-dashboard.md` into the docs wiki as `docs/wiki/projects/admin-dashboard.md`, a feasibility assessment for the browser admin after the repository split. Written against the code rather than the request's framing, which corrected two assumptions: `GitHubRepository` is already repository-agnostic (owner, repo, and branch are environment configuration) and its tree filter already matches the content repository's layout, so what the split broke is `web/.env.example`, not the service. The substantive finding is that the discomfort with a Git-backed admin is about write model, not about Git — `saveFile` commits one file directly to a branch, forfeiting review, atomicity, and revert while still paying Git's costs — and that a proposal-only admin dissolves it, including the merge-conflict capability a Worker cannot provide. Surfaces a fifth option `CR-018` does not list: write-capable through pull requests only. Five open questions filed; raw source left unchanged per `docs/WIKI.md`.
+
 ### Changed
 
 - Added a planning workflow to `change-requests/SKILL.md`, covering how an idea becomes an implementable request rather than only how a request is filed. Three gates: a one-line index row; a reconnaissance pass that writes `Context` from the code and produces `Open Questions`; and a decision pass that settles those questions, dated and with the fact that settled each, before implementation starts. Phases are expected to carry a check that can fail rather than to be merely small. `templates/change-request.md` gained matching `Open Questions` and `Decisions` sections and a `Reviewed` date beside `Created`. Both sections had already been invented ad hoc in `CR-024` and again in `CR-023`; the review date exists because `CR-023` asked for a decision that had been made months earlier, which no field in the old template could have surfaced.
