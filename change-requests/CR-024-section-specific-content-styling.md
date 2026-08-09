@@ -1,6 +1,6 @@
 # CR-024: Section-Specific Content Styling
 
-Status: Proposed  
+Status: In Progress  
 Priority: Medium  
 Area: Web Content  
 Created: 2026-08-02
@@ -63,8 +63,7 @@ Four phases, each independently shippable and independently revertible.
   - *A shared design-token package consumed by both the site and the reader generator.* The most correct-looking option and the wrong one for now: `story-crafter` is a separate private repository and the reader is a self-contained generated bundle with no build dependency on this repository. Publishing or vendoring a token package costs more than it saves while there is exactly one shared theme. Revisit if the palettes must stay in lockstep.
 - The site's default treatment is already dark — `main.css` opens with a cool navy gradient, cyan and purple accents, and JetBrains Mono as the global body face — so the story theme is a shift in temperature and typeface, not a light/dark flip. Moving between a post and a story should read as changing rooms, not changing sites.
 - The header logo is the one element phase 2 cannot tokenise, because its colours are literal hex in the SVG markup rather than in CSS. `Layout.tsx` inlines two `<linearGradient>` definitions — `grad` at `#00d4ff → #7c3aed` for the three nodes and the connecting path, and `bgGrad` at `#0f0f23 → #1a1a3e` for the rounded tile behind them — plus two bare `#00d4ff` circles. The wordmark beside it is not a problem: `.logo-text` already gradient-clips `var(--accent-cyan)`/`var(--accent-purple)`, so phase 2 retokenises it for free.
-- The tile is the real issue, not the accents. `bgGrad`'s two stops are exactly `--bg-dark` and `--bg-darker`, the same pair the body gradient uses, so today the tile is invisible camouflage and the mark reads as nodes floating on the page. Against a warm story background it stops matching and becomes a visible cool-navy square — and two different darks side by side read as a mistake rather than a choice, more obviously than a hue shift would on a light background.
-- Three ways out, cheapest first: drop the `rect` and let the tile be transparent, which removes the clash everywhere and costs nothing on the default theme where it is already invisible; or move the `stop-color` values into CSS so they resolve from the theme's tokens, since the SVG is inline and ordinary selectors reach it; or leave the mark alone and accept a cyberpunk logo on story pages. The first two can combine.
+- The tile is the real issue, not the accents. `bgGrad`'s two stops are exactly `--bg-dark` and `--bg-darker`, the same pair the body gradient uses, so it is very nearly camouflage — though not quite, because `header` lays `rgba(0, 0, 0, 0.3)` over the page behind it and the tile paints on top of that overlay rather than under it. The tile is therefore a little lighter than its surroundings, and reads today as a faint rounded square that most people take for part of the mark. Against a warm story background it would stop nearly-matching and become an unmistakable cool-navy square, and two different darks side by side read as a mistake rather than a choice.
 - The reader's day/night toggle and brightness dimmer are stateful controls tied to its bedtime use. Port the night palette, not the mechanism. A reading-preference control on the site would be its own request.
 - The reader's gold-on-warm-dark is tuned for a dimmed phone in a dark room. It needs a contrast check before it ships on the web, and may need adjusted values rather than a literal copy.
 - Stories reach the site through `npm run sync:stories` as a build artifact, so this work does not touch story source files or `story-crafter` itself.
@@ -78,9 +77,9 @@ Decisions:
 
 - **2026-08-09 — `technical-sessions` does not get its own theme in this request.** It stays on the default treatment, which the current dark monospace palette already suits. Only `stories` diverges, so the request ships one theme and the claim that a second one costs only token values stays a testable prediction rather than an assumption baked into the first implementation.
 
-Open questions:
+- **2026-08-09 — the logo drops its tile and takes its colours from CSS.** Both together: the `rect` and the `bgGrad` definition are gone, so the mark is nodes on a transparent ground that cannot clash with any theme, and the remaining gradient's stops resolve from `--accent-cyan`/`--accent-purple` through `main.css`, so phase 2 retokenises the mark along with everything else. The gradient id is namespaced `logo-gradient` rather than `grad`, since ids are document-global. Implemented ahead of the phases, in `0.3.8`, because it stands alone and the existing `:root` tokens were already enough to resolve against. It is a small visible change on the default theme — the faint tile is gone — rather than the no-op first assumed.
 
-- What happens to the header logo's inline SVG under a story theme — transparent tile, tokenised stops, or left as is? Needed before phase 3 ships, not before phase 1.
+No open questions remain.
 
 ## Outcome
 

@@ -77,7 +77,23 @@ header {
 
 .logo-icon {
     flex-shrink: 0;
-    border-radius: 8px;
+}
+
+/*
+ * The mark's colours live here rather than as hardcoded stops in the inline
+ * SVG, so it resolves from the palette like every other themed surface. The
+ * SVG is server-rendered into the document, so these selectors reach it.
+ */
+.logo-icon .logo-gradient-from {
+    stop-color: var(--accent-cyan);
+}
+
+.logo-icon .logo-gradient-to {
+    stop-color: var(--accent-purple);
+}
+
+.logo-icon .logo-glow {
+    fill: var(--accent-cyan);
 }
 
 .logo-text {
