@@ -3,7 +3,8 @@
 Status: Proposed  
 Priority: Medium  
 Area: Web Admin  
-Created: 2026-05-29
+Created: 2026-05-29  
+Reviewed: 2026-08-09
 
 ## Context
 
@@ -49,6 +50,13 @@ The preferred default is to avoid keeping an ambiguous write-capable browser adm
 - Existing admin routes live under `web/src/routes/admin/`.
 - Current content editing uses GitHub API services under `web/src/services/content/`.
 
-## Outcome
+### Review 2026-08-09
+
+`Context` holds — the split happened as anticipated (`CR-020`), so this request is ready to decide rather than stale. Two facts sharpen it:
+
+- The admin still ships in the deployed Worker and still writes through the GitHub API, but publishable Markdown now lives in `mylifeindigital.content`. Whatever the admin writes to, it is no longer the repository it is deployed from.
+- Production deploys exclusively through `deploy.yml` (`CR-019`, `CR-025`), so admin edits cannot publish on their own regardless of the decision.
+
+This is the keystone of the admin backlog: `CR-009` and `CR-010` both defer to it in their own `Context`, and both are now `Blocked` behind it. Deciding this releases or closes two requests at once, which makes it the highest-leverage item in the backlog even at Medium priority.
 
 Pending decision.

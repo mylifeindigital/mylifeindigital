@@ -1,9 +1,10 @@
 # CR-010: Add Admin Validation Panel and Author-Facing Warnings
 
-Status: Proposed  
+Status: Blocked  
 Priority: High  
 Area: Web Admin  
-Created: 2026-05-06
+Created: 2026-05-06  
+Reviewed: 2026-08-09
 
 ## Context
 

@@ -1,9 +1,10 @@
 # CR-009: Add Admin Metadata Editing UI
 
-Status: Proposed  
+Status: Blocked  
 Priority: Medium  
 Area: Web Admin  
-Created: 2026-05-06
+Created: 2026-05-06  
+Reviewed: 2026-08-09
 
 ## Context
 

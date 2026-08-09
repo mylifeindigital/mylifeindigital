@@ -4,6 +4,12 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ## 2026-08-09
 
+### Changed
+
+- Added a planning workflow to `change-requests/SKILL.md`, covering how an idea becomes an implementable request rather than only how a request is filed. Three gates: a one-line index row; a reconnaissance pass that writes `Context` from the code and produces `Open Questions`; and a decision pass that settles those questions, dated and with the fact that settled each, before implementation starts. Phases are expected to carry a check that can fail rather than to be merely small. `templates/change-request.md` gained matching `Open Questions` and `Decisions` sections and a `Reviewed` date beside `Created`. Both sections had already been invented ad hoc in `CR-024` and again in `CR-023`; the review date exists because `CR-023` asked for a decision that had been made months earlier, which no field in the old template could have surfaced.
+
+- Groomed the May-era backlog against the current repository. `CR-009` and `CR-010` move to `Blocked` — both name `CR-018` as an unresolved dependency in their own `Context` while sitting as `Proposed`. `CR-018` and `CR-014` gained review notes: the former's context still holds and it is the keystone of the admin backlog, releasing or closing two requests at once; the latter has been substantially overtaken, since `CR-019` settled how CI produces generated artifacts and `CR-020`/`CR-021` settled artifact ignoring and content resolution. Nothing was dropped.
+
 ### Added
 
 - Completed `CR-023`: the repository has a documented baseline test setup. `AGENTS.md` gained a Testing section recording the runner choice, the colocation rule and why it is mechanical rather than stylistic, the split TypeScript programs, and the full list of what blocks a deploy today. Root scripts gained `test` (both suites), `test:web`, `typecheck`, `typecheck:web`, and `typecheck:tests`. `app-ci.yml` gained `Run web tests` and `Type-check web tests`, placed before the content-dependent steps because nothing in the web test import graph reaches the generated `posts-data.ts` — verified by deleting that file and re-running the suite green. Web app details in `web/CHANGELOG.md` (0.4.1).

@@ -3,7 +3,8 @@
 Status: Proposed  
 Priority: Medium  
 Area: Architecture  
-Created: 2026-05-06
+Created: 2026-05-06  
+Reviewed: 2026-08-09
 
 ## Context
 
@@ -54,6 +55,14 @@ The first likely decision is to keep `posts-data.ts` generated-only and ignored,
 - Current known position from migration planning: `posts-data.ts` should remain generated-only after the split; GitHub Actions should generate it in the workflow workspace and deploy the resulting Worker bundle.
 - Current known position from migration planning: generated images are remote in Cloudflare/R2, and `web/scripts/image-manifest.json` remains app-owned during the initial cutover.
 
-## Outcome
+### Review 2026-08-09
+
+Much of `Context` and `Proposed Implementation` above was written before the split and has since been settled by implementation rather than by this request. Re-scope before planning:
+
+- "How GitHub Actions should produce generated artifacts during app/content deployment" is answered. `deploy.yml` assembles all three repositories, runs `sync:stories` and `build:posts` in the workflow workspace, and records every resolved SHA per deployment (`CR-019`).
+- "Which generated artifacts should be ignored by Git" is answered for the two that mattered: `web/src/utils/posts-data.ts` and the synced `content/stories/` are both git-ignored build artifacts.
+- `CONTENT_DIR` is now required and fails loudly when unresolvable (`CR-021`), so "how local development should generate artifacts without treating them as authored content" is partly answered too.
+
+What remains genuinely open is narrower than the request suggests: the ownership of `web/scripts/image-manifest.json`, whether any generated artifact should be committed for rollback (deployment currently rolls back by redeploying known-good SHAs, which may make this moot), and the traceability story for R2-hosted images. Consider rewriting the request around those three, or dropping it in favour of a focused successor.
 
 Pending implementation.
