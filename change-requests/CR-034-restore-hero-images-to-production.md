@@ -61,33 +61,59 @@ Every generated image that exists is rendered by the deployed site, and an image
 
 ## Open Questions
 
-- [ ] Where does the image URL live durably — persisted into content frontmatter at generation time, or read from the manifest at every build? Frontmatter makes the content self-describing but means an app-repo script writes into the content repository. The manifest keeps content clean but keeps the URL in a hash-keyed cache in a third place.
-- [ ] If the manifest stays the source, what happens on a hash mismatch in a non-generating build — keep serving the stale image, or drop it? Dropping is current behaviour and is what made this invisible.
-- [ ] Does `deploy.yml` invoke this behind `--generate-images --dry-run`, or does the flag get a name that says what it does? Shipping the current spelling into the deploy workflow reads like a mistake.
-- [ ] Do stories get images at all? 64 of the 67 uncovered items are stories, and they have never had one. This is a content decision, not a pipeline one.
+- [x] Where does the image URL live durably — persisted into content frontmatter at generation time, or read from the manifest at every build? **Frontmatter.** See `Decisions`.
+- [x] If the manifest stays the source, what happens on a hash mismatch in a non-generating build? **Moot.** The manifest is no longer the source; nothing hashes anything at serve time.
+- [x] Does `deploy.yml` invoke this behind `--generate-images --dry-run`, or does the flag get a better name? **Neither.** `deploy.yml` needs no image mode at all — see `Decisions`.
+- [ ] Do stories get images at all? 64 of the 67 uncovered items are stories, and they have never had one. This is a content decision, not a pipeline one, and it does not block the restoring work.
 
 Implementation does not start while any box here is unchecked.
 
 ## Proposed Implementation
 
-Shape depends on the first open question. The minimal restoring change is a non-generating image mode in `build-posts.ts` that adds `ImageGeneratorProcessor` with generation disabled, invoked from `deploy.yml`, restoring all fifteen images with no credential surface.
+The URL becomes ordinary frontmatter. Three pieces of work, only one of which touches the application:
 
-That is deliberately recorded as the *minimal* change and not yet as the recommendation, because it leaves the fragility above intact.
+**1. Backfill (content repository).** Write `image`, `imageMobile`, and `imageAlt` into the frontmatter of the fifteen items that have manifest entries, taking the values from `web/scripts/image-manifest.json`. One pull request against `mylifeindigital.content`, reviewable as content — which is what it now is.
+
+**2. Persist on generation (application repository).** `ImageGeneratorProcessor` currently writes the URL into `context.metadata` and the manifest, both of which are discarded or ignored by a production build. It must also write the fields back into the source Markdown, so a newly generated image is durable the moment it is generated. `scripts/update-date.ts:56` already does exactly this kind of frontmatter write-back against `CONTENT_DIR`, so the mechanism exists and does not need inventing.
+
+**3. Cleanup.** `web/package.json`'s `build` script still claims to generate images and is unreachable. `Layout.tsx:37`'s `preconnect` becomes justified again once images render, so it stays.
+
+`deploy.yml` does not change. Verified: adding `image`, `imageMobile`, and `imageAlt` to a post's frontmatter and running plain `npm run build:posts` — the exact command at `deploy.yml:131` — carries all three into `posts-data.ts` with no code change and no flag. `FrontmatterProcessor` already puts every frontmatter key into `context.metadata`, which is what the layouts read.
+
+Step 1 alone restores every image the site is missing. Step 2 is what stops it happening again.
+
+## Decisions
+
+### 2026-08-10 — The image URL is frontmatter, not a build-time lookup
+
+The choice was between persisting the URL into content frontmatter at generation time, and having every build look it up in `web/scripts/image-manifest.json` by `section/slug` plus a hash of the body. Frontmatter wins on four counts, three of which are precedent rather than preference.
+
+**This project already made this exact call once.** `CR-026` found that `GitDateProcessor` derived `updated` at build time from git history, so every post claimed it was updated on the migration date. The fix was to make the value **authored in frontmatter**, and it was rated `High`. Derived-at-build-time failed there for the same reason it failed here: the value is invisible in the content, so when the derivation breaks nothing looks wrong until someone checks the live site. Images broke on 2026-08-02 and went unnoticed for eight days.
+
+**The objection to frontmatter is already settled practice.** "An application-repository script writing into the content repository" sounds like a new boundary crossing; it is not. `scripts/update-date.ts:56` resolves `CONTENT_DIR` and writes `updated:` into content frontmatter today, and `scripts/content/generate-content.ts:73` creates content files outright. Generation is a manual local operation run by someone holding both checkouts, so the write is an ordinary local edit that gets committed as content.
+
+**The lookup model cannot be made safe without gutting it.** Under the manifest model, editing a post's body changes its hash, the entry no longer matches, and the image is silently dropped on the next deploy — a typo fix is enough. That is the same failure that produced the current outage, triggered by an edit instead of a workflow change. It can be patched by making non-generating builds ignore the hash, but then the hash means nothing at serve time and what remains is a committed table in one repository keyed by files in another, where a rename orphans an entry silently.
+
+**Frontmatter needs no production machinery at all.** Verified by fixture: adding the three fields to a post and running plain `npm run build:posts` — the exact command at `deploy.yml:131` — carries them into `posts-data.ts`. No processor in the production pipeline, no flag in `deploy.yml`, no credential surface, and `ImageGeneratorProcessor.ts:54` already returns early when `context.metadata.image` is set, so the generator was written expecting frontmatter to win.
+
+Consequence for `CR-014`: the manifest stops being the durable record and becomes a local cache whose only job is avoiding a second payment to OpenAI for the same content. It no longer needs committing and can no longer orphan anything that matters.
 
 ## Acceptance Criteria
 
-- [ ] The deployed site renders a hero image for every item with a manifest entry — verified against the live site, not the local build.
-- [ ] The deploy path needs no OpenAI or R2 credential to render existing images.
-- [ ] Editing the body of an item that has an image does not silently remove that image.
-- [ ] `Layout.tsx`'s `preconnect` either has traffic to justify it or is removed.
+- [ ] The deployed site renders a hero image for all fifteen items that have one — verified against the live site, not the local build.
+- [ ] The deploy path needs no OpenAI or R2 credential to render existing images, and `deploy.yml` is unchanged.
+- [ ] Editing the body of an item that has an image does not remove that image.
+- [ ] Generating a new image writes the URL into the source Markdown, so it survives without the manifest.
 - [ ] `web/package.json`'s `build` script either becomes reachable again or stops claiming to generate images.
-- [ ] A test pins the regression: a build without generation still produces image URLs for manifest-covered content.
+- [ ] A test pins the regression: a build with no image machinery still produces image URLs for content whose frontmatter carries them.
 
 ## Implementation Notes
 
 Split from `CR-014` on 2026-08-10. `CR-014` keeps the artifact-ownership policy question; this request owns the defect.
 
-Related: `CR-019` (introduced the CI deploy that runs `build:posts`), `CR-025` (removed the local deploy that ran `build`), `CR-018` and `CR-029` (moved credentials out of the deploy path).
+Related: `CR-019` (introduced the CI deploy that runs `build:posts`), `CR-025` (removed the local deploy that ran `build`), `CR-018` and `CR-029` (moved credentials out of the deploy path), `CR-026` (the precedent for authored-over-derived).
+
+`imageAlt` is currently generated as `Abstract illustration for ${title}` for every image. Moving it into frontmatter makes it authored and therefore editable, which is an accessibility improvement available for free — but writing real alt text for fifteen items is content work and is not part of this request.
 
 ## Outcome
 
