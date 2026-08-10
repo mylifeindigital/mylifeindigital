@@ -118,6 +118,21 @@ jobs:
           npm run typecheck:scripts
           npm run test:scripts
 
+      # Resolve the three commits ONCE, before the build (CR-030).
+      #
+      # They used to be resolved only in the summary step below, after
+      # `wrangler deploy` — which meant the bundle had no way to say what it was
+      # built from, and the only record of it lived outside the artifact. The
+      # build stamp needs them beforehand, and both consumers now read the same
+      # values, so the summary table and the deployed console cannot disagree.
+      - name: Resolve assembled revisions
+        run: |
+          {
+            echo "BUILD_APP_SHA=$(git rev-parse HEAD)"
+            echo "BUILD_CONTENT_SHA=$(git -C content-repo rev-parse HEAD)"
+            echo "BUILD_STORY_SHA=$(git -C story-crafter rev-parse HEAD)"
+          } >> "$GITHUB_ENV"
+
       - name: Sync stories into the assembled content
         env:
           STORY_CRAFTER_PATH: ${{ github.workspace }}/story-crafter
@@ -141,6 +156,12 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: npx wrangler deploy
 
+      # Reads the values resolved above rather than asking git again, so this
+      # table and the stamp compiled into the Worker are the same three commits
+      # by construction. `if: always()` means it can run before the resolve step
+      # did — a failed checkout, say — so each falls back rather than rendering
+      # an empty cell that would read as "no commit" instead of "never got that
+      # far".
       - name: Record deployed revisions
         if: always()
         run: |
@@ -149,9 +170,9 @@ jobs:
             echo ""
             echo "| Repository | Ref | Commit |"
             echo "| --- | --- | --- |"
-            echo "| mylifeindigital | ${{ inputs.app_ref || github.ref_name }} | $(git rev-parse HEAD) |"
-            echo "| mylifeindigital.content | ${{ inputs.content_ref || github.event.client_payload.content_ref || 'main' }} | $(git -C content-repo rev-parse HEAD) |"
-            echo "| story-crafter | ${{ inputs.story_ref || 'main' }} | $(git -C story-crafter rev-parse HEAD) |"
+            echo "| mylifeindigital | ${{ inputs.app_ref || github.ref_name }} | ${BUILD_APP_SHA:-unresolved} |"
+            echo "| mylifeindigital.content | ${{ inputs.content_ref || github.event.client_payload.content_ref || 'main' }} | ${BUILD_CONTENT_SHA:-unresolved} |"
+            echo "| story-crafter | ${{ inputs.story_ref || 'main' }} | ${BUILD_STORY_SHA:-unresolved} |"
             echo ""
             echo "Trigger: \`${{ github.event_name }}\`"
           } >> "$GITHUB_STEP_SUMMARY"
