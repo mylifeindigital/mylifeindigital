@@ -22,7 +22,7 @@ Questions that matter to future repository work.
 Resolved by `CR-018` on 2026-08-09: the admin becomes a read-only operations console and all browser content editing is removed, so the write-model questions previously filed here no longer apply. What remains open concerns the console itself (`CR-030`).
 
 - Where does the console read deployment state from — the GitHub Actions API, a deployment record written by `deploy.yml`, or a Worker-side value stamped at build time? Only the last survives GitHub being unreachable.
-- Pipeline warnings are currently discarded at build time. Do they need to be persisted as a build artifact for the console to read, and if so, is that artifact ownership question part of `CR-014`?
+- Pipeline warnings are now surfaced but still not persisted. `CR-013` validation issues become GitHub annotations and a job summary; every other `context.warnings` entry is only `console.warn`ed (`build-posts.ts:202`). Both vanish when the run's logs age out, so neither is readable by a console. Does the console need them as a durable build artifact, and if so, who owns it? **Not `CR-014`** — that request was reshaped on 2026-08-10 to cover the image manifest alone.
 - Does the console need authentication at all once it holds no write credential and reports only on already-public content, or does Cloudflare Access stay because deployment metadata is not public?
 - Does the console earn its maintenance cost once the Electron content operations app exists, or is it an interim surface with a planned end?
 
