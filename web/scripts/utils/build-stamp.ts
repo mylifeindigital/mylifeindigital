@@ -11,12 +11,46 @@
 
 import { execFileSync } from 'child_process';
 import { existsSync, readFileSync } from 'fs';
-import { dirname, join, resolve } from 'path';
+import { basename, dirname, join, relative, resolve } from 'path';
 
-import type { BuildInfo } from '../../src/utils/build-info.js';
+import type { BuildInfo, BuildValidationIssue } from '../../src/utils/build-info.js';
+import type { ValidationIssue } from '../processors/index.js';
 
 /** Reads the commit at HEAD of the checkout containing `directory`. */
 export type HeadReader = (directory: string) => string | null;
+
+/**
+ * Rewrites an absolute content path as one relative to the content directory.
+ *
+ * The stamp is rendered onto a public page, so an absolute path is wrong twice:
+ * it is noise (`/home/runner/work/mylifeindigital/mylifeindigital/content-repo/
+ * content/posts/x.md`), and it discloses the CI runner's layout. Relative to
+ * the content root it is both stable and identical whether the build ran in
+ * Actions or on a laptop.
+ *
+ * A path that escapes the content directory should not exist; if one does, its
+ * basename is published rather than a `../` chain that would disclose the same
+ * layout by another route.
+ */
+export function relativeContentPath(filePath: string, contentDir: string): string {
+    const relativePath = relative(contentDir, filePath);
+    if (!relativePath || relativePath.startsWith('..')) return basename(filePath);
+    return relativePath;
+}
+
+/** Reshapes the build's validation issues for the stamp. */
+export function stampIssues(
+    issues: readonly ValidationIssue[],
+    contentDir: string
+): BuildValidationIssue[] {
+    return issues.map(issue => ({
+        file: relativeContentPath(issue.filePath, contentDir),
+        section: issue.container,
+        field: issue.field,
+        rule: issue.rule,
+        message: issue.message,
+    }));
+}
 
 export interface BuildStampInput {
     /** Process environment; the workflow's resolved SHAs arrive here. */
@@ -31,6 +65,8 @@ export interface BuildStampInput {
     now: Date;
     /** How to ask git for a commit. Injected so tests need no repositories. */
     readHead: HeadReader;
+    /** Validation issues collected across the build. */
+    issues: readonly ValidationIssue[];
 }
 
 /**
@@ -87,7 +123,7 @@ export function resolveRevision(
 }
 
 export function createBuildInfo(input: BuildStampInput): BuildInfo {
-    const { env, repositoryRoot, contentDir, version, now, readHead } = input;
+    const { env, repositoryRoot, contentDir, version, now, readHead, issues } = input;
 
     return {
         builtAt: now.toISOString(),
@@ -104,6 +140,7 @@ export function createBuildInfo(input: BuildStampInput): BuildInfo {
                 readHead
             ),
         },
+        issues: stampIssues(issues, contentDir),
     };
 }
 
@@ -143,6 +180,7 @@ export function buildStampFor(
     webDirectory: string,
     contentDir: string,
     env: Record<string, string | undefined>,
+    issues: readonly ValidationIssue[],
     now: Date = new Date(),
     readHead: HeadReader = readGitHead
 ): BuildInfo {
@@ -153,5 +191,6 @@ export function buildStampFor(
         version: readPackageVersion(join(webDirectory, 'package.json')),
         now,
         readHead,
+        issues,
     });
 }
