@@ -67,7 +67,7 @@ A public route in the Worker reading a build-time stamp, credential-free, phased
 **Phase 1 — Stamp the build.** `deploy.yml` resolves the three SHAs before `npm run build:posts` rather than after `wrangler deploy`, and passes them as environment variables. `build-posts.ts` (or a sibling generator) writes a generated, git-ignored `build-info.ts` alongside `posts-data.ts` carrying the three SHAs, the build timestamp, the trigger event, and the version read from `web/package.json`. `web/src/version.ts` is deleted in the same phase.
 *Check:* the stamped SHAs equal `git rev-parse HEAD` in each of the three checkouts in a real deployment run, and a local build with no CI environment still produces a valid stamp rather than failing or emitting placeholders. `npx tsc --noEmit` proves the deleted `version.ts` had no importers, as the repository-wide grep already indicates.
 
-**Phase 2 — Capture the inventory and the issues.** Record per-section published counts into the same generated module, and with them `validationProcessor.issues`, whose file paths must be relativised the way `reportValidationIssues` already relativises them — an absolute CI path both reads as noise and discloses the runner's layout on a public page. Drafts are counted by the build for its log and are not stamped.
+**Phase 2 — Capture the inventory and the issues.** Stamp `validationProcessor.issues`, whose file paths must be relativised — an absolute CI path both reads as noise and discloses the runner's layout on a public page. Counts are **derived from `posts-data.ts` at load time rather than stamped**; see the phase 2 note in `Implementation Notes` for why the plan changed. Drafts are counted by the build for its log and are not stamped.
 *Check:* the recorded counts equal an independent count over the content tree — 81 published on today's tree — and a file deliberately given a missing required field appears in the stamp with the same `field` and `rule` that `CR-013` reports for it, then disappears when the field is restored. No draft slug, title, or count appears anywhere in the generated module, verified by grepping it for the four current draft slugs.
 
 **Phase 3 — Render it.** A route, registered before `/:section` so it is reachable at all, reads the generated module and renders it. No new data source, no runtime fetch. It states in the page that it describes the Worker serving the request and not the state of any repository, so that identical-looking SHAs after a failed deploy read as the truth they are.
@@ -103,7 +103,7 @@ A public route in the Worker reading a build-time stamp, credential-free, phased
 
 ## Implementation Notes
 
-### Phase 1 — shipped in `0.11.0`, 2026-08-10
+### Phase 1 — 2026-08-10, shipped in `0.11.0`
 
 `build:posts` writes a git-ignored `web/src/utils/build-data.ts` beside `posts-data.ts`, in the same run and after the same success check, so the stamp's one claim — "this is the build that produced that content" — cannot come apart. `web/src/utils/build-info.ts` holds the `BuildInfo` shape, `web/scripts/utils/build-stamp.ts` resolves and renders it, and `deploy.yml` gained a `Resolve assembled revisions` step before the build.
 
@@ -115,7 +115,23 @@ Three things worth recording:
 - **An unresolvable commit is `null`, never a placeholder string.** The stamp's entire value is that it cannot be stale, so a plausible-looking wrong SHA is worse than an absent one. App CI stamps `story: null` legitimately, since it checks out no stories.
 - **`deploy.yml` now resolves the commits once and both consumers read the same values.** The summary table used to compute them independently after `wrangler deploy`. Nothing could realistically move between two steps of one run, but the duplication meant the table and the bundle were two claims rather than one, which is the exact failure mode this request exists to remove. The table keeps `if: always()` and falls back to `unresolved`, so a run that fails before the resolve step still renders a readable table.
 
-`AGENTS.md` was corrected in the same phase. Its release procedure said to bump the version in both `web/package.json` and `web/src/version.ts` — a two-file rule that is the direct cause of the drift this phase deleted. The version now lives in `package.json` alone and the stamp reads it at build time.
+### Phase 2 — 2026-08-10
+
+**The plan said to stamp per-section counts, and that was wrong.** `posts-data.ts` is in the same bundle, written by the same build, and already contains the items — so a stamped count would be a second copy of a number sitting beside the thing it counts, and two copies of one fact can disagree while one cannot. Counts are derived instead, by `deriveInventory` in `web/src/utils/content-inventory.ts`. Validation issues are the opposite case and *are* stamped: they do not survive into `posts-data.ts` at all, so the build is the only thing that ever knows them. The dividing line is not "content data versus build data" but whether the artifact already carries the fact.
+
+`deriveInventory` is a pure function over `SiteContent` rather than an index in `post-cache.ts`, because `tsconfig.test.json` runs before `build:posts` in CI and anything reaching the generated `posts-data.ts` from a test's import graph would break that ordering. It also totals by summing the section rows rather than reading `allItems.length`, so the console cannot print a total that contradicts the rows above it.
+
+**Drafts cannot leak, structurally rather than by filtering.** `DraftFilterProcessor` sets `context.skip`, which ends the pipeline *before* `ValidationProcessor` runs, and `ExcludeProcessor` — the only other candidate — merely strips marked body content and never skips an item. So no draft can produce a validation issue, and no draft enters `siteContent`. There is no filter to get wrong.
+
+**All three checks pass.**
+
+- Counts equal an independent count of the content tree: `posts` 8 (12 files − 4 drafts), `stories` 64, `technical-sessions` 9, total 81, 1 standalone page — identical to `deriveInventory` over the real built artifact.
+- A published post with its required `author` removed appears in the stamp as `field: "author"`, `rule: "required"`, with the same message `CR-013` prints on the pull request, and the entry disappears when the field is restored. Run against a throwaway copy of the content tree, so the content repository was never modified — confirmed clean afterwards.
+- Grepping the generated module for the four current draft slugs finds none, and the word "draft" appears in it zero times.
+
+The fixture run also proved the relativisation against a content root the code had never seen: the issue stamped as `posts/why-do-i-build.md`, with no trace of the scratchpad path it was actually built from.
+
+`AGENTS.md` was corrected in phase 1. Its release procedure said to bump the version in both `web/package.json` and `web/src/version.ts` — a two-file rule that is the direct cause of the drift this phase deleted. The version now lives in `package.json` alone and the stamp reads it at build time.
 
 - Decision that created this request: `CR-018`. Removal that cleared the way: `CR-029`. Feasibility record: `docs/wiki/projects/admin-dashboard.md`.
 - `CR-032` overlaps at one point: `/dashboard` currently renders the section not-found view because `/:section` swallows single-segment paths. A console route must be registered before `/:section`, as the old admin mount was.

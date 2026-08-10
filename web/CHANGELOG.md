@@ -4,6 +4,20 @@ All notable changes to the web app will be documented in this file.
 
 
 
+## 0.12.0 — 2026-08-10
+
+### Added
+
+- The build stamp now carries the validation issues found in the build that produced it (`CR-030` phase 2). They are non-fatal by design, so an issue not fixed before merge goes live — and until now it then had nowhere to be seen, because `CR-013` reports it on a pull request that scrolls away. File paths are stored relative to the content root, so the same file reads identically whether the deploy ran in Actions or on a laptop, and no CI runner layout reaches a public page.
+
+- `deriveInventory` in `web/src/utils/content-inventory.ts` counts published items per section from the built content. Measured against the real tree: 8 posts, 64 stories, 9 technical sessions, 81 total, 1 standalone page.
+
+### Changed
+
+- Counts are derived from `posts-data.ts` rather than stamped into `build-data.ts`, reversing the plan for this phase. Both files ship in the same bundle from the same build, so a stamped count would be a second copy of a number sitting beside the items it counts — and two copies can disagree where one cannot. Validation issues remain stamped for the opposite reason: they never reach `posts-data.ts`, so the build is the only thing that knows them.
+
+- Drafts cannot appear in either surface, structurally rather than by filtering: `DraftFilterProcessor` ends the pipeline before `ValidationProcessor` runs, so a draft can produce no issue, and it never enters `siteContent` to be counted.
+
 ## 0.11.0 — 2026-08-10
 
 ### Added

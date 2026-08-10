@@ -373,9 +373,13 @@ export const postsData: ContentItem[] = siteContent.allItems;
  * content". Two scripts, or one script that could write one file without the
  * other, would let the claim become false.
  */
-function generateBuildDataFile(contentDir: string, outputPath: string): BuildInfo {
+function generateBuildDataFile(
+    contentDir: string,
+    outputPath: string,
+    issues: readonly ValidationIssue[]
+): BuildInfo {
     const webDirectory = join(__dirname, '..');
-    const info = buildStampFor(webDirectory, contentDir, process.env);
+    const info = buildStampFor(webDirectory, contentDir, process.env, issues);
 
     writeFileSync(outputPath, renderBuildData(info), 'utf-8');
 
@@ -425,12 +429,16 @@ async function main(): Promise<void> {
     }
 
     generateContentDataFile(siteContent, outputPath);
-    const buildInfo = generateBuildDataFile(contentDir, buildDataPath);
+
+    // Collected before the stamp is written, because the stamp carries them:
+    // an issue is non-fatal by design, so it describes content that is live and
+    // incomplete, and until CR-030 it had nowhere to be seen once the pull
+    // request had scrolled away.
+    const issues = validationProcessor?.issues ?? [];
+    const buildInfo = generateBuildDataFile(contentDir, buildDataPath, issues);
 
     // Reported after the artifact is written, because a validation issue never
-    // blocks publication -- it describes content that is live and incomplete
-    // (CR-013).
-    const issues = validationProcessor?.issues ?? [];
+    // blocks publication (CR-013).
     reportValidationIssues(issues);
 
     console.log('');
