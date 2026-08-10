@@ -4,13 +4,20 @@
  *
  * Usage:
  *   npm run generate:images              # Generate missing images
- *   npm run generate:images -- --force   # Force regenerate all
  *   npm run generate:images -- --dry-run # Preview without generating
  *   npm run generate:images -- posts/my-article  # Generate specific item
  *   npm run generate:images -- --include-drafts  # Include draft: true posts
  *
  * Drafts are skipped by default (CR-035): a draft is excluded from the build
  * entirely, so an image generated for one cannot be rendered by anything.
+ *
+ * An item is "missing" an image when its frontmatter has no `image:`. That is
+ * the only skip condition, so to replace an image, delete the `image`,
+ * `imageMobile`, and `imageAlt` lines from the content file and run again. The
+ * old `--force` flag is gone with the cache it bypassed (CR-014): forcing
+ * regeneration over existing frontmatter would upload a new image that
+ * `insertImageFrontmatter` then declines to record, leaving the site on the old
+ * one — the exact failure CR-034 fixed.
  */
 
 import { readFileSync, writeFileSync, readdirSync, existsSync, statSync } from 'fs';
@@ -30,13 +37,11 @@ import { generateImageFromContent } from './utils/cloudflare-ai.js';
 import { uploadImage, getImageKey } from './utils/r2-storage.js';
 import { resizeToMultipleSizes } from './utils/image-resize.js';
 import {
-    loadManifest,
-    saveManifest,
-    getContentHash,
-    needsRegeneration,
-    updateManifest,
-    type ImageManifest,
-} from './utils/image-manifest.js';
+    readImageLog,
+    writeImageLog,
+    appendEntry,
+    type ImageLogEntry,
+} from './utils/image-log.js';
 
 // Capture CONTENT_DIR from the real environment BEFORE dotenv loads web/.env,
 // so an explicit CONTENT_DIR on the command line is not overridden by the one
@@ -51,7 +56,6 @@ const __dirname = dirname(__filename);
 
 // Parse arguments
 const args = process.argv.slice(2);
-const forceRegenerate = args.includes('--force');
 const dryRun = args.includes('--dry-run');
 const includeDrafts = args.includes('--include-drafts');
 const specificItems = args.filter(a => !a.startsWith('--'));
@@ -109,24 +113,18 @@ function discoverContent(contentDir: string): ContentFile[] {
 
 /**
  * Generate image for a single content item.
+ *
+ * Returns the log entry to record, or `null` if nothing was generated.
  */
 async function generateImageForContent(
-    manifest: ImageManifest,
     item: ContentFile,
     config: ReturnType<typeof getConfig>
-): Promise<boolean> {
-    const contentHash = getContentHash(item.body);
+): Promise<ImageLogEntry | null> {
     const itemKey = `${item.section}/${item.slug}`;
-
-    // Check if regeneration is needed
-    if (!forceRegenerate && !needsRegeneration(manifest, item.section, item.slug, contentHash)) {
-        console.log(`  ⏭️  ${itemKey} (cached)`);
-        return false;
-    }
 
     if (dryRun) {
         console.log(`  [DRY RUN] Would generate: ${itemKey}`);
-        return false;
+        return null;
     }
 
     try {
@@ -147,35 +145,49 @@ async function generateImageForContent(
             uploadImage(mobileKey, resized.mobile, 'image/webp'),
         ]);
 
-        // Update manifest
-        updateManifest(manifest, item.section, item.slug, {
-            contentHash,
+        const entry: ImageLogEntry = {
+            section: item.section,
+            slug: item.slug,
+            generatedAt: new Date().toISOString(),
             prompt,
             images: {
                 desktop: desktopUrl,
                 mobile: mobileUrl,
             },
-        });
-
-        // Persist into the content itself. The manifest is a cache; this is the
-        // record the deployed site actually reads (CR-034).
-        writeFileSync(
-            item.filePath,
-            insertImageFrontmatter(
-                readFileSync(item.filePath, 'utf-8'),
-                { desktop: desktopUrl, mobile: mobileUrl },
-                item.title
-            ),
-            'utf-8'
-        );
+        };
 
         console.log(`     ✅ Generated: ${desktopUrl}`);
-        console.log(`     ✍️  Wrote image frontmatter into ${item.section}/${item.slug}.md`);
-        return true;
+
+        // Persist into the content itself. This is the record the deployed site
+        // actually reads (CR-034); the log is only provenance.
+        //
+        // Caught separately so a write-back failure still returns the entry:
+        // the image has been paid for and uploaded by this point, and losing
+        // the record of that is worse than the missing frontmatter, which the
+        // message below tells the operator how to fix.
+        try {
+            writeFileSync(
+                item.filePath,
+                insertImageFrontmatter(
+                    readFileSync(item.filePath, 'utf-8'),
+                    { desktop: desktopUrl, mobile: mobileUrl },
+                    item.title
+                ),
+                'utf-8'
+            );
+            console.log(`     ✍️  Wrote image frontmatter into ${item.section}/${item.slug}.md`);
+        } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            console.error(`     ⚠️  Generated but could not write frontmatter: ${message}`);
+            console.error(`        The site will not show this image until ${item.section}/${item.slug}.md`);
+            console.error(`        carries image: ${desktopUrl}`);
+        }
+
+        return entry;
     } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         console.error(`     ❌ Failed: ${message}`);
-        return false;
+        return null;
     }
 }
 
@@ -193,7 +205,7 @@ async function main(): Promise<void> {
     });
     const contentDir = resolution.contentDir;
     console.log(`  Content: ${contentDir} — ${describeContentDirSource(resolution)}`);
-    console.log(`  Mode: ${dryRun ? 'dry run' : forceRegenerate ? 'force regenerate' : 'incremental'}`);
+    console.log(`  Mode: ${dryRun ? 'dry run' : 'generate missing'}`);
     console.log('');
 
     // Discover content
@@ -207,7 +219,9 @@ async function main(): Promise<void> {
         });
     }
 
-    // Skip items with custom images
+    // An item whose frontmatter already names an image is done — whether the
+    // author set it or an earlier run wrote it back. This is now the only skip,
+    // which is why the regeneration cache became unreachable (CR-014).
     items = items.filter(item => !item.hasCustomImage);
 
     // Drafts are not published, so nothing can render an image generated for
@@ -219,25 +233,27 @@ async function main(): Promise<void> {
     describeSkipped(skipped).forEach(line => console.log(line));
     console.log('');
 
-    // Load manifest
-    const manifest = loadManifest();
+    // Read the log up front so a malformed file stops the run before anything
+    // is spent, rather than after — writing is what would truncate it.
+    let log = readImageLog();
     let generated = 0;
 
-    // Process each item
+    // Written after each success rather than once at the end, so an interrupted
+    // run still records every image it actually paid for.
     for (const item of items) {
-        const didGenerate = await generateImageForContent(manifest, item, config);
-        if (didGenerate) generated++;
-    }
+        const entry = await generateImageForContent(item, config);
+        if (!entry) continue;
 
-    // Save manifest
-    if (generated > 0) {
-        saveManifest(manifest);
-        console.log('');
-        console.log(`  💾 Saved manifest`);
+        log = appendEntry(log, entry);
+        writeImageLog(log);
+        generated++;
     }
 
     console.log('');
     console.log(`✅ Done. Generated ${generated} image(s).`);
+    if (generated > 0) {
+        console.log(`   Recorded in web/scripts/image-log.json (${log.length} entries).`);
+    }
 }
 
 main().catch(err => {

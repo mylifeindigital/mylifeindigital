@@ -1,191 +1,212 @@
-{
-  "posts/analogue-to-digital-a-real-world-example": {
-    "contentHash": "c0b8044f4241e84b",
+[
+  {
+    "section": "posts",
+    "slug": "analogue-to-digital-a-real-world-example",
+    "generatedAt": "2026-01-31T07:47:04.432Z",
     "prompt": "Create an abstract image that embodies the transition from analogue to digital. Use a blend of warm and cool colors to represent nostalgia and innovation, incorporating swirling shapes to symbolize the flow of change. Incorporate textures that evoke both the tactile nature of VHS tapes and the smoothness of digital screens. The overall composition should convey a sense of evolution and transformation, merging the old and new in a harmonious visual experience that stirs emotions of reminiscence and progress.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/posts/analogue-to-digital-a-real-world-example-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/posts/analogue-to-digital-a-real-world-example-600.webp"
-    },
-    "generatedAt": "2026-01-31T07:47:04.432Z"
+    }
   },
-  "posts/building-intentionally-small": {
-    "contentHash": "8e6de35789491f70",
+  {
+    "section": "posts",
+    "slug": "building-intentionally-small",
+    "generatedAt": "2026-01-31T07:47:18.916Z",
     "prompt": "Create an abstract image that embodies the essence of curiosity and exploration through vibrant colors and dynamic shapes. Use swirling forms to represent the flow of ideas and knowledge, blending soft textures to convey the gentle nature of discovery. Incorporate contrasting elements to symbolize the tension between success and failure, emphasizing the importance of experience. The overall composition should evoke a sense of wonder and a journey of understanding, inviting the viewer to engage with the emotional undertones of growth and experimentation.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/posts/building-intentionally-small-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/posts/building-intentionally-small-600.webp"
-    },
-    "generatedAt": "2026-01-31T07:47:18.916Z"
+    }
   },
-  "posts/feeling-competent-vs-being-competent": {
-    "contentHash": "db4f6ecb9d4d437f",
+  {
+    "section": "posts",
+    "slug": "feeling-competent-vs-being-competent",
+    "generatedAt": "2026-01-31T07:47:33.923Z",
     "prompt": "Create an abstract image that embodies the themes of resilience, acceptance, and the fluidity of ideas. Use a blend of soft, muted colors that transition into vibrant hues, symbolizing the emotional journey from rejection to growth. Incorporate swirling shapes and flowing textures that suggest movement and transformation, evoking a sense of release and renewal. The overall composition should convey a harmonious balance between chaos and calm, reflecting the complexity of navigating failures and the strength found in letting go.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/posts/feeling-competent-vs-being-competent-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/posts/feeling-competent-vs-being-competent-600.webp"
-    },
-    "generatedAt": "2026-01-31T07:47:33.923Z"
+    }
   },
-  "posts/thinking-about-markdown": {
-    "contentHash": "f9018640028bb0d4",
+  {
+    "section": "posts",
+    "slug": "thinking-about-markdown",
+    "generatedAt": "2026-01-31T07:47:49.733Z",
     "prompt": "Create an abstract image that embodies the themes of experimentation, growth, and expressive creativity. Use swirling, dynamic shapes to represent the evolving nature of a project, blending colors that evoke a sense of innovation and consistency. Incorporate textures that suggest complexity and a hint of chaos, symbolizing the journey of building and learning over time. The overall composition should feel vibrant and fluid, capturing the essence of continuous development and the excitement of creating something unique.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/posts/thinking-about-markdown-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/posts/thinking-about-markdown-600.webp"
-    },
-    "generatedAt": "2026-01-31T07:47:49.733Z"
+    }
   },
-  "posts/why-i-dont-chase-titles-anymore": {
-    "contentHash": "29bc2c2be6037d34",
+  {
+    "section": "posts",
+    "slug": "why-i-dont-chase-titles-anymore",
+    "generatedAt": "2026-01-31T07:48:06.164Z",
     "prompt": "Create an abstract image that conveys the essence of deep exploration and connection. Use flowing shapes and intertwining lines to symbolize the process of understanding and threading ideas together. Incorporate a palette of warm and cool colors to evoke a sense of balance between passion and logic. Textures should reflect the intricacies of systems and tools, suggesting layers of knowledge and effort. Emphasize a harmonious composition that captures the satisfaction of slowly piecing together a coherent whole, resonating with the emotional tone of curiosity and care.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/posts/why-i-dont-chase-titles-anymore-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/posts/why-i-dont-chase-titles-anymore-600.webp"
-    },
-    "generatedAt": "2026-01-31T07:48:06.164Z"
+    }
   },
-  "technical-sessions/2025-11-w4-typescript": {
-    "contentHash": "79e1e84f638bd9a1",
+  {
+    "section": "technical-sessions",
+    "slug": "2025-11-w4-typescript",
+    "generatedAt": "2026-01-31T07:48:19.880Z",
     "prompt": "Create an abstract image that conveys the complexity and layered understanding of a technical learning journey. Use intertwining geometric shapes to represent the concepts of generics, utility types, and type safety. Incorporate a gradient of deep blues and vibrant oranges to evoke a sense of challenge and growth. Textures should convey a sense of structured chaos, reflecting the struggle and clarity that comes with mastering a new skill. Let the composition flow dynamically, suggesting movement and progress through the learning process.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/technical-sessions/2025-11-w4-typescript-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/technical-sessions/2025-11-w4-typescript-600.webp"
-    },
-    "generatedAt": "2026-01-31T07:48:19.880Z"
+    }
   },
-  "technical-sessions/2025-12-w4-cloudflare-workers": {
-    "contentHash": "ec6e760eea402831",
+  {
+    "section": "technical-sessions",
+    "slug": "2025-12-w4-cloudflare-workers",
+    "generatedAt": "2026-01-31T07:48:34.250Z",
     "prompt": "Generate an abstract image that embodies the concepts of innovation and learning in a digital realm. Use swirling shapes and dynamic textures to represent the flow of ideas and the complexity of technology. Employ a color palette of deep blues and vibrant greens to evoke a sense of exploration and growth, while incorporating sharp geometric patterns to symbolize the structured yet evolving nature of programming and development. Let the composition reflect a sense of movement and transformation, capturing the essence of understanding and discovery.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/technical-sessions/2025-12-w4-cloudflare-workers-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/technical-sessions/2025-12-w4-cloudflare-workers-600.webp"
-    },
-    "generatedAt": "2026-01-31T07:48:34.250Z"
+    }
   },
-  "technical-sessions/2025-12-w4-hono-agent-orchestrator": {
-    "contentHash": "0e2904c061485f88",
+  {
+    "section": "technical-sessions",
+    "slug": "2025-12-w4-hono-agent-orchestrator",
+    "generatedAt": "2026-01-31T07:48:49.163Z",
     "prompt": "Create an abstract image that reflects the complexity and dynamism of AI agent orchestration. Use flowing shapes and intricate patterns to represent the interconnectedness of components and processes. Incorporate a palette of deep blues and vibrant greens to evoke a sense of technology and innovation, while softer textures suggest a journey of learning and discovery. The composition should convey movement and rhythm, illustrating the asynchronous nature of agent execution and the evolving understanding of architecture.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/technical-sessions/2025-12-w4-hono-agent-orchestrator-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/technical-sessions/2025-12-w4-hono-agent-orchestrator-600.webp"
-    },
-    "generatedAt": "2026-01-31T07:48:49.163Z"
+    }
   },
-  "technical-sessions/2025-12-w4-web-code-deep-dive": {
-    "contentHash": "75d2405acf6e0394",
+  {
+    "section": "technical-sessions",
+    "slug": "2025-12-w4-web-code-deep-dive",
+    "generatedAt": "2026-01-31T07:49:04.363Z",
     "prompt": "Create an abstract image that represents the journey of understanding complex code. Use swirling shapes to symbolize the flow of ideas and insights, with bold contrasts in colors like deep blues and vibrant oranges to evoke a sense of focus and energy. Incorporate textured layers to represent the challenges faced, and softer gradients to illustrate the gradual clarity gained through exploration and learning. Aim for a harmonious balance between chaos and order, reflecting the coder's emotional experience.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/technical-sessions/2025-12-w4-web-code-deep-dive-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/technical-sessions/2025-12-w4-web-code-deep-dive-600.webp"
-    },
-    "generatedAt": "2026-01-31T07:49:04.363Z"
+    }
   },
-  "technical-sessions/2026-01-w1-markdown-parsing": {
-    "contentHash": "68a17114b3d357f9",
+  {
+    "section": "technical-sessions",
+    "slug": "2026-01-w1-markdown-parsing",
+    "generatedAt": "2026-01-31T07:49:18.760Z",
     "prompt": "Create an abstract image that conveys the complexity and structure of an Abstract Syntax Tree (AST) in the context of Markdown parsing. Use intertwined shapes and layers to symbolize the parsing process, incorporating vibrant colors that evoke a sense of discovery and learning. Incorporate textures that suggest depth and intricacy, reflecting both challenge and clarity. The overall composition should feel dynamic and progressive, embodying the journey of understanding and building knowledge.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/technical-sessions/2026-01-w1-markdown-parsing-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/technical-sessions/2026-01-w1-markdown-parsing-600.webp"
-    },
-    "generatedAt": "2026-01-31T07:49:18.760Z"
+    }
   },
-  "technical-sessions/2026-01-w1-typescript-general": {
-    "contentHash": "30b33d37e673cc7a",
+  {
+    "section": "technical-sessions",
+    "slug": "2026-01-w1-typescript-general",
+    "generatedAt": "2026-01-31T07:49:33.781Z",
     "prompt": "Create an abstract image that conveys a sense of growth and complexity, using swirling shapes and overlapping layers to represent the intricacies of code and the concept of closure. Incorporate a palette of warm and cool colors to evoke a balance between clarity and confusion, with textured patterns suggesting depth and evolving understanding. The composition should reflect a dynamic interplay between order and chaos, illustrating the journey of learning and revisiting fundamental concepts.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/technical-sessions/2026-01-w1-typescript-general-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/technical-sessions/2026-01-w1-typescript-general-600.webp"
-    },
-    "generatedAt": "2026-01-31T07:49:33.781Z"
+    }
   },
-  "technical-sessions/2026-01-w1-typescript": {
-    "contentHash": "7323d6f54241d6b6",
+  {
+    "section": "technical-sessions",
+    "slug": "2026-01-w1-typescript",
+    "generatedAt": "2026-01-31T07:49:47.873Z",
     "prompt": "Generate an abstract image that embodies the themes of growth, learning, and discovery in the context of programming. Use swirling shapes and dynamic lines to represent the flow of ideas and concepts, interspersed with vibrant colors like deep blues and bright yellows to evoke curiosity and enlightenment. Incorporate textures that suggest complexity and depth, symbolizing the intricacies of function memoization and coding challenges. Aim for a harmonious yet chaotic composition that reflects both the clarity and confusion of the learning process.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/technical-sessions/2026-01-w1-typescript-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/technical-sessions/2026-01-w1-typescript-600.webp"
-    },
-    "generatedAt": "2026-01-31T07:49:47.873Z"
+    }
   },
-  "technical-sessions/2026-01-w2-markdown-metadata-parsing": {
-    "contentHash": "da1888eabcc4556b",
+  {
+    "section": "technical-sessions",
+    "slug": "2026-01-w2-markdown-metadata-parsing",
+    "generatedAt": "2026-01-31T07:50:03.952Z",
     "prompt": "Create an abstract image that embodies the themes of exploration, complexity, and clarity in the realm of digital processing. Use a blend of deep blues and vibrant greens to represent the technological aspect, combined with soft, swirling textures to evoke a sense of confusion and challenge. Incorporate geometric shapes to symbolize structure and organization, while allowing lighter, flowing elements to suggest the journey of learning and discovery. The overall composition should balance chaos with order, reflecting the duality of processing information and the pursuit of understanding.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/technical-sessions/2026-01-w2-markdown-metadata-parsing-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/technical-sessions/2026-01-w2-markdown-metadata-parsing-600.webp"
-    },
-    "generatedAt": "2026-01-31T07:50:03.952Z"
+    }
   },
-  "technical-sessions/2026-01-w4-nodejs-orchestrator-pattern": {
-    "contentHash": "17b6ac0fda3082fe",
+  {
+    "section": "technical-sessions",
+    "slug": "2026-01-w4-nodejs-orchestrator-pattern",
+    "generatedAt": "2026-01-31T07:50:18.276Z",
     "prompt": "Create an abstract image that embodies the theme of modularity and fluidity in a content-processing system. Use a blend of soft curves and sharp angles to represent the independence of processors, while incorporating layers and overlapping shapes to signify the orchestration of multiple processes. Utilize a palette of cool blues and vibrant greens, accented with warm yellows and oranges, to evoke a sense of evolution and adaptability. Incorporate textures that suggest movement and transformation, creating a dynamic composition that reflects the journey of building a flexible system.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/technical-sessions/2026-01-w4-nodejs-orchestrator-pattern-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/technical-sessions/2026-01-w4-nodejs-orchestrator-pattern-600.webp"
-    },
-    "generatedAt": "2026-01-31T07:50:18.276Z"
+    }
   },
-  "posts/when-is-a-desktop-app-a-good-idea": {
-    "contentHash": "4211b7585adc1efc",
+  {
+    "section": "posts",
+    "slug": "when-is-a-desktop-app-a-good-idea",
+    "generatedAt": "2026-05-06T10:08:35.163Z",
     "prompt": "Create an abstract image that embodies the fluidity and interconnected nature of a digital workflow. Utilize swirling shapes and layered textures to represent the seamless transition between writing, coding, and rendering. Incorporate a palette of cool blues and vibrant greens, reflecting creativity and technology. Include subtle hints of geometric patterns to symbolize structure amidst the chaos of ideas, conveying a sense of harmony in a lightweight, efficient system. The overall mood should evoke inspiration and innovation without depicting concrete elements.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/posts/when-is-a-desktop-app-a-good-idea-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/posts/when-is-a-desktop-app-a-good-idea-600.webp"
-    },
-    "generatedAt": "2026-05-06T10:08:35.163Z"
+    }
   },
-  "posts/how-i-would-enhance-my-content-creation-experience": {
-    "contentHash": "fcaaef482e887b16",
+  {
+    "section": "posts",
+    "slug": "how-i-would-enhance-my-content-creation-experience",
+    "generatedAt": "2026-08-10T16:15:46.586Z",
     "prompt": "Create an abstract composition that embodies the intricate relationship between technology and creativity in content creation. Use a blend of soft and sharp geometric shapes to represent the structure and fluidity of Markdown and Git. Incorporate a palette of cool blues, vibrant greens, and subtle grays, symbolizing confidence and innovation. Layer textures to evoke the complexity of metadata and the dynamic nature of the publishing process. The overall feel should reflect an organized yet creative workspace, conveying a sense of exploration and the evolution of ideas.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/posts/how-i-would-enhance-my-content-creation-experience-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/posts/how-i-would-enhance-my-content-creation-experience-600.webp"
-    },
-    "generatedAt": "2026-08-10T16:15:46.586Z"
+    }
   },
-  "posts/my-journal-journey": {
-    "contentHash": "f1946dc543de5ffd",
+  {
+    "section": "posts",
+    "slug": "my-journal-journey",
+    "generatedAt": "2026-08-10T16:16:01.189Z",
     "prompt": "Create an abstract composition that conveys the journey of self-discovery and reflection. Use swirling shapes to represent the flow of thoughts and emotions. Incorporate a palette of deep blues and warm golds to evoke introspection and hope. Blend textured layers to suggest depth and complexity, while smooth gradients symbolize the transition from chaos to clarity. The overall feel should be introspective and serene, capturing the essence of a personal journal journey without depicting literal objects.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/posts/my-journal-journey-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/posts/my-journal-journey-600.webp"
-    },
-    "generatedAt": "2026-08-10T16:16:01.189Z"
+    }
   },
-  "posts/my-wandering-mind": {
-    "contentHash": "03c26574146d7fa0",
+  {
+    "section": "posts",
+    "slug": "my-wandering-mind",
+    "generatedAt": "2026-08-10T16:16:14.535Z",
     "prompt": "Create an abstract image that embodies the essence of a wandering mind. Use swirling, fluid shapes to represent thoughts in motion, with vibrant colors transitioning from calm blues and greens to energetic yellows and reds. Incorporate textures that evoke a sense of depth and complexity, suggesting layers of contemplation and imagination. Let the composition flow freely, capturing the whimsical and unpredictable nature of a wandering mind, inviting viewers to explore the intricate patterns of thought without any concrete representation.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/posts/my-wandering-mind-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/posts/my-wandering-mind-600.webp"
-    },
-    "generatedAt": "2026-08-10T16:16:14.535Z"
+    }
   },
-  "posts/the-story-crafter-idea": {
-    "contentHash": "a0139ffcbdf78f3d",
+  {
+    "section": "posts",
+    "slug": "the-story-crafter-idea",
+    "generatedAt": "2026-08-10T16:16:27.642Z",
     "prompt": "Create an abstract artistic image that embodies the warmth and nostalgia of bedtime storytelling. Use soft, flowing shapes and gentle textures to evoke a sense of calm and imagination. Incorporate a soothing color palette with deep blues, warm golds, and soft whites to represent the night sky and a comforting atmosphere. Capture the essence of a child's dreamlike world, where stories come alive in the mind, blending light and shadow to symbolize the balance between reality and imagination.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/posts/the-story-crafter-idea-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/posts/the-story-crafter-idea-600.webp"
-    },
-    "generatedAt": "2026-08-10T16:16:27.642Z"
+    }
   },
-  "posts/why-do-i-build": {
-    "contentHash": "4b5ba64fbee86ceb",
+  {
+    "section": "posts",
+    "slug": "why-do-i-build",
+    "generatedAt": "2026-08-10T16:16:41.008Z",
     "prompt": "Create an abstract image that embodies the journey of incremental growth and purpose. Use flowing shapes that intertwine and build upon each other, symbolizing the progression from idea to completion. Incorporate a harmonious blend of warm and cool colors to evoke a sense of motivation and reflection. Include textures that suggest layers and complexity, representing the multifaceted nature of building and development. Aim for a composition that inspires a feeling of steady advancement and the satisfaction of achieving small milestones over time.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/posts/why-do-i-build-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/posts/why-do-i-build-600.webp"
-    },
-    "generatedAt": "2026-08-10T16:16:41.008Z"
+    }
   },
-  "posts/why-my-life-in-digital-is-becoming-a-product-lab": {
-    "contentHash": "79a168da7e928cfa",
+  {
+    "section": "posts",
+    "slug": "why-my-life-in-digital-is-becoming-a-product-lab",
+    "generatedAt": "2026-08-10T16:16:54.568Z",
     "prompt": "Create an abstract image that represents the journey of exploration and reflection in a digital landscape. Use flowing shapes and dynamic textures to convey movement and evolution, incorporating a palette of deep blues, vibrant oranges, and soft greens to evoke a sense of introspection and innovation. Incorporate layers and gradients to symbolize complexity and the interplay of ideas, suggesting a path that meanders yet seeks clarity. The overall composition should feel both chaotic and harmonious, capturing the essence of creativity and the continuous quest for purpose.",
     "images": {
       "desktop": "https://images.mylifeindigital.co.za/posts/why-my-life-in-digital-is-becoming-a-product-lab-1200.webp",
       "mobile": "https://images.mylifeindigital.co.za/posts/why-my-life-in-digital-is-becoming-a-product-lab-600.webp"
-    },
-    "generatedAt": "2026-08-10T16:16:54.568Z"
+    }
   }
-}
+]
