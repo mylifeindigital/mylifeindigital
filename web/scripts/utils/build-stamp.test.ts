@@ -13,12 +13,15 @@ import { describe, it } from 'node:test';
 
 import {
     createBuildInfo,
+    relativeContentPath,
     renderBuildData,
     resolveRevision,
     resolveStoryRoot,
     readPackageVersion,
+    stampIssues,
     type HeadReader,
 } from './build-stamp.js';
+import type { ValidationIssue } from '../processors/index.js';
 
 const NEVER_ASKED: HeadReader = () => {
     throw new Error('git should not have been consulted');
@@ -77,6 +80,7 @@ describe('createBuildInfo', () => {
         contentDir: '/projects/mylifeindigital.content/content',
         version: '0.10.0',
         now: new Date('2026-08-10T18:00:00.000Z'),
+        issues: [],
     };
 
     it('stamps the three commits the workflow resolved', () => {
@@ -96,6 +100,7 @@ describe('createBuildInfo', () => {
             version: '0.10.0',
             trigger: 'repository_dispatch',
             revisions: { app: 'aaa', content: 'bbb', story: 'ccc' },
+            issues: [],
         });
     });
 
@@ -136,6 +141,70 @@ describe('createBuildInfo', () => {
     });
 });
 
+describe('stampIssues', () => {
+    const CONTENT_DIR = '/home/runner/work/mylifeindigital/mylifeindigital/content-repo/content';
+
+    const issue = (filePath: string): ValidationIssue => ({
+        container: 'posts',
+        filePath,
+        field: 'summary',
+        rule: 'required',
+        message: 'is required by the "posts" schema',
+    });
+
+    it('strips the runner layout off the path', () => {
+        // The stamp is rendered on a public page. An absolute CI path is noise
+        // to a reader and a disclosure of the runner's directory structure.
+        const [stamped] = stampIssues([issue(`${CONTENT_DIR}/posts/a-post.md`)], CONTENT_DIR);
+
+        assert.equal(stamped.file, 'posts/a-post.md');
+    });
+
+    it('gives the same path locally as in CI', () => {
+        // Same file, two machines, one string — otherwise the console's output
+        // would depend on where the deploy happened to run.
+        const local = '/Users/someone/projects/mylifeindigital.content/content';
+        const [fromLocal] = stampIssues([issue(`${local}/posts/a-post.md`)], local);
+        const [fromCi] = stampIssues([issue(`${CONTENT_DIR}/posts/a-post.md`)], CONTENT_DIR);
+
+        assert.equal(fromLocal.file, fromCi.file);
+    });
+
+    it('publishes a basename rather than a ../ chain for a path outside the content root', () => {
+        // Should not arise. If it does, the fallback must not disclose by
+        // another route what the relative path was there to hide.
+        const [stamped] = stampIssues([issue('/etc/somewhere/else.md')], CONTENT_DIR);
+
+        assert.equal(stamped.file, 'else.md');
+    });
+
+    it('carries the same field and rule CR-013 reports', () => {
+        const [stamped] = stampIssues([issue(`${CONTENT_DIR}/posts/a-post.md`)], CONTENT_DIR);
+
+        assert.deepEqual(stamped, {
+            file: 'posts/a-post.md',
+            section: 'posts',
+            field: 'summary',
+            rule: 'required',
+            message: 'is required by the "posts" schema',
+        });
+    });
+
+    it('is empty when the build found nothing', () => {
+        assert.deepEqual(stampIssues([], CONTENT_DIR), []);
+    });
+});
+
+describe('relativeContentPath', () => {
+    it('leaves an already-relative path alone', () => {
+        assert.equal(relativeContentPath('/content/posts/a.md', '/content'), 'posts/a.md');
+    });
+
+    it('falls back to the basename when the file is the content directory itself', () => {
+        assert.equal(relativeContentPath('/content', '/content'), 'content');
+    });
+});
+
 describe('readPackageVersion', () => {
     it('falls back rather than throwing when there is no package.json', () => {
         assert.equal(readPackageVersion('/nowhere/package.json'), '0.0.0');
@@ -148,6 +217,7 @@ describe('renderBuildData', () => {
         version: '0.10.0',
         trigger: 'push',
         revisions: { app: 'aaa', content: 'bbb', story: null },
+        issues: [],
     };
 
     it('imports its type from the hand-written module', () => {

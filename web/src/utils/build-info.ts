@@ -16,6 +16,27 @@
  * from a deploy that never happened. Run history is GitHub's job; this is the
  * bundle's.
  */
+/**
+ * A rule a published file did not satisfy, as found by the build that produced
+ * this bundle (`ValidationProcessor`, CR-013).
+ *
+ * These are carried in the stamp rather than derived at runtime because they do
+ * not survive into `posts-data.ts` — they are a fact about the build, and the
+ * build is the only thing that ever knows them. They describe **published**
+ * content by construction: `DraftFilterProcessor` skips a draft before
+ * `ValidationProcessor` runs, so a draft cannot appear here and no unpublished
+ * work reaches the page (CR-030).
+ */
+export interface BuildValidationIssue {
+    /** Path relative to the content directory, e.g. `posts/my-post.md`. */
+    file: string;
+    /** The section whose schema declared the rule. */
+    section: string;
+    field: string;
+    rule: string;
+    message: string;
+}
+
 export interface BuildInfo {
     /** When the build that produced this bundle ran, ISO 8601. */
     builtAt: string;
@@ -42,4 +63,15 @@ export interface BuildInfo {
         content: string | null;
         story: string | null;
     };
+
+    /**
+     * Rules published content did not satisfy in this build.
+     *
+     * Empty is the normal state and means the build found nothing, not that
+     * nothing was checked. These are non-fatal by deliberate design, so an
+     * issue not fixed before merge goes live — and until this stamp existed, it
+     * then had nowhere to be seen (CR-013 reports them on the pull request,
+     * which scrolls away).
+     */
+    issues: BuildValidationIssue[];
 }
