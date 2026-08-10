@@ -3,6 +3,17 @@
 All notable changes to the web app will be documented in this file.
 
 
+
+## 0.9.0 — 2026-08-10
+
+### Fixed
+
+- `generate:images` skips `draft: true` posts (`CR-035`). It read `data.image` when deciding what to skip and never `data.draft`, so its first working run generated and uploaded images for four unpublished posts — content `DraftFilterProcessor` excludes from the build entirely, meaning nothing could render them. Drafts are now held back by default and released with `--include-drafts`.
+
+  Naming an item on the command line is deliberately *not* treated as consent: item selection is a substring match, so `posts/my` selects both `my-journal-journey` and `my-wandering-mind`, and a caller reaching for one draft could pull in others without noticing.
+
+  The skip is announced rather than silent, naming each draft held back and the flag that releases it — a silent skip would trade one confusion for another, leaving an author waiting for an image no run will produce.
+
 ## 0.8.0 — 2026-08-10
 
 ### Removed

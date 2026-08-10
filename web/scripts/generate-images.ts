@@ -7,6 +7,10 @@
  *   npm run generate:images -- --force   # Force regenerate all
  *   npm run generate:images -- --dry-run # Preview without generating
  *   npm run generate:images -- posts/my-article  # Generate specific item
+ *   npm run generate:images -- --include-drafts  # Include draft: true posts
+ *
+ * Drafts are skipped by default (CR-035): a draft is excluded from the build
+ * entirely, so an image generated for one cannot be rendered by anything.
  */
 
 import { readFileSync, writeFileSync, readdirSync, existsSync, statSync } from 'fs';
@@ -19,6 +23,7 @@ import {
     describeContentDirSource,
 } from '../../scripts/content/content-dir.js';
 import { insertImageFrontmatter } from './utils/image-frontmatter.js';
+import { partitionDrafts, describeSkipped } from './utils/draft-selection.js';
 
 import { validateConfig, getConfig } from './config/image-gen.js';
 import { generateImageFromContent } from './utils/cloudflare-ai.js';
@@ -48,6 +53,7 @@ const __dirname = dirname(__filename);
 const args = process.argv.slice(2);
 const forceRegenerate = args.includes('--force');
 const dryRun = args.includes('--dry-run');
+const includeDrafts = args.includes('--include-drafts');
 const specificItems = args.filter(a => !a.startsWith('--'));
 
 interface ContentFile {
@@ -57,6 +63,7 @@ interface ContentFile {
     body: string;
     title: string;
     hasCustomImage: boolean;
+    isDraft: boolean;
 }
 
 /**
@@ -92,6 +99,7 @@ function discoverContent(contentDir: string): ContentFile[] {
                 body,
                 title: data.title || slug,
                 hasCustomImage: !!data.image,
+                isDraft: data.draft === true,
             });
         }
     }
@@ -202,7 +210,13 @@ async function main(): Promise<void> {
     // Skip items with custom images
     items = items.filter(item => !item.hasCustomImage);
 
+    // Drafts are not published, so nothing can render an image generated for
+    // one (CR-035). Held back unless explicitly released.
+    const { selected, skipped } = partitionDrafts(items, includeDrafts);
+    items = selected;
+
     console.log(`  Found ${items.length} content item(s)`);
+    describeSkipped(skipped).forEach(line => console.log(line));
     console.log('');
 
     // Load manifest

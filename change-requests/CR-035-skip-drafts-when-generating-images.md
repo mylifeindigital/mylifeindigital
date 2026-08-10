@@ -1,10 +1,11 @@
 # CR-035: Skip Drafts When Generating Images
 
-Status: Proposed  
+Status: Done  
 Priority: Medium  
 Area: Content Pipeline  
 Created: 2026-08-10  
-Reviewed: 2026-08-10
+Reviewed: 2026-08-10  
+Completed: 2026-08-10
 
 ## Context
 
@@ -31,9 +32,9 @@ Generating images does not spend money on content that cannot be published, with
 
 ## Open Questions
 
-- [ ] Is skipping drafts the default with an opt-in flag, or is a draft skipped only when not named explicitly on the command line? The second is subtler and may be the better fit, since `generate:images -- posts/my-draft` is already an explicit act.
-- [ ] Does an explicitly named draft still generate, or does it require the flag as well?
-- [ ] Should the run report what it skipped and why? A silent skip risks the opposite confusion — an author waiting for an image that no run will ever produce.
+- [x] Is skipping drafts the default with an opt-in flag, or is a draft skipped only when not named explicitly? **Default skip, `--include-drafts` to release.** Settled by a fact rather than a preference; see `Decisions`.
+- [x] Does an explicitly named draft still generate, or does it require the flag as well? **It requires the flag**, for the same reason.
+- [x] Should the run report what it skipped and why? **Yes**, naming each draft and how to release it.
 
 Implementation does not start while any box here is unchecked.
 
@@ -45,10 +46,10 @@ The check belongs in the generator, not in a shared helper: `DraftFilterProcesso
 
 ## Acceptance Criteria
 
-- [ ] A `draft: true` item is not generated for by default, and the run says so.
-- [ ] A deliberate run against a named draft is still possible.
-- [ ] The behaviour is covered by a test, alongside the existing `web/scripts/utils` tests added by `CR-034`.
-- [ ] `AGENTS.md` records that images are generated at publication time, not draft time.
+- [x] A `draft: true` item is not generated for by default, and the run says so.
+- [x] A deliberate run against a named draft is still possible.
+- [x] The behaviour is covered by a test, alongside the existing `web/scripts/utils` tests added by `CR-034`.
+- [x] `AGENTS.md` records that images are generated at publication time, not draft time.
 
 ## Implementation Notes
 
@@ -58,4 +59,20 @@ Related: `CR-013` (drafts are never held to publication rules), `CR-014` (orphan
 
 ## Outcome
 
-Pending implementation.
+`generate:images` skips `draft: true` items by default and names what it held back.
+
+Verified against a fixture carrying one published post and one draft:
+
+```
+  Found 1 content item(s)
+  ⏭️  Skipped 1 draft(s) — a draft is not published, so nothing would render its image:
+       posts/unfinished-post
+     Pass --include-drafts to generate for them anyway.
+  [DRY RUN] Would generate: posts/published-post
+```
+
+With `--include-drafts`, both are selected.
+
+A fixture was needed because the real content tree can no longer demonstrate it: every post now carries `image:` frontmatter, so the existing `hasCustomImage` filter empties the list before the draft partition is reached. That is the correct order — an authored image always wins — but it means the regression this request fixes is no longer reachable through real content, which is exactly why it is pinned by tests.
+
+Eleven new tests in `web/scripts/utils/draft-selection.test.ts`, bringing the scripts suite to 26 and the total to 89. Four typecheck programs clean.

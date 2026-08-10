@@ -53,12 +53,25 @@ npm run test:web              # web app only
 cd web && npm run test:watch  # re-run web tests on change
 npm run typecheck             # all three TypeScript programs
 npm run typecheck:scripts
+npm run typecheck:web-scripts
 npm run typecheck:web
 npm run typecheck:tests
 
 # Image generation
-cd web && npm run generate:images
+cd web && npm run generate:images -- posts/
 ```
+
+Image generation happens **at publication time, not draft time**. A `draft: true`
+post is excluded from the build entirely, so an image generated for one cannot be
+rendered by anything; `generate:images` skips drafts and says so, and
+`--include-drafts` releases them (CR-035). Always scope a run — `posts/` rather
+than a bare invocation — because the script walks every directory under
+`CONTENT_DIR`, and a local `content/stories/` holds 64 synced episodes that are
+deliberately imageless.
+
+Generated URLs are written into the content's own frontmatter and committed in
+`mylifeindigital.content` (CR-034). The manifest at `web/scripts/image-manifest.json`
+is only a regeneration cache; the site reads the frontmatter.
 
 Production is deployed only by `.github/workflows/deploy.yml` (CR-019), which assembles all three repositories; `.github/DEPLOYMENT.md` is the runbook for deploying, redeploying, rolling back, and diagnosing failures. There is no local deploy command — the `deploy` scripts were removed in CR-025 so the single deployment path is structural rather than a convention. Do not add one back, and do not run `wrangler deploy` by hand; use the workflow's manual dispatch with explicit refs instead.
 
