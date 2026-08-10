@@ -4,6 +4,7 @@ import { indexRoute } from './routes/index.js';
 import { aboutRoute } from './routes/about.js';
 import { sectionRoute } from './routes/[section]/index.js';
 import { contentItemRoute } from './routes/[section]/[slug].js';
+import { statusRoute } from './routes/status.js';
 import { type Env, getConfig } from './config.js';
 
 // Create app with environment bindings type
@@ -22,6 +23,14 @@ app.get('/', (c) => {
 app.get('/about', (c) => {
     const config = getConfig(c.env);
     return c.render(aboutRoute(config));
+});
+
+// The operations console. Registered before /:section for the same reason the
+// admin dashboard was: a single-segment path is swallowed by the section route
+// otherwise, and /status would render the section not-found view (CR-030).
+app.get('/status', (c) => {
+    const config = getConfig(c.env);
+    return c.render(statusRoute(config));
 });
 
 // Section listing route (e.g., /posts, /technical-sessions)

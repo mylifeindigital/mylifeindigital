@@ -1,10 +1,11 @@
 # CR-030: Build the Deployment and Content-Health Console
 
-Status: In Progress  
+Status: Done  
 Priority: Medium  
 Area: Web Admin  
 Created: 2026-08-09  
-Reviewed: 2026-08-10
+Reviewed: 2026-08-10  
+Completed: 2026-08-10
 
 ## Context
 
@@ -89,17 +90,17 @@ A public route in the Worker reading a build-time stamp, credential-free, phased
 
 ## Acceptance Criteria
 
-- [ ] The console reports the application, content, and story commits compiled into the Worker that is serving the request.
-- [ ] It reports when that Worker was built, and the version it was built from.
-- [ ] It reports per-section published counts and the validation issues found in the build that produced it.
-- [ ] It is publicly reachable and contains no draft slug, title, or count.
-- [ ] `wrangler.toml`'s "this Worker has no secrets" statement is still true, unamended.
-- [ ] The information cannot be stale relative to the Worker serving it, and the page says so — a failed deploy leaves the console correct and unchanged, which must not read as the console being broken.
+- [x] The console reports the application, content, and story commits compiled into the Worker that is serving the request.
+- [x] It reports when that Worker was built, and the version it was built from.
+- [x] It reports per-section published counts and the validation issues found in the build that produced it.
+- [x] It is publicly reachable and contains no draft slug, title, or count.
+- [x] `wrangler.toml`'s "this Worker has no secrets" statement is still true, unamended.
+- [x] The information cannot be stale relative to the Worker serving it, and the page says so — a failed deploy leaves the console correct and unchanged, which must not read as the console being broken.
 - [x] `web/src/version.ts` is deleted and the reported version comes from `web/package.json` at build time.
-- [ ] The public site is unchanged, verified by rendering the public routes before and after and comparing.
-- [ ] `npm test` and all three type-check programs pass, and the Worker bundles.
-- [ ] `.github/DEPLOYMENT.md` records the console alongside the workflow summary table it currently calls "the source of truth for what is live", and states which answers which question.
-- [ ] Added capability is recorded in `web/CHANGELOG.md`.
+- [x] The public site is unchanged, verified by rendering the public routes before and after and comparing.
+- [x] `npm test` and all four type-check programs pass, and the Worker bundles.
+- [x] `.github/DEPLOYMENT.md` records the console alongside the workflow summary table it currently calls "the source of truth for what is live", and states which answers which question.
+- [x] Added capability is recorded in `web/CHANGELOG.md`.
 
 ## Implementation Notes
 
@@ -133,6 +134,36 @@ The fixture run also proved the relativisation against a content root the code h
 
 `AGENTS.md` was corrected in phase 1. Its release procedure said to bump the version in both `web/package.json` and `web/src/version.ts` — a two-file rule that is the direct cause of the drift this phase deleted. The version now lives in `package.json` alone and the stamp reads it at build time.
 
+### Phase 3 — 2026-08-10
+
+`/status` renders the stamp and the inventory through `StatusConsole`, registered before
+`/:section` because a single-segment path is otherwise swallowed by the section route.
+
+**The presentation is split from the route, and CI ordering is why.** `routes/status.tsx`
+imports the generated `build-data.ts`, and `tsconfig.test.json` runs before `build:posts`,
+so a test reaching that import would break the ordering `CR-023` established. `StatusConsole`
+takes `BuildInfo` and `ContentInventory` as props and imports only types, so the parts worth
+pinning are tested with fixtures: a null commit renders `unknown` rather than an empty cell,
+an empty issue list reads as a finding rather than as a section that failed to render, and
+the page states what it describes.
+
+**Check passed: the public site is unchanged.** All 14 public routes — home, about, three
+section listings, six content pages across all three sections, and the three not-found paths —
+render byte-for-byte identically before and after, with the hero slider's `Date.now()` element
+id normalised as in `CR-029`. That covers the one risk in this phase: `Layout` gained an
+optional `noindex` prop, and every page that does not pass it is provably untouched.
+
+Two things done in passing:
+
+- **`web/public/styles/admin.css` is deleted.** 718 lines referenced by nothing since `CR-029`
+  removed the HTML that loaded it. Found while looking for a table style to reuse.
+- **The console is `noindex`.** It is public because nothing on it needs protecting, which is
+  not the same as it being worth indexing — build commits in search results serve no reader,
+  and `CR-032` exists because the site already indexes things it should not.
+
+Verified against the real tree: the rendered page contains none of the four draft slugs, and
+the only numbers on it are the published counts (8, 64, 9, 1 standalone, 81 total).
+
 - Decision that created this request: `CR-018`. Removal that cleared the way: `CR-029`. Feasibility record: `docs/wiki/projects/admin-dashboard.md`.
 - `CR-032` overlaps at one point: `/dashboard` currently renders the section not-found view because `/:section` swallows single-segment paths. A console route must be registered before `/:section`, as the old admin mount was.
 - `CR-031` overlaps at another: a console page that reports what is live must not be edge-cached beyond the life of the deployment that produced it.
@@ -140,4 +171,16 @@ The fixture run also proved the relativisation against a content root the code h
 
 ## Outcome
 
-Pending implementation.
+**The site answers what is live, at [/status](https://mylifeindigital.co.za/status), and the Worker still holds no credentials.** Shipped across three phases — `0.11.0` (the stamp), `0.12.0` (issues and inventory), `0.13.0` (the console).
+
+The question it settles is narrower than `CR-018` imagined and sharper than it looked. The site compiles its content into the Worker, so "what does production contain" is answerable from no repository: `main` describes the deployment that has not happened yet, and `posts-data.ts` is git-ignored and rebuilt per deploy, so the artifact that defines the site exists in no checkout at all. The only thing that knows is the running Worker, and now it says so.
+
+What the request did **not** build is as much of the outcome as what it did. Two of `CR-018`'s four reports had been overtaken before implementation started — `CR-028` made unprocessable files fatal, `CR-013` put validation issues on the pull request — and a third, the last deployment's outcome, was scoped out because a build-time stamp structurally cannot carry it. What remained was one honest question and a small surface answering it, rather than the operations dashboard the name suggests.
+
+Three findings worth keeping:
+
+- **The mirror image of `CR-018`.** That request rejected the browser for authoring because a checkout beats it. The same comparison reversed here: a checkout is *worse* for describing production, because it is not production. The two decisions look contradictory and rest on one consistent principle.
+- **Stamp what the artifact does not already carry.** The phase plan called for stamping per-section counts; `posts-data.ts` ships in the same bundle and already holds the items, so counts are derived and only validation issues are stamped. The dividing line is not "content data versus build data".
+- **A two-file version rule is a rule that gets half-followed.** `web/src/version.ts` sat unread at `0.5.1` against a `0.10.0` package because `AGENTS.md` told every release to bump both. The file is gone, the instruction names one file, and the stamp reads it at build time.
+
+The one ambiguity accepted deliberately: after a failed deploy the console keeps showing the previous commits, which is the truth about production and looks identical to a stale page. The page says what it describes, and `.github/DEPLOYMENT.md` records which surface answers "what is live" and which answers "what happened".

@@ -43,7 +43,7 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-027 | Schema-driven listing components | Proposed | Medium | Web Content | 2026-08-09 | Pending detail |
 | CR-028 | Fail the build on malformed frontmatter | Done | High | Content Pipeline | 2026-08-09 | [CR-028-fail-the-build-on-malformed-frontmatter.md](./CR-028-fail-the-build-on-malformed-frontmatter.md) |
 | CR-029 | Remove the web admin write path | Done | High | Web Admin | 2026-08-09 | [CR-029-remove-the-web-admin-write-path.md](./CR-029-remove-the-web-admin-write-path.md) |
-| CR-030 | Build the deployment and content-health console | In Progress | Medium | Web Admin | 2026-08-09 | [CR-030-build-the-deployment-and-content-health-console.md](./CR-030-build-the-deployment-and-content-health-console.md) |
+| CR-030 | Build the deployment and content-health console | Done | Medium | Web Admin | 2026-08-09 | [CR-030-build-the-deployment-and-content-health-console.md](./CR-030-build-the-deployment-and-content-health-console.md) |
 | CR-031 | Define the caching policy for HTML and assets | Proposed | Medium | Deployment | 2026-08-09 | Pending detail |
 | CR-032 | Fix soft 404s and unify not-found pages | Proposed | Medium | Web Content | 2026-08-09 | Pending detail |
 | CR-033 | Add story-crafter CI so stories validate before merge | Done | High | Deployment | 2026-08-09 | [CR-033-add-story-crafter-ci-so-stories-validate-before-merge.md](./CR-033-add-story-crafter-ci-so-stories-validate-before-merge.md) |
