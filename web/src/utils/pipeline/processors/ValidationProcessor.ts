@@ -54,8 +54,7 @@ function isEmpty(value: unknown): boolean {
  * Violations are warnings, never failures: a half-described post is still a
  * publishable post, and CR-028's fatal bar stays where it is -- input the
  * pipeline cannot process. Issues accumulate on the processor across the whole
- * run so the build can report them together, the same shape
- * ImageGeneratorProcessor uses for its manifest.
+ * run so the build can report them together.
  *
  * Must run after FrontmatterProcessor (needs metadata) and after
  * DraftFilterProcessor, so a draft is never held to publication rules.

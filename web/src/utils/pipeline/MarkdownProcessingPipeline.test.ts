@@ -9,8 +9,8 @@
  * processor — DraftFilterProcessor is meaningless without the FrontmatterProcessor
  * that populates the metadata it reads.
  *
- * ImageGeneratorProcessor is deliberately absent: build-posts only adds it under
- * --generate-images, and it needs credentials.
+ * No image processor appears here, or anywhere in a build: image URLs are
+ * frontmatter, written by `npm run generate:images` (CR-034).
  */
 
 import assert from 'node:assert/strict';

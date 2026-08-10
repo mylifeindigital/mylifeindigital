@@ -39,7 +39,6 @@ cd web && npm run dev
 npm run build
 npm run build:web
 cd web && npm run build:posts
-cd web && npm run build:posts:images
 
 # Content utilities
 npm run new-content -- --type post --title "My New Post"

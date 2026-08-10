@@ -57,8 +57,8 @@ export class MarkdownProcessingPipeline {
                 // throws, the context is half-built -- FrontmatterProcessor
                 // failing leaves `metadata` at its seeded default, which reads
                 // as valid and hides `draft: true` from DraftFilterProcessor.
-                // A processor that can survive its own failure catches it
-                // internally, as ImageGeneratorProcessor does.
+                // A processor that can survive its own failure is expected to
+                // catch it internally rather than rely on this handler.
                 return {
                     status: 'failed',
                     processor: processor.name,

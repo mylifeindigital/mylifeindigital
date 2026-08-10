@@ -2,6 +2,24 @@
 
 All notable changes to the web app will be documented in this file.
 
+
+## 0.8.0 — 2026-08-10
+
+### Removed
+
+- `ImageGeneratorProcessor` and the `--generate-images` build mode. Image generation was implemented twice — once as a pipeline processor coupled to `build:posts`, once as the standalone `generate:images` script — and the processor was the copy that made images a build-time concern. With URLs living in content frontmatter (`CR-034`), a build needs no image processor at all, so `build:posts` has no image mode to opt out of and `build` no longer points at a script that does not exist.
+
+### Fixed
+
+- `generate:images` resolves `CONTENT_DIR`. It hardcoded `join(__dirname, '../../content')`, the pre-split in-repo path, which now holds a single `README.md` — so it discovered zero content items and had been silently inert since `CR-020`.
+- `generate:images` writes its URLs into the source Markdown's frontmatter, which is what makes a generated image durable. Extracted to `web/scripts/utils/image-frontmatter.ts` as a pure transform, testable with no credentials and no network.
+- A standing type error in `build-posts.ts`: `standalonePageSources` is `as const`, so `new Set(...)` inferred `Set<'pages'>` and membership tests against arbitrary directory names did not typecheck. Never caught because nothing typechecked the file.
+
+### Added
+
+- `web/tsconfig.scripts.json`, and `typecheck:web-scripts` in the root typecheck chain and `app-ci.yml`. `web/scripts/` — the entire content build — was covered by no tsconfig: `web/tsconfig.json` excludes `scripts`, the root program excludes `web`. Confirmed with `tsc --listFiles`. The first run of the new program found the error above.
+- Tests for the frontmatter write-back and for image URLs surviving a pipeline with no image machinery. `test:scripts` now covers `web/scripts/utils/*.test.ts`, the first tests in that directory.
+
 ## [0.7.0] - 2026-08-09
 
 ### Added

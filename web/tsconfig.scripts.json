@@ -1,0 +1,14 @@
+{
+  // Build-time scripts: web/scripts/** plus the shared content-dir helpers they
+  // import from the repository root. Neither was covered by any tsconfig before
+  // CR-034 — web/tsconfig.json excludes `scripts`, and the root program excludes
+  // `web` — so build-posts.ts, the entire content build, was typechecked by
+  // nothing.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "noEmit": true
+  },
+  "include": ["scripts/**/*", "../scripts/content/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

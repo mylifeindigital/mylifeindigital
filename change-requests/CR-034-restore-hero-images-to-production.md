@@ -1,10 +1,11 @@
 # CR-034: Restore Hero Images to Production
 
-Status: Proposed  
+Status: Done  
 Priority: High  
 Area: Content Pipeline  
 Created: 2026-08-10  
-Reviewed: 2026-08-10
+Reviewed: 2026-08-10  
+Completed: 2026-08-10
 
 ## Context
 
@@ -64,7 +65,7 @@ Every generated image that exists is rendered by the deployed site, and an image
 - [x] Where does the image URL live durably — persisted into content frontmatter at generation time, or read from the manifest at every build? **Frontmatter.** See `Decisions`.
 - [x] If the manifest stays the source, what happens on a hash mismatch in a non-generating build? **Moot.** The manifest is no longer the source; nothing hashes anything at serve time.
 - [x] Does `deploy.yml` invoke this behind `--generate-images --dry-run`, or does the flag get a better name? **Neither.** `deploy.yml` needs no image mode at all — see `Decisions`.
-- [ ] Do stories get images at all? 64 of the 67 uncovered items are stories, and they have never had one. This is a content decision, not a pipeline one, and it does not block the restoring work.
+- [x] Do stories get images at all? **No, deliberately, for now.** See `Decisions`.
 
 Implementation does not start while any box here is unchecked.
 
@@ -98,14 +99,20 @@ The choice was between persisting the URL into content frontmatter at generation
 
 Consequence for `CR-014`: the manifest stops being the durable record and becomes a local cache whose only job is avoiding a second payment to OpenAI for the same content. It no longer needs committing and can no longer orphan anything that matters.
 
+### 2026-08-10 — Stories do not get images
+
+Recorded as a deliberate "not now" rather than left open. Stories have run five seasons and 64 episodes without a hero image and nothing reads as missing: `StoryLayout` leads with season and episode furniture rather than an image, and no story has ever had a manifest entry. Including them would mean 64 generations against the OpenAI API and a question this request is not the place to answer — whether an abstract illustration is the right thing at the top of a bedtime story at all.
+
+Deciding it here keeps the request a defect fix. If stories should have images, that is a content feature and earns its own request.
+
 ## Acceptance Criteria
 
-- [ ] The deployed site renders a hero image for all fifteen items that have one — verified against the live site, not the local build.
-- [ ] The deploy path needs no OpenAI or R2 credential to render existing images, and `deploy.yml` is unchanged.
-- [ ] Editing the body of an item that has an image does not remove that image.
-- [ ] Generating a new image writes the URL into the source Markdown, so it survives without the manifest.
-- [ ] `web/package.json`'s `build` script either becomes reachable again or stops claiming to generate images.
-- [ ] A test pins the regression: a build with no image machinery still produces image URLs for content whose frontmatter carries them.
+- [x] The deployed site renders a hero image for all fifteen items that have one — verified against the live site, not the local build.
+- [x] The deploy path needs no OpenAI or R2 credential to render existing images, and `deploy.yml` is unchanged.
+- [x] Editing the body of an item that has an image does not remove that image.
+- [x] Generating a new image writes the URL into the source Markdown, so it survives without the manifest.
+- [x] `web/package.json`'s `build` script either becomes reachable again or stops claiming to generate images.
+- [x] A test pins the regression: a build with no image machinery still produces image URLs for content whose frontmatter carries them.
 
 ## Implementation Notes
 
@@ -117,4 +124,35 @@ Related: `CR-019` (introduced the CI deploy that runs `build:posts`), `CR-025` (
 
 ## Outcome
 
-Pending implementation.
+Images are live. All fifteen render on production, verified by fetching each page and matching its expected R2 URL: **15/15, 0 missing**. The content backfill alone achieved that, with no application change — `deploy.yml` ran the same plain `build:posts` it always has.
+
+The application work that followed is what stops it recurring.
+
+### What changed
+
+| Change | Why |
+| --- | --- |
+| `generate-images.ts` resolves `CONTENT_DIR` | It hardcoded `join(__dirname, '../../content')`, the pre-split in-repo path. That directory now holds one `README.md`, so the script discovered **zero** items and had been silently inert since `CR-020`. |
+| `generate-images.ts` writes frontmatter back | The step that makes a generated image durable. Extracted to `web/scripts/utils/image-frontmatter.ts` as a pure transform so it is testable without credentials or a network. |
+| `ImageGeneratorProcessor` deleted | It was the second implementation of image generation and the mechanism that coupled images to builds. With generation owned by the standalone script and URLs living in content, a build needs no image processor at all. |
+| `--generate-images` removed from `build-posts.ts` | Nothing opts into image generation during a build any more. |
+| `web/package.json` | `build` pointed at `build:posts:images`, which no longer exists; it now runs `build:posts && tsc`. |
+
+### The gap this uncovered
+
+`web/scripts/` — which holds `build-posts.ts`, the entire content build — was covered by **no tsconfig and no test runner**. `web/tsconfig.json` excludes `scripts`, the root program excludes `web`, and both test globs stop short of it. Verified with `tsc --listFiles`: zero files from `web/scripts/` in any of the three programs.
+
+So `build-posts.ts` had never been typechecked, including through `CR-013` and `CR-028`, both of which modified it. Adding `web/tsconfig.scripts.json` and running it found a standing type error at what is now `build-posts.ts:258`: `standalonePageSources` is `as const`, so `new Set(...)` inferred `Set<'pages'>` and membership tests against arbitrary directory names did not typecheck. Fixed by widening to `Set<string>`.
+
+`typecheck:web-scripts` is now part of `npm run typecheck` and a step in `app-ci.yml`, and `test:scripts` picks up `web/scripts/utils/*.test.ts`.
+
+### Verification
+
+- 15/15 pages live with their image, checked against production
+- Building content `main` with the image processor deleted still yields **15** distinct image URLs — the point of the design
+- 82 tests pass (19 scripts, 63 web), up from 73; four typecheck programs clean
+- Write-back covered by nine tests: all three anchors, the no-anchor error, quote escaping, body preservation, and never overwriting an authored `image:`
+
+### Not done
+
+`imageAlt` is still the generator's `"Abstract illustration for {title}"` on all fifteen. It is authored now, so improving it is content work.
