@@ -70,8 +70,15 @@ than a bare invocation — because the script walks every directory under
 deliberately imageless.
 
 Generated URLs are written into the content's own frontmatter and committed in
-`mylifeindigital.content` (CR-034). The manifest at `web/scripts/image-manifest.json`
-is only a regeneration cache; the site reads the frontmatter.
+`mylifeindigital.content` (CR-034). Frontmatter is the only thing the site
+reads, and an existing `image:` is the only reason a run skips an item — so to
+replace an image, delete the `image`, `imageMobile`, and `imageAlt` lines and
+run again. There is no `--force`.
+
+`web/scripts/image-log.json` is an append-only record of what was generated,
+when, and from which prompt (CR-014). Nothing reads it and no build consults it;
+it is committed only because it is the one artifact here that cannot be
+regenerated. Never rewrite or prune it, and never restore a lookup from it.
 
 Production is deployed only by `.github/workflows/deploy.yml` (CR-019), which assembles all three repositories; `.github/DEPLOYMENT.md` is the runbook for deploying, redeploying, rolling back, and diagnosing failures. There is no local deploy command — the `deploy` scripts were removed in CR-025 so the single deployment path is structural rather than a convention. Do not add one back, and do not run `wrangler deploy` by hand; use the workflow's manual dispatch with explicit refs instead.
 

@@ -4,6 +4,20 @@ All notable changes to the web app will be documented in this file.
 
 
 
+## 0.10.0 — 2026-08-10
+
+### Changed
+
+- `web/scripts/image-manifest.json` is replaced by `web/scripts/image-log.json`, an append-only record rather than a regeneration cache (`CR-014`). The 21 existing entries migrate in chronological order; `contentHash` is dropped, prompts and URLs are kept. The cache had become unreachable when `CR-034` moved image URLs into content frontmatter: `generate:images` filters out every item carrying `image:` before the manifest loads, so no lookup could hit.
+
+- `generate:images` writes the log after each successful generation rather than once at the end, and a frontmatter write-back failure no longer discards the entry. An image that has been generated, paid for, and uploaded is now recorded even if the run is interrupted or the write-back throws — and the failure message names the URL that must be pasted into the post by hand.
+
+### Removed
+
+- The `--force` flag. Its only job was bypassing the cache check that no longer exists, and repointing it at frontmatter would have recreated the `CR-034` defect: `insertImageFrontmatter` declines to overwrite an existing `image:`, so a forced run would upload a new image, fail to record it, and leave the site rendering the old one. To replace an image, delete the `image`, `imageMobile`, and `imageAlt` lines from the content file and run `generate:images` again.
+
+- `needsRegeneration`, `getContentHash`, `getManifestKey`, and `updateManifest`, with the manifest module itself.
+
 ## 0.9.0 — 2026-08-10
 
 ### Fixed

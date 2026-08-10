@@ -2,6 +2,13 @@
 
 Append-only record of docs wiki activity.
 
+## [2026-08-10] decision | Artifact boundary recorded for the content pipeline
+
+- Added an Artifact Boundary section to [Content Pipeline](./projects/content-pipeline.md), closing the last acceptance criterion of `CR-014`.
+- The rule recorded is not "generated files are ignored" but whether an artifact **can be regenerated from its sources**. That single test explains why `posts-data.ts` and the synced `content/stories/` are untracked while image state is committed, where a simpler generated/authored split does not.
+- Image state is documented as split deliberately: the URL sits in content frontmatter because it is what the site reads (`CR-034`), and the provenance sits in `web/scripts/image-log.json` because a paid, non-deterministic model call cannot be rebuilt.
+- Recorded why `image-manifest.json` was deleted rather than relocated — once URLs moved to frontmatter, every item it described was filtered out before it loaded, so no entry could be consulted.
+
 ## [2026-08-09] decision | Markdown parser recorded, duplicate parser removed
 
 - Added [Markdown Parser](./decisions/markdown-parser.md) recording what `CR-012` found already decided in code: `gray-matter` for frontmatter, `marked` for tokenising, TOC extraction, and HTML rendering, one implementation each.

@@ -17,7 +17,7 @@ Catalog of LLM-maintained wiki pages. Read this first when querying or maintaini
 | [Admin Dashboard](./projects/admin-dashboard.md) | What a Worker-hosted, Git-backed admin can and cannot do after the repository split, and the `CR-018` decision that made it a read-only operations console. Records a feasible write model that was deliberately not adopted. |
 | [Content Editor](./projects/content-editor.md) | Direction for the focused Electron content editor, including its boundary with VS Code, templates, planning assistance, assistant panel, and manifest questions. |
 | [Content Operations App](./projects/content-operations-app.md) | Scope and workflow memory for the local-first Electron content operations direction, with VS Code retained for source-code work. |
-| [Content Pipeline](./projects/content-pipeline.md) | Build-time Markdown processing, generated content artifacts, and scaling considerations. |
+| [Content Pipeline](./projects/content-pipeline.md) | Build-time Markdown processing, generated content artifacts, and scaling considerations. Records the `CR-014` artifact boundary: what Git tracks turns on whether an artifact can be regenerated. |
 | [Story Crafter](./projects/story-crafter.md) | Future standalone feature idea for generated story series, continuity, Git-backed story artifacts, and mobile reading workflows. |
 
 ## Concepts
