@@ -1,15 +1,14 @@
 {
   "name": "web",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Hono markdown web application for Cloudflare Workers",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "dev": "wrangler dev",
     "dev:node": "tsx watch src/index.node.ts",
-    "build": "npm run build:posts:images && tsc",
+    "build": "npm run build:posts && tsc",
     "build:posts": "tsx scripts/build-posts.ts",
-    "build:posts:images": "tsx scripts/build-posts.ts --generate-images",
     "compare:preview-parity": "tsx scripts/compare-preview-parity.ts",
     "preview-worker:poc": "tsx scripts/run-preview-worker-poc.ts",
     "generate:images": "tsx scripts/generate-images.ts",

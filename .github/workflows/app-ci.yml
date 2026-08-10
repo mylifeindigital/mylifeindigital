@@ -61,6 +61,13 @@ jobs:
       - name: Type-check root scripts
         run: npm run typecheck:scripts
 
+      # web/scripts/ holds the entire content build and was covered by no
+      # tsconfig at all until CR-034: web/tsconfig.json excludes `scripts`, and
+      # the root program excludes `web`. The first run of this program found a
+      # standing type error in build-posts.ts.
+      - name: Type-check web build scripts
+        run: npm run typecheck:web-scripts
+
       - name: Run script tests
         run: npm run test:scripts
 
@@ -80,8 +87,9 @@ jobs:
         working-directory: web
         env:
           CONTENT_DIR: ${{ github.workspace }}/content-repo/content
-        # Plain build:posts — no --generate-images, so ordinary validation
-        # never depends on OpenAI credentials or credits (CR-019).
+        # build:posts has no image mode to opt out of any more (CR-034). Image
+        # URLs are frontmatter, written into the content by `generate:images`,
+        # so no build anywhere depends on OpenAI credentials or credits.
         run: npm run build:posts
 
       - name: Type-check web app

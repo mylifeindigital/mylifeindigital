@@ -6,8 +6,11 @@
  * This is necessary because Cloudflare Workers don't have filesystem access.
  *
  * Usage:
- *   npm run build:posts           # Build without image generation
- *   npm run build:posts:images    # Build with AI image generation
+ *   npm run build:posts
+ *
+ * This build never generates images. Image URLs arrive as ordinary frontmatter,
+ * written into the content by `npm run generate:images` (CR-034), so the
+ * deployed site needs no image machinery and no credentials to render them.
  */
 
 import { readFileSync, readdirSync, writeFileSync, existsSync, mkdirSync, statSync, appendFileSync } from 'fs';
@@ -28,7 +31,6 @@ import {
     TocProcessor,
     HtmlProcessor,
     ExcludeProcessor,
-    ImageGeneratorProcessor,
 } from './processors/index.js';
 import type { ContentItem, Section, SiteContent } from '../src/utils/markdown.js';
 import { resolveContentDir, describeContentDirSource } from '../../scripts/content/content-dir.js';
@@ -47,12 +49,10 @@ const __dirname = dirname(__filename);
 
 // Parse command line arguments
 const args = process.argv.slice(2);
-const generateImages = args.includes('--generate-images');
-const forceRegenerate = args.includes('--force-regenerate');
-const dryRun = args.includes('--dry-run');
 
-// Track ImageGeneratorProcessor for manifest saving
-let imageGeneratorProcessor: ImageGeneratorProcessor | null = null;
+// Image generation deliberately does not live here (CR-034). `npm run
+// generate:images` owns it, and writes its URLs into content frontmatter, so a
+// build only ever reads them like any other metadata.
 let validationProcessor: ValidationProcessor | null = null;
 
 const standalonePageSources = [
@@ -76,16 +76,6 @@ function createPipeline(): MarkdownProcessingPipeline {
         .use(new DraftFilterProcessor())
         .use(validationProcessor)
         .use(new ExcludeProcessor());
-
-    // Add image generation if requested
-    if (generateImages) {
-        imageGeneratorProcessor = new ImageGeneratorProcessor({
-            enabled: true,
-            forceRegenerate,
-            dryRun,
-        });
-        pipeline.use(imageGeneratorProcessor);
-    }
 
     return pipeline
         .use(new AstProcessor())
@@ -265,7 +255,10 @@ async function getAllSections(
     contentDir: string
 ): Promise<Section[]> {
     const sections: Section[] = [];
-    const standaloneSections = new Set(
+    // Widened deliberately: `standalonePageSources` is `as const`, so inference
+    // gives Set<'pages'> and membership tests against an arbitrary directory
+    // name do not typecheck.
+    const standaloneSections = new Set<string>(
         standalonePageSources.map(page => page.section)
     );
 
@@ -383,9 +376,6 @@ async function main(): Promise<void> {
     console.log('📦 Building content data...');
     console.log(`  Source: ${contentDir} — ${describeContentDirSource(resolution)}`);
     console.log(`  Output: ${outputPath}`);
-    if (generateImages) {
-        console.log(`  🎨 Image generation: enabled${dryRun ? ' (dry run)' : ''}${forceRegenerate ? ' (force regenerate)' : ''}`);
-    }
     console.log('');
 
     const pipeline = createPipeline();
@@ -398,12 +388,6 @@ async function main(): Promise<void> {
         allItems,
         standalonePages,
     };
-
-    // Save image manifest if we generated images. Done before the failure gate
-    // below so that images already paid for are not regenerated on the retry.
-    if (imageGeneratorProcessor) {
-        imageGeneratorProcessor.saveManifestIfDirty();
-    }
 
     // A file the pipeline could not process must not reach the site, and must
     // not leave the build reporting success (CR-028). posts-data.ts is left

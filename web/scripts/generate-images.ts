@@ -9,11 +9,16 @@
  *   npm run generate:images -- posts/my-article  # Generate specific item
  */
 
-import { readFileSync, readdirSync, existsSync, statSync } from 'fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync, statSync } from 'fs';
 import { join, dirname, extname, basename } from 'path';
 import { fileURLToPath } from 'url';
 import { config as dotenvConfig } from 'dotenv';
 import matter from 'gray-matter';
+import {
+    resolveContentDir,
+    describeContentDirSource,
+} from '../../scripts/content/content-dir.js';
+import { insertImageFrontmatter } from './utils/image-frontmatter.js';
 
 import { validateConfig, getConfig } from './config/image-gen.js';
 import { generateImageFromContent } from './utils/cloudflare-ai.js';
@@ -27,6 +32,11 @@ import {
     updateManifest,
     type ImageManifest,
 } from './utils/image-manifest.js';
+
+// Capture CONTENT_DIR from the real environment BEFORE dotenv loads web/.env,
+// so an explicit CONTENT_DIR on the command line is not overridden by the one
+// that file happens to carry. build-posts.ts does the same, for the same reason.
+const contentDirFromEnvironment = process.env.CONTENT_DIR;
 
 // Load environment variables
 dotenvConfig();
@@ -139,7 +149,20 @@ async function generateImageForContent(
             },
         });
 
+        // Persist into the content itself. The manifest is a cache; this is the
+        // record the deployed site actually reads (CR-034).
+        writeFileSync(
+            item.filePath,
+            insertImageFrontmatter(
+                readFileSync(item.filePath, 'utf-8'),
+                { desktop: desktopUrl, mobile: mobileUrl },
+                item.title
+            ),
+            'utf-8'
+        );
+
         console.log(`     ✅ Generated: ${desktopUrl}`);
+        console.log(`     ✍️  Wrote image frontmatter into ${item.section}/${item.slug}.md`);
         return true;
     } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
@@ -156,8 +179,12 @@ async function main(): Promise<void> {
     validateConfig();
     const config = getConfig();
 
-    const contentDir = join(__dirname, '../../content');
-    console.log(`  Content: ${contentDir}`);
+    const resolution = resolveContentDir({
+        repositoryRoot: join(__dirname, '../..'),
+        env: { CONTENT_DIR: contentDirFromEnvironment },
+    });
+    const contentDir = resolution.contentDir;
+    console.log(`  Content: ${contentDir} — ${describeContentDirSource(resolution)}`);
     console.log(`  Mode: ${dryRun ? 'dry run' : forceRegenerate ? 'force regenerate' : 'incremental'}`);
     console.log('');
 

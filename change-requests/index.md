@@ -47,7 +47,7 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-031 | Define the caching policy for HTML and assets | Proposed | Medium | Deployment | 2026-08-09 | Pending detail |
 | CR-032 | Fix soft 404s and unify not-found pages | Proposed | Medium | Web Content | 2026-08-09 | Pending detail |
 | CR-033 | Add story-crafter CI so stories validate before merge | Done | High | Deployment | 2026-08-09 | [CR-033-add-story-crafter-ci-so-stories-validate-before-merge.md](./CR-033-add-story-crafter-ci-so-stories-validate-before-merge.md) |
-| CR-034 | Restore hero images to production | Proposed | High | Content Pipeline | 2026-08-10 | [CR-034-restore-hero-images-to-production.md](./CR-034-restore-hero-images-to-production.md) |
+| CR-034 | Restore hero images to production | Done | High | Content Pipeline | 2026-08-10 | [CR-034-restore-hero-images-to-production.md](./CR-034-restore-hero-images-to-production.md) |
 
 ## Backlog Grooming Notes
 
