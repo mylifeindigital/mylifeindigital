@@ -183,9 +183,13 @@ Use separate changelogs for separate scopes:
 
 When completing features or fixes for the web app:
 
-1. Bump the version in both `web/package.json` and `web/src/version.ts`.
+1. Bump the version in `web/package.json`. It is the only place the version is
+   written; `web/src/version.ts` was deleted by `CR-030` precisely because this
+   step named two files and one of them was always the one that got missed —
+   it sat unread at `0.5.1` against a `0.10.0` package. The build stamp reads
+   `package.json` at build time, so there is nothing to keep in step.
 2. Add an entry to `web/CHANGELOG.md` using the existing changelog format.
-3. Include both version files and the changelog in the commit.
+3. Include the version bump and the changelog in the commit.
 
 For docs-only, process-only, planning, or agent-guidance changes:
 

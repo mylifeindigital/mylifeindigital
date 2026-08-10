@@ -4,6 +4,22 @@ All notable changes to the web app will be documented in this file.
 
 
 
+## 0.11.0 — 2026-08-10
+
+### Added
+
+- The build now stamps what it was assembled from into the bundle (`CR-030` phase 1). `build:posts` writes a git-ignored `web/src/utils/build-data.ts` beside `posts-data.ts`, carrying the application, content, and story commits, the build timestamp, the trigger, and the package version. It exists because the site compiles its content into the Worker, so no repository checkout can describe what production contains — `main` describes the deployment that has not happened yet. Nothing renders it yet; the console route is phase 3.
+
+- `deploy.yml` resolves the three commits once, before the build, instead of only in the summary table after `wrangler deploy`. The table now reads those same values, so what the summary claims was deployed and what the bundle says it was built from cannot drift apart.
+
+### Changed
+
+- The version is written in `web/package.json` only. `AGENTS.md` had instructed releases to bump two files in step, and the stamp reads the package version at build time, so there is no longer a second place to miss.
+
+### Removed
+
+- `web/src/version.ts`. It exported `0.5.1` against a `0.10.0` package and **had no importers** — the one build-identity signal in the Worker was both unread and five minor versions stale, which is the drift the single-source change above prevents.
+
 ## 0.10.0 — 2026-08-10
 
 ### Changed
