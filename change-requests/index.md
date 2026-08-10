@@ -46,7 +46,7 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-030 | Build the deployment and content-health console | Proposed | Medium | Web Admin | 2026-08-09 | Pending detail |
 | CR-031 | Define the caching policy for HTML and assets | Proposed | Medium | Deployment | 2026-08-09 | Pending detail |
 | CR-032 | Fix soft 404s and unify not-found pages | Proposed | Medium | Web Content | 2026-08-09 | Pending detail |
-| CR-033 | Add story-crafter CI so stories validate before merge | Proposed | High | Deployment | 2026-08-09 | Pending detail |
+| CR-033 | Add story-crafter CI so stories validate before merge | In Progress | High | Deployment | 2026-08-09 | [CR-033-add-story-crafter-ci-so-stories-validate-before-merge.md](./CR-033-add-story-crafter-ci-so-stories-validate-before-merge.md) |
 
 ## Backlog Grooming Notes
 
