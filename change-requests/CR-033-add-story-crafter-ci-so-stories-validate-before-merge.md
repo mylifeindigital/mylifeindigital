@@ -1,10 +1,11 @@
 # CR-033: Add story-crafter CI So Stories Validate Before Merge
 
-Status: In Progress  
+Status: Done  
 Priority: High  
 Area: Deployment  
 Created: 2026-08-09  
-Reviewed: 2026-08-10
+Reviewed: 2026-08-10  
+Completed: 2026-08-10
 
 ## Context
 
@@ -44,9 +45,9 @@ A story is held to both the canon rules and the site's shape while it is still a
 - [x] Which validators run — story-crafter's canon suite, the application's `sync:stories`, or both? **Both**, though not for the reason first assumed: canon turns out to be strictly stricter, and `sync:stories` earns its place as a cross-repository contract test. See `Decisions`.
 - [x] Does CI also run `build:posts`, the way `content-ci.yml` does? **No.** See `Decisions`.
 - [x] Does `validate-continuity`'s "latest story" default do the right thing on a pull request that adds a story? **Yes**, for the common case, with a known gap recorded in `Decisions`.
-- [ ] Is the new check **required** on `story-crafter`'s `main`, which means changing branch protection? Owner decision — the workflow is useful either way, but only a required check closes the gap this request describes.
+- [x] Is the new check **required** on `story-crafter`'s `main`, which means changing branch protection? **Yes, with `strict: true`**, matching `mylifeindigital.content`. See `Decisions`.
 
-Implementation does not start while any box here is unchecked. The workflow may land before the last box is ticked; making it required is a repository settings change and is deliberately separated from the code.
+Implementation does not start while any box here is unchecked. The workflow landed before the last box was ticked; making it required is a repository settings change and was deliberately separated from the code.
 
 ## Proposed Implementation
 
@@ -86,6 +87,12 @@ Both still run, for a different reason than the one first recorded. `sync:storie
 
 That is also why the canon gate runs first: it is the gate that will actually catch an authoring mistake, and it needs no dependency install to do it.
 
+### 2026-08-10 — Required, and `strict: true`
+
+The check is required on `main`, matching `mylifeindigital.content`. `strict` — the branch must be up to date with `main` before merging — carries a specific meaning in this repository rather than being copied for symmetry: `validate-continuity` validates the **latest** story, resolved by `getLatestStory` as the last episode of the active season. A branch cut from a stale `main` can therefore have its new episode validated against the wrong preceding episode. `strict` forces the branch to see the real season tail before the check counts.
+
+Applied with a full `PUT` of the protection object, preserving every existing setting: zero required approving reviews, force pushes and deletions still disallowed, admins not enforced.
+
 ### 2026-08-10 — `build:posts` is not run here
 
 `content-ci.yml` runs `build:posts`, so the obvious move was to mirror it. Tested instead: `build:posts` against a stories-only `CONTENT_DIR` exits **0** and generates all 64 items, so it would work. It is still not worth running. The only rule `CR-013`'s validator applies to a story is the base schema's non-empty `title`, and `sync-stories.ts` already hard-requires `title` through `requireString`. The generated frontmatter cannot trip `CR-028` either, because `sync-stories.ts` emits it through `quoteYaml` — it is well-formed by construction. So `build:posts` would add a full site build and a spurious `Standalone page not found: .../pages/about.md` warning in exchange for zero additional coverage.
@@ -100,13 +107,13 @@ The gap: a pull request that **edits an older** episode gets registry, frontmatt
 
 ## Acceptance Criteria
 
-- [ ] A pull request against `story-crafter` runs a `Story CI` workflow that executes both gates.
-- [ ] The canon gate runs before `npm ci`, so a canon failure does not pay for a dependency install.
-- [ ] A story that breaks canon fails the pull request, naming the failing validator, the file, and the field.
-- [ ] When canon passes, `sync:stories` still runs to completion against `mylifeindigital` at `main` — the contract check is not short-circuited.
-- [ ] The workflow never deploys and never writes into either repository's content tree.
-- [ ] The check passes on `main` as it stands today.
-- [ ] `Validate stories (no deploy)` is a required status check on `story-crafter`'s `main` (owner decision — see the last open question).
+- [x] A pull request against `story-crafter` runs a `Story CI` workflow that executes both gates.
+- [x] The canon gate runs before `npm ci`, so a canon failure does not pay for a dependency install.
+- [x] A story that breaks canon fails the pull request, naming the failing validator, the file, and the field.
+- [x] When canon passes, `sync:stories` still runs to completion against `mylifeindigital` at `main` — the contract check is not short-circuited.
+- [x] The workflow never deploys and never writes into either repository's content tree.
+- [x] The check passes on `main` as it stands today.
+- [x] `Validate stories (no deploy)` is a required status check on `story-crafter`'s `main`.
 
 ## Implementation Notes
 
@@ -116,4 +123,22 @@ The workflow file lives in `story-crafter`, which is private; this request and i
 
 ## Outcome
 
-Pending.
+`story-crafter/.github/workflows/story-ci.yml` added in story-crafter#11, and `Validate stories (no deploy)` is now a required status check on `story-crafter`'s `main` with `strict: true`.
+
+The workflow's first run was its own pull request. All seven steps succeeded in 27 seconds — the canon gate, the locked install, and `sync:stories` against `mylifeindigital` at `main`, producing 64 stories into a throwaway directory under `$RUNNER_TEMP`.
+
+How each acceptance criterion was checked:
+
+| Criterion | Evidence |
+| --- | --- |
+| Both gates run on a pull request | story-crafter#11's own run, all seven steps `success` |
+| Canon runs before `npm ci` | step order in the run's job record |
+| A canon break fails, naming validator, file and field | fault injection on a **copy** of the repository, not on a pull request — removing `main_character` produced `FAIL registry`, `FAIL frontmatter`, `FAIL continuity` with `stories/season-5/05-…md: missing main_character` |
+| `sync:stories` is not short-circuited | it ran to completion in the same run, after canon passed |
+| Never deploys, never writes into a content tree | no deploy step exists; `CONTENT_DIR` is `$RUNNER_TEMP/content` |
+| Passes on `main` today | the same run, plus a local rehearsal of all three steps in workflow order |
+| Required status check | `GET …/branches/main/protection` now returns `contexts: ["Validate stories (no deploy)"]`, `strict: true` |
+
+Note on the third row: the failure paths were proved locally rather than by opening a deliberately broken pull request, so what is verified is that the validators fail correctly and that CI runs them — not that a red check has ever blocked a real merge.
+
+One side effect worth recording: merging a workflow-only change to `story-crafter`'s `main` triggered a full production deploy, because `request-deploy.yml` fires on any push to `main` with no `paths-ignore`, while the application repository's `deploy.yml` has one. The deploy succeeded and the site was unchanged. The asymmetry is real and is left for a separate request.
