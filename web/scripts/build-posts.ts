@@ -34,6 +34,8 @@ import {
 } from './processors/index.js';
 import type { ContentItem, Section, SiteContent } from '../src/utils/markdown.js';
 import { resolveContentDir, describeContentDirSource } from '../../scripts/content/content-dir.js';
+import type { BuildInfo } from '../src/utils/build-info.js';
+import { buildStampFor, renderBuildData } from './utils/build-stamp.js';
 
 // Capture CONTENT_DIR from the real environment BEFORE dotenv loads web/.env,
 // so web/.env can never become a competing source for the content path (CR-021;
@@ -363,6 +365,23 @@ export const postsData: ContentItem[] = siteContent.allItems;
     writeFileSync(outputPath, output, 'utf-8');
 }
 
+/**
+ * Write the build stamp (CR-030).
+ *
+ * Deliberately written in the same run and at the same point as posts-data.ts,
+ * because the stamp's only claim is "this is the build that produced that
+ * content". Two scripts, or one script that could write one file without the
+ * other, would let the claim become false.
+ */
+function generateBuildDataFile(contentDir: string, outputPath: string): BuildInfo {
+    const webDirectory = join(__dirname, '..');
+    const info = buildStampFor(webDirectory, contentDir, process.env);
+
+    writeFileSync(outputPath, renderBuildData(info), 'utf-8');
+
+    return info;
+}
+
 // Main execution
 async function main(): Promise<void> {
     const repositoryRoot = join(__dirname, '../..');
@@ -372,6 +391,7 @@ async function main(): Promise<void> {
     });
     const contentDir = resolution.contentDir;
     const outputPath = join(__dirname, '../src/utils/posts-data.ts');
+    const buildDataPath = join(__dirname, '../src/utils/build-data.ts');
 
     console.log('📦 Building content data...');
     console.log(`  Source: ${contentDir} — ${describeContentDirSource(resolution)}`);
@@ -405,6 +425,7 @@ async function main(): Promise<void> {
     }
 
     generateContentDataFile(siteContent, outputPath);
+    const buildInfo = generateBuildDataFile(contentDir, buildDataPath);
 
     // Reported after the artifact is written, because a validation issue never
     // blocks publication -- it describes content that is live and incomplete
@@ -420,6 +441,13 @@ async function main(): Promise<void> {
     sections.forEach(section => {
         console.log(`   - ${section.title}: ${section.items.length} item(s)`);
     });
+
+    const shortSha = (sha: string | null): string => (sha ? sha.slice(0, 7) : 'unknown');
+    console.log('');
+    console.log(`🏷️  Build stamp: v${buildInfo.version} — ${buildInfo.trigger} — ${buildInfo.builtAt}`);
+    console.log(
+        `   app ${shortSha(buildInfo.revisions.app)} · content ${shortSha(buildInfo.revisions.content)} · story ${shortSha(buildInfo.revisions.story)}`
+    );
 
     if (issues.length > 0) {
         console.log('');

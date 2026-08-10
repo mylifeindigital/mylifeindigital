@@ -7,6 +7,9 @@ dist/
 # Generated posts data (created at build time)
 src/utils/posts-data.ts
 
+# Generated build stamp (created at build time, alongside posts-data.ts)
+src/utils/build-data.ts
+
 # Wrangler
 .wrangler/
 .dev.vars
