@@ -19,10 +19,16 @@ interface LayoutProps {
      * attribute off entirely and the page on the default treatment.
      */
     theme?: string;
+    /**
+     * Keeps a page out of search results. Used by the operations console, which
+     * is public but is not part of the site's readable content — indexing it
+     * would put build commits in search results for no reader's benefit.
+     */
+    noindex?: boolean;
     children: any;
 }
 
-export function Layout({ title, siteTitle, sections = [], socialLinks = {}, preloadImages = [], theme, children }: LayoutProps) {
+export function Layout({ title, siteTitle, sections = [], socialLinks = {}, preloadImages = [], theme, noindex, children }: LayoutProps) {
     const pageTitle = title || siteTitle;
 
     return (
@@ -31,6 +37,7 @@ export function Layout({ title, siteTitle, sections = [], socialLinks = {}, prel
                 <meta charset="UTF-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title>{pageTitle}</title>
+                {noindex && <meta name="robots" content="noindex" />}
                 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
                 {/* Preconnect to image CDN for faster LCP */}

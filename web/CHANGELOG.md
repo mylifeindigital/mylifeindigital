@@ -4,6 +4,26 @@ All notable changes to the web app will be documented in this file.
 
 
 
+## 0.13.0 — 2026-08-10
+
+### Added
+
+- **`/status`, the operations console** (`CR-030` phase 3, completing the request). Reports the three commits compiled into the Worker serving the request, when it was built and from what version, published counts per section, and the validation issues the build found. No credential and no runtime fetch: the page is the deployment describing itself, so it cannot be stale. Registered before `/:section`, which would otherwise swallow a single-segment path and render the section not-found view.
+
+- The page states that it describes the Worker serving the request rather than the state of any repository. That matters because of what the console deliberately cannot report: a failed deploy ships no Worker, so the previous one keeps serving and keeps showing its own commits — correct, and otherwise indistinguishable from a page that has stopped updating. `.github/DEPLOYMENT.md` now records which surface answers "what is live" and which answers "what happened".
+
+- `StatusConsole` is split from its route so it can be tested with fixtures. The route imports the generated `build-data.ts`, and `tsconfig.test.json` runs before `build:posts`, so a test reaching that import would break the CI ordering `CR-023` established.
+
+- `Layout` takes an optional `noindex`. The console is public because nothing on it needs protecting, which is not the same as being worth indexing.
+
+### Removed
+
+- `web/public/styles/admin.css` — 718 lines referenced by nothing since `CR-029` deleted the HTML that loaded it.
+
+### Verification
+
+All 14 public routes render byte-for-byte identically before and after, with the hero slider's `Date.now()` element id normalised (the `CR-029` comparison). The rendered console contains none of the four current draft slugs, and the only numbers on it are published counts.
+
 ## 0.12.0 — 2026-08-10
 
 ### Added

@@ -30,8 +30,29 @@ one run stays pending, and a newer request supersedes it. The surviving run chec
 repository at its tip, so the deployed result still reflects every merge.
 
 Every run writes a **Production deployment** table to its workflow summary with the resolved
-commit of all three repositories and the triggering event. That table is the source of truth
-for what is live, and the input for any rollback.
+commit of all three repositories and the triggering event. It is the input for any rollback.
+
+## What is live, and what happened
+
+Two surfaces, and they answer different questions. Confusing them is how a rollback gets
+aimed at the wrong commit.
+
+| Surface | Answers | Because |
+| --- | --- | --- |
+| [mylifeindigital.co.za/status](https://mylifeindigital.co.za/status) | **What is live** | The commits are compiled into the Worker at build time (`CR-030`), so the page is the deployment describing itself. If it is answering, that is the build answering. |
+| The workflow summary table | **What happened** | A record of what a run assembled — including runs that failed, and runs superseded by a later one. |
+
+The console is the better answer to "what is serving right now", because the summary table
+describes a *run* rather than the Worker: a run can fail after the table is written, and
+concurrent merges can leave a newer run that never deployed. The two now read the same
+resolved values — `deploy.yml` resolves the three commits once, before the build — so they
+agree whenever the run they describe is the one that deployed.
+
+The console deliberately cannot tell you a deployment **failed**. A failed deploy ships no
+Worker, so the previous one keeps serving and keeps reporting its own commits, correctly.
+A console showing commits older than your last merge is therefore a true statement, and it
+looks exactly like a page that has stopped updating. When a merge does not appear to have
+taken effect, check the Actions run — that is what the run history is for.
 
 ## Manual redeployment
 

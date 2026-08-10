@@ -1,5 +1,6 @@
 import type { ContentItem, Section, SiteContent } from './markdown.js';
 import { siteContent } from './posts-data.js';
+import { deriveInventory, type ContentInventory } from './content-inventory.js';
 
 // Content generated at build time into posts-data.ts. "Cache" here means an
 // in-memory lookup index built once at module load — not an HTTP or CDN cache.
@@ -53,4 +54,18 @@ export function getAllItems(): ContentItem[] {
  */
 export function getStandalonePageBySlug(slug: string): ContentItem | null {
     return standalonePageBySlugCache.get(slug) || null;
+}
+
+/**
+ * What the deployed site contains, counted from the content it was built with
+ * (CR-030).
+ *
+ * Computed once at module load like the indexes above. Counted rather than read
+ * from the build stamp on purpose: this module already holds the items, so a
+ * recorded total would be a second copy of a fact that is right here.
+ */
+const inventoryCache: ContentInventory = deriveInventory(contentCache);
+
+export function getContentInventory(): ContentInventory {
+    return inventoryCache;
 }

@@ -2123,3 +2123,108 @@ body[data-theme="story"] {
 .story-prose > p:last-child strong {
     font-weight: 400;
 }
+
+/* Operations console (CR-030) */
+.status {
+    max-width: var(--reading-measure);
+    margin: 0 auto;
+}
+
+.status-header {
+    margin-bottom: var(--spacing-xl);
+}
+
+.status-lede {
+    color: var(--text-secondary);
+    line-height: var(--reading-leading);
+    margin-top: var(--spacing-md);
+}
+
+.status-block {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.status-block h2 {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-cyan);
+    margin-bottom: var(--spacing-md);
+}
+
+.status-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs) var(--spacing-md);
+    justify-content: space-between;
+    align-items: baseline;
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.status-row:last-of-type {
+    border-bottom: none;
+}
+
+.status-label {
+    color: var(--text-secondary);
+}
+
+.status-value {
+    /* A 40-character commit has to wrap on a phone rather than widen the page. */
+    overflow-wrap: anywhere;
+    text-align: right;
+}
+
+.status-sha {
+    font-size: 0.85rem;
+}
+
+.status-muted {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.status-total {
+    border-top: 1px solid var(--line-strong);
+    margin-top: var(--spacing-sm);
+    font-weight: 700;
+}
+
+.status-note {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-top: var(--spacing-md);
+}
+
+.status-clear {
+    color: var(--text-primary);
+}
+
+.status-issues {
+    list-style: none;
+    display: grid;
+    gap: var(--spacing-sm);
+}
+
+.status-issues li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs) var(--spacing-md);
+    justify-content: space-between;
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.status-file {
+    overflow-wrap: anywhere;
+}
+
+.status-issue-detail {
+    color: var(--text-secondary);
+    text-align: right;
+}
