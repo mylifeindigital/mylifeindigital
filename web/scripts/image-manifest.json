@@ -133,5 +133,59 @@
       "mobile": "https://images.mylifeindigital.co.za/posts/when-is-a-desktop-app-a-good-idea-600.webp"
     },
     "generatedAt": "2026-05-06T10:08:35.163Z"
+  },
+  "posts/how-i-would-enhance-my-content-creation-experience": {
+    "contentHash": "fcaaef482e887b16",
+    "prompt": "Create an abstract composition that embodies the intricate relationship between technology and creativity in content creation. Use a blend of soft and sharp geometric shapes to represent the structure and fluidity of Markdown and Git. Incorporate a palette of cool blues, vibrant greens, and subtle grays, symbolizing confidence and innovation. Layer textures to evoke the complexity of metadata and the dynamic nature of the publishing process. The overall feel should reflect an organized yet creative workspace, conveying a sense of exploration and the evolution of ideas.",
+    "images": {
+      "desktop": "https://images.mylifeindigital.co.za/posts/how-i-would-enhance-my-content-creation-experience-1200.webp",
+      "mobile": "https://images.mylifeindigital.co.za/posts/how-i-would-enhance-my-content-creation-experience-600.webp"
+    },
+    "generatedAt": "2026-08-10T16:15:46.586Z"
+  },
+  "posts/my-journal-journey": {
+    "contentHash": "f1946dc543de5ffd",
+    "prompt": "Create an abstract composition that conveys the journey of self-discovery and reflection. Use swirling shapes to represent the flow of thoughts and emotions. Incorporate a palette of deep blues and warm golds to evoke introspection and hope. Blend textured layers to suggest depth and complexity, while smooth gradients symbolize the transition from chaos to clarity. The overall feel should be introspective and serene, capturing the essence of a personal journal journey without depicting literal objects.",
+    "images": {
+      "desktop": "https://images.mylifeindigital.co.za/posts/my-journal-journey-1200.webp",
+      "mobile": "https://images.mylifeindigital.co.za/posts/my-journal-journey-600.webp"
+    },
+    "generatedAt": "2026-08-10T16:16:01.189Z"
+  },
+  "posts/my-wandering-mind": {
+    "contentHash": "03c26574146d7fa0",
+    "prompt": "Create an abstract image that embodies the essence of a wandering mind. Use swirling, fluid shapes to represent thoughts in motion, with vibrant colors transitioning from calm blues and greens to energetic yellows and reds. Incorporate textures that evoke a sense of depth and complexity, suggesting layers of contemplation and imagination. Let the composition flow freely, capturing the whimsical and unpredictable nature of a wandering mind, inviting viewers to explore the intricate patterns of thought without any concrete representation.",
+    "images": {
+      "desktop": "https://images.mylifeindigital.co.za/posts/my-wandering-mind-1200.webp",
+      "mobile": "https://images.mylifeindigital.co.za/posts/my-wandering-mind-600.webp"
+    },
+    "generatedAt": "2026-08-10T16:16:14.535Z"
+  },
+  "posts/the-story-crafter-idea": {
+    "contentHash": "a0139ffcbdf78f3d",
+    "prompt": "Create an abstract artistic image that embodies the warmth and nostalgia of bedtime storytelling. Use soft, flowing shapes and gentle textures to evoke a sense of calm and imagination. Incorporate a soothing color palette with deep blues, warm golds, and soft whites to represent the night sky and a comforting atmosphere. Capture the essence of a child's dreamlike world, where stories come alive in the mind, blending light and shadow to symbolize the balance between reality and imagination.",
+    "images": {
+      "desktop": "https://images.mylifeindigital.co.za/posts/the-story-crafter-idea-1200.webp",
+      "mobile": "https://images.mylifeindigital.co.za/posts/the-story-crafter-idea-600.webp"
+    },
+    "generatedAt": "2026-08-10T16:16:27.642Z"
+  },
+  "posts/why-do-i-build": {
+    "contentHash": "4b5ba64fbee86ceb",
+    "prompt": "Create an abstract image that embodies the journey of incremental growth and purpose. Use flowing shapes that intertwine and build upon each other, symbolizing the progression from idea to completion. Incorporate a harmonious blend of warm and cool colors to evoke a sense of motivation and reflection. Include textures that suggest layers and complexity, representing the multifaceted nature of building and development. Aim for a composition that inspires a feeling of steady advancement and the satisfaction of achieving small milestones over time.",
+    "images": {
+      "desktop": "https://images.mylifeindigital.co.za/posts/why-do-i-build-1200.webp",
+      "mobile": "https://images.mylifeindigital.co.za/posts/why-do-i-build-600.webp"
+    },
+    "generatedAt": "2026-08-10T16:16:41.008Z"
+  },
+  "posts/why-my-life-in-digital-is-becoming-a-product-lab": {
+    "contentHash": "79a168da7e928cfa",
+    "prompt": "Create an abstract image that represents the journey of exploration and reflection in a digital landscape. Use flowing shapes and dynamic textures to convey movement and evolution, incorporating a palette of deep blues, vibrant oranges, and soft greens to evoke a sense of introspection and innovation. Incorporate layers and gradients to symbolize complexity and the interplay of ideas, suggesting a path that meanders yet seeks clarity. The overall composition should feel both chaotic and harmonious, capturing the essence of creativity and the continuous quest for purpose.",
+    "images": {
+      "desktop": "https://images.mylifeindigital.co.za/posts/why-my-life-in-digital-is-becoming-a-product-lab-1200.webp",
+      "mobile": "https://images.mylifeindigital.co.za/posts/why-my-life-in-digital-is-becoming-a-product-lab-600.webp"
+    },
+    "generatedAt": "2026-08-10T16:16:54.568Z"
   }
 }
