@@ -27,7 +27,7 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-011 | Spike browser-worker preview pipeline | Done | Medium | Content Pipeline | 2026-05-06 | [CR-011-spike-browser-worker-preview-pipeline.md](./CR-011-spike-browser-worker-preview-pipeline.md) |
 | CR-012 | Retire duplicate Markdown parsing | Done | Medium | Content Pipeline | 2026-05-06 | [CR-012-retire-duplicate-markdown-parsing.md](./CR-012-retire-duplicate-markdown-parsing.md) |
 | CR-013 | Validate content semantics the pipeline accepts | Done | Medium | Quality | 2026-05-06 | [CR-013-validate-content-semantics-the-pipeline-accepts.md](./CR-013-validate-content-semantics-the-pipeline-accepts.md) |
-| CR-014 | Reassess generated content artifact strategy | Proposed | Medium | Architecture | 2026-05-06 | [CR-014-reassess-generated-content-artifact-strategy.md](./CR-014-reassess-generated-content-artifact-strategy.md) |
+| CR-014 | Decide ownership of the image manifest | Proposed | Medium | Architecture | 2026-05-06 | [CR-014-decide-ownership-of-the-image-manifest.md](./CR-014-decide-ownership-of-the-image-manifest.md) |
 | CR-015 | Template-driven content generator | Done | High | Content Operations | 2026-05-21 | [CR-015-template-driven-content-generator.md](./CR-015-template-driven-content-generator.md) |
 | CR-016 | Render standalone About content | Done | High | Web Content | 2026-05-21 | [CR-016-render-standalone-about-content.md](./CR-016-render-standalone-about-content.md) |
 | CR-017 | Convert docs to LLM wiki | Done | Medium | Process | 2026-05-23 | [CR-017-convert-docs-to-llm-wiki.md](./CR-017-convert-docs-to-llm-wiki.md) |
@@ -47,8 +47,15 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-031 | Define the caching policy for HTML and assets | Proposed | Medium | Deployment | 2026-08-09 | Pending detail |
 | CR-032 | Fix soft 404s and unify not-found pages | Proposed | Medium | Web Content | 2026-08-09 | Pending detail |
 | CR-033 | Add story-crafter CI so stories validate before merge | Done | High | Deployment | 2026-08-09 | [CR-033-add-story-crafter-ci-so-stories-validate-before-merge.md](./CR-033-add-story-crafter-ci-so-stories-validate-before-merge.md) |
+| CR-034 | Restore hero images to production | Proposed | High | Content Pipeline | 2026-08-10 | [CR-034-restore-hero-images-to-production.md](./CR-034-restore-hero-images-to-production.md) |
 
 ## Backlog Grooming Notes
+
+### 2026-08-10
+
+- Added `CR-034` and reshaped `CR-014` from "Reassess generated content artifact strategy" to "Decide ownership of the image manifest". `CR-014`'s own 2026-08-09 review had already found most of it overtaken by implementation and named three survivors; checking those three against the code resolved two and escalated the third. "Should any generated artifact be committed for rollback" is answered — deployment rolls back by redeploying known-good SHAs (`CR-019`), so nothing needs committing. "Traceability for R2-hosted images" turned out not to be about traceability: the images are perfectly traceable and simply **are not rendered**. Only manifest ownership survives as a real question, and even that may be decided as a side effect of `CR-034`.
+
+- `CR-034` is a live defect rather than a design question, which is why it was split out rather than left inside a 2026-05 architecture request. The site has rendered no hero images since 2026-08-02, verified against the live site and not merely the local build: zero image URLs on the homepage and on a post that has generated images, zero in the built `posts-data.ts`, zero content files carrying `image:` — while `HEAD` on the R2 objects returns 206, so the images exist and serve. `metadata.image` is written only by `ImageGeneratorProcessor`, which is only added under `--generate-images`, and `deploy.yml` runs plain `build:posts`. The cause is a seam between two correct decisions: `CR-019` gave CI a deploy that does not generate images, and `CR-025` deleted the local deploy that did, on the same day. Keeping generation out of CI was right — it needs OpenAI and R2 credentials that `CR-018` and `CR-029` deliberately removed from the deploy path — but the URL only ever lived in `context.metadata` during a generating build and was never persisted, so removing the build removed the images. The restoring change is small: the processor consults the manifest before it does anything expensive, and `build:posts --generate-images --dry-run` against the real tree restores 15 of 15 with no network call. Recorded as the minimal change and not yet the recommendation, because it leaves the underlying fragility intact — the cache key is a hash of the item's body, so editing a post that has an image silently drops that image on the next deploy, which is exactly how this became invisible in the first place.
 
 ### 2026-08-09
 
