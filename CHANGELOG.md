@@ -2,6 +2,14 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-08-10
+
+### Changed
+
+- Completed `CR-033`. `story-crafter` now runs a `Story CI` workflow on every pull request, and `Validate stories (no deploy)` is a required status check on its `main` with `strict: true` — closing the last repository that could merge unvalidated content. Nothing new was written to do it: both gates already existed and both ran in the wrong place. The canon suite (`validate-all.mjs` — registry, frontmatter, continuity, season readiness) ran only on the author's machine via `/next-story` and a Stop hook, and `sync:stories` ran for the first time inside `deploy.yml`, after the story had merged. The reasoning for running both was recorded and then reversed: "they share no rules" was wrong, and fault injection showed `sync-stories.ts`'s eight required fields are a strict subset of `story-data.mjs`'s nine, with the two hand-written parsers emitting byte-identical error text — removing `secondary_themes` fails canon and syncs cleanly, while nothing tested fails sync and passes canon. Canon is simply the stricter gate. `sync:stories` is kept anyway as a cross-repository contract test, because the grammar is implemented twice in two repositories and canon passing here says nothing about whether the application at `main` can still consume a story; it should sit silent and earn its place the day the two drift. `build:posts` is deliberately not run, unlike `content-ci.yml` — it succeeds against a stories-only `CONTENT_DIR`, but the only rule `CR-013`'s validator applies to a story is a non-empty `title` that `sync-stories.ts` already hard-requires, so it would buy a full site build and no coverage. `strict: true` was chosen for a reason specific to this repository rather than for symmetry: `validate-continuity` checks the latest story, so a branch cut from a stale `main` can validate a new episode against the wrong predecessor.
+
+- Noted, not fixed: merging a workflow-only change to `story-crafter`'s `main` triggered a full production deploy, because `request-deploy.yml` fires on any push to `main` with no `paths-ignore`, while `deploy.yml` in this repository has one. The same happened in `mylifeindigital.content` earlier the same day. Both deploys succeeded and neither changed the site. The asymmetry is real and belongs to its own request.
+
 ## 2026-08-09
 
 ### Added
