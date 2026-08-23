@@ -11,6 +11,9 @@
     {
       "name": "story-crafter",
       "path": "../story-crafter"
+    },
+    {
+      "path": "../mylifeindigital.skills"
     }
   ],
   "settings": {
