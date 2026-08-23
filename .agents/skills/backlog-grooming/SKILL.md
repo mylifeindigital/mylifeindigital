@@ -10,11 +10,12 @@ Use this skill to groom the local-first change request backlog in `change-reques
 ## First Steps
 
 1. Read `AGENTS.md` for repository-wide agent guidance.
-2. Read `change-requests/SKILL.md` for the change request workflow.
-3. Read `change-requests/index.md` before opening detail files.
-4. Read `change-requests/templates/change-request.md` to preserve the expected detail-file shape.
-5. Read `docs/WIKI.md` and `.agents/skills/llm-wiki/SKILL.md` before editing wiki files.
-6. Read `docs/wiki/index.md` to understand the current wiki catalog.
+2. Read the shared `$manage-change-requests` skill for the reusable lifecycle.
+3. Read `change-requests/WORKFLOW.md` for the repository-specific contract.
+4. Read `change-requests/index.md` before opening detail files.
+5. Read `change-requests/templates/change-request.md` to preserve the expected detail-file shape.
+6. Read `docs/WIKI.md` and `.agents/skills/llm-wiki/SKILL.md` before editing wiki files.
+7. Read `docs/wiki/index.md` to understand the current wiki catalog.
 
 ## Backlog Inventory
 
