@@ -2,6 +2,18 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-08-23
+
+### Changed
+
+- Replaced the repository-local change-request skill with a thin
+  `change-requests/WORKFLOW.md` project contract. The reusable lifecycle now
+  comes from the shared `$manage-change-requests` skill maintained in
+  `mylifeindigital.skills`; this repository retains only its dashboard and
+  template contract, reconnaissance lessons, and Git/wiki/release integrations.
+  Updated `AGENTS.md` and backlog grooming to use the layered workflow, and
+  removed the obsolete local skill UI metadata.
+
 ## 2026-08-10
 
 ### Added

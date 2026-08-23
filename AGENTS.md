@@ -148,8 +148,9 @@ There is none, and reintroducing one needs a change request. `CR-018` decided th
 
 Use `change-requests/` for local-first planning and implementation tracking.
 
+- The shared `$manage-change-requests` skill defines the reusable lifecycle.
 - `change-requests/index.md` is the dashboard.
-- `change-requests/SKILL.md` defines the workflow for creating and updating requests.
+- `change-requests/WORKFLOW.md` defines this repository's local contract and overrides.
 - `change-requests/templates/change-request.md` is the template for new requests.
 - Use stable IDs such as `CR-001`, `CR-002`, and keep one implementation outcome per request.
 
