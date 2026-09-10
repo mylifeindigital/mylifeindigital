@@ -10,11 +10,11 @@ Reviewed: 2026-09-10
 
 [mlid-streams.md](../docs/raw/mlid-streams.md) describes low-ceremony capture of short thoughts, AI categorization, wiki indexing, and eventual authoring assistance. Notes should be useful without becoming posts or requiring a template for every content type. The [MLID Stream wiki page](../docs/wiki/projects/mlid-stream.md) records the initial exploration.
 
-The existing [docs workflow](../docs/WIKI.md) already separates raw sources from synthesized wiki pages, with provenance, an index, and a log. A notes repository would reuse that model and potentially extract general exploratory knowledge; it is not a reason to move all application documentation. The boundary with repository-specific knowledge must be settled before choosing a capture destination.
+The existing [docs workflow](../docs/WIKI.md) already separates raw sources from synthesized wiki pages, with provenance, an index, and a log. The user has now selected the private [mylifeindigital.notes](https://github.com/mylifeindigital/mylifeindigital.notes) repository for new general captures. Application-specific knowledge stays in this repository's `docs/`, and existing docs are not bulk-migrated. The notes repository can reuse the raw-source/wiki model; its detailed organization remains to be defined.
 
 [AGENTS.md](../AGENTS.md) places application code and experiments here and publishable Markdown in the sibling content repository. [content-dir.ts](../scripts/content/content-dir.ts) resolves that content checkout; it is not a general notes-directory setting. [package.json](../package.json) currently uses npm workspaces and Node/tsx tooling. A Bun CLI experiment would be a scoped addition, not an implicit migration of the site runtime or Markdown parser.
 
-In the 2026-09-10 discussion, the user identified Git synchronization as the immediate concern and reported protected main branches in both application and content repositories. Protection does not require one PR per note: a working branch can hold pushed commits while integration into main waits. The suggested `mylifeindigital.notes` repository and daily batch PR are candidates, not approved provisioning or merge policies. Remote protections were not independently inspected for this planning request.
+In the 2026-09-10 discussion, the user identified Git synchronization as the immediate concern and reported protected main branches in both application and content repositories. Protection does not require one PR per note: a working branch can hold pushed commits while integration into main waits. The notes repository has been created at the user's request; daily batch PRs and the notes repository's protection/merge policy remain undecided. Existing repositories' remote protections were not independently inspected for this planning request.
 
 ## Goal
 
@@ -22,13 +22,13 @@ Build a small local CLI that captures Markdown thoughts and makes their Git sync
 
 ## Open Questions
 
-- [ ] Should general captures live in a new `mylifeindigital.notes` repository, and which knowledge belongs there versus this repository's `docs/`? Recommended starting point: new general notes there, application knowledge here, no bulk migration.
+- [x] Should general captures live in a new `mylifeindigital.notes` repository, and which knowledge belongs there versus this repository's `docs/`? Resolved 2026-09-10: new general notes there, application knowledge here, no bulk migration; see Decisions.
 - [ ] What branch protection and merge policy should the notes repository use: a daily batch PR or an explicitly closed capture session, and manual merge or policy-controlled auto-merge? Define when main catches up and what happens when a batch remains open overnight.
 - [ ] Should each capture commit and push immediately, with failed pushes retried by an explicit sync command? Define local-only, committed, pushed, and merged states and whether background retries are needed.
 - [ ] Should the CLI start in `experiments/mlid-stream/` using Bun with Shell for `git` and `gh` orchestration? Set its npm invocation and verification boundary before adding a workspace.
 - [ ] Is first-version AI organization an explicit handoff to the existing wiki skill, or a direct integration? Choose the harness/provider, invocation, review behavior, and tracked outputs. Decide whether Markdown index/log files suffice initially or SQLite is necessary.
 
-Implementation is blocked on these workflow and ownership decisions. Next action: resolve these choices with the user and record the answers below before promoting the implementation plan.
+CLI implementation is blocked on the remaining workflow decisions. Repository ownership is resolved. Next action: settle the notes repository's branch/merge policy and the remaining unchecked choices before promoting the implementation plan.
 
 ## Proposed Implementation
 
@@ -45,6 +45,8 @@ For this outcome, content promotion is a documented future handoff into `mylifei
 - 2026-09-10: Capture this work as a dedicated request following the user's instruction. Repository creation, daily PR batching, Bun adoption, and docs migration remain proposals; the conversation has not settled them.
 - 2026-09-10: Keep the outcome focused on capture, synchronization, and an organization handoff. The source's publishing and experiment-showcase ideas remain future consumers rather than expanding this request into a site redesign. Existing content-operations direction remains recorded in [CR-006](./CR-006-define-content-operations-app-scope-and-workflows.md).
 
+- 2026-09-10: Resolved capture ownership with the user: new general notes belong in `mylifeindigital.notes`; application knowledge remains in `mylifeindigital/docs/`; no bulk docs migration. Created the repository as private to keep unpublished personal captures private by default. This supersedes the earlier repository-creation proposal; publishing drafts still belong in `mylifeindigital.content`.
+
 ## Acceptance Criteria
 
 - [ ] Ownership, storage, runtime, organization, and branch/merge questions are resolved in dated decisions.
@@ -59,6 +61,8 @@ For this outcome, content promotion is a documented future handoff into `mylifei
 ## Implementation Notes
 
 - 2026-09-10: Planning only. Inspected the source note, wiki contract, content-directory resolver, workspace configuration, and related content-operations request. No notes repository or CLI has been created, and no remote Git operation is part of this planning change.
+
+- 2026-09-10: Created [mylifeindigital/mylifeindigital.notes](https://github.com/mylifeindigital/mylifeindigital.notes) through authenticated `gh repo create --private --add-readme`. Only the initial README was provisioned; no captures were moved, local checkout created, or branch protection configured. CLI implementation has not started.
 
 ## Outcome
 

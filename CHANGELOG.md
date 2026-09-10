@@ -6,6 +6,8 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ### Added
 
+- Resolved `CR-036` capture ownership and created the private `mylifeindigital.notes` GitHub repository for new general notes. Application documentation stays here without a bulk migration; notes branch/merge policy remains open.
+
 - Added `CR-036` for MLID Stream capture and Git synchronization, including a provisional batch PR workflow, notes-versus-docs ownership, and an AI organization handoff. Implementation awaits explicit workflow decisions; no notes repository or CLI was created.
 
 - Indexed the MLID Stream exploration and supplied Bun Shell reference in the docs wiki, with source links and unresolved capture, authoring, storage, and publishing questions. Catalogued the empty Bun Markdown source as pending synthesis.
