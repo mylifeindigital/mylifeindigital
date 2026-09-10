@@ -6,6 +6,8 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ### Added
 
+- Resolved the `CR-036` CLI boundary: an isolated Bun experiment outside npm workspaces, with direct Bun invocation, an optional root npm entry point, and dedicated verification separate from the site.
+
 - Resolved `CR-036` retry mechanics: one sync mechanism runs after capture or through `stream sync`, with visible pending failures and no background retries in version one.
 
 - Resolved late arrivals in `CR-036`: notes synced after their original daily batch closes join the next active day’s batch with the original capture timestamp preserved.

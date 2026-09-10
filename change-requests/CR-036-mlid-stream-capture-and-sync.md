@@ -27,17 +27,17 @@ Build a small local CLI that captures Markdown thoughts and makes their Git sync
 - [x] What batch and merge policy should the notes repository use: a daily batch PR or an explicitly closed capture session, and manual merge or policy-controlled auto-merge? Resolved 2026-09-10: daily batches on active days, server-side finalization, and policy-controlled auto-merge; see Decisions for quiet days and overnight batches.
 - [x] How should late offline captures be assigned if their original daily batch has already finalized? Resolved 2026-09-10: add them to the next active day’s batch while preserving the original capture timestamp; see Decisions.
 - [x] Should failed pushes be retried by an explicit sync command, background retries, or both? Resolved 2026-09-10: one sync mechanism triggered after each capture or manually through `stream sync`; failures remain pending until the next trigger. No background retries in version one. Preserve distinct local-only, committed, pushed, and merged states.
-- [ ] Should the CLI start in `experiments/mlid-stream/` using Bun with Shell for `git` and `gh` orchestration? Set its npm invocation and verification boundary before adding a workspace.
+- [x] Should the CLI start in `experiments/mlid-stream/` using Bun with Shell for `git` and `gh` orchestration? Resolved 2026-09-10: an isolated Bun CLI outside the root npm workspace list, supporting direct Bun invocation and a root `npm run stream -- ...` convenience wrapper, with dedicated verification; see Decisions.
 - [ ] Is first-version AI organization an explicit handoff to the existing wiki skill, or a direct integration? Choose the harness/provider, invocation, review behavior, and tracked outputs. Decide whether Markdown index/log files suffice initially or SQLite is necessary.
 
-CLI implementation is blocked on the remaining workflow decisions. Repository ownership is resolved. Next action: settle runtime and organization choices, and define the required notes-validation workflow before promoting the implementation plan.
+CLI implementation is blocked on the remaining workflow decisions. Repository ownership is resolved. Next action: settle organization choices, and define the required notes-validation workflow before promoting the implementation plan.
 
 ## Proposed Implementation
 
 Provisional phases, subject to the open questions:
 
 1. **Capture locally.** Implement capture and inbox commands against an explicitly configured notes checkout. Check: twenty one-line captures produce twenty distinct, recoverable notes without network access or AI availability; neither application docs nor publishable content is modified.
-2. **Synchronize a batch.** Use Git and, if selected, Bun Shell plus authenticated `gh` to commit only owned files, push a working branch, and create or reuse its PR. Check with a disposable remote: twenty captures share one batch PR; retries do not duplicate notes or PRs; push/authentication failures preserve local notes and report pending sync. Dirty checkouts, remote divergence, and a remotely merged branch must produce recoverable behavior without force-pushing or discarding unrelated work.
+2. **Synchronize a batch.** Use Git through Bun Shell plus authenticated `gh` to commit only owned files, push a working branch, and create or reuse its PR. Check with a disposable remote: twenty captures share one batch PR; retries do not duplicate notes or PRs; push/authentication failures preserve local notes and report pending sync. Dirty checkouts, remote divergence, and a remotely merged branch must produce recoverable behavior without force-pushing or discarding unrelated work.
 3. **Finalize daily batches on the server.** Implement a scheduled GitHub workflow that finds eligible previous-day draft PRs using Africa/Johannesburg dates, marks them ready, and enables auto-merge under existing protection. Implement the required notes-validation check and enable repository auto-merge as prerequisites. Check: quiet days create no PRs; active-day PRs cannot auto-merge early; missed schedule runs catch up older eligible batches; failed checks/conflicts leave batches open; later captures can start a new daily branch while older batches wait. Updating branches and retrying finalization must not discard notes or bypass checks.
 4. **Connect organization.** Add the selected explicit organization action or handoff, preserving raw captures and provenance. Check: synthesized entries link to their sources and update the index/log; an unavailable AI integration cannot prevent capture or Git sync.
 
@@ -58,6 +58,8 @@ For this outcome, content promotion is a documented future handoff into `mylifei
 
 - 2026-09-10: The user confirmed one shared sync mechanism for automatic sync after each capture and explicit `stream sync`. Failed pushes remain pending until the next capture or manual sync; version one has no background retry scheduler. The CLI reports saved locally, committed, pushed, and merged distinctly so a local save is never presented as remote synchronization. Repeated sync calls reuse pending work and the batch PR without duplicate notes, commits, or PRs, and concurrent calls are serialized. This resolves the retry mechanics left open in the earlier decisions.
 
+- 2026-09-10: Resolved the CLI location, runtime, invocation, and verification boundary from the discussion: keep TypeScript implementation in `experiments/mlid-stream/`, outside the root npm workspace list. Bun executes the CLI; Bun Shell orchestrates `git` and `gh`. Support direct `bun run src/cli.ts ...` from the experiment and a root `npm run stream -- ...` convenience script that launches Bun. npm is only a launcher, not the runtime executing the CLI. The wrapper does not register a workspace. Verify the experiment with dedicated type checks and Node-compatible `node:test` tests executed under Bun, using temporary Git repositories and simulated GitHub responses; routine tests must not push personal notes or create real PRs. Preserve existing application npm build/test commands and avoid adding a site-build dependency on Bun. This provides a consistent optional entry point while keeping direct Bun use and experiment isolation. No CLI or wrapper is implemented by this decision update.
+
 ## Acceptance Criteria
 
 - [ ] Ownership, storage, runtime, organization, and branch/merge questions are resolved in dated decisions.
@@ -71,6 +73,7 @@ For this outcome, content promotion is a documented future handoff into `mylifei
 - [ ] Closing/merging a batch and starting the next works after refreshing from the remote, including an externally merged PR and remote divergence.
 - [ ] The selected organization workflow preserves original captures and source links, and maintains an index and log.
 - [ ] Documentation explains setup, notes location, offline recovery, PR merge ownership, docs boundaries, and the future content-promotion handoff.
+- [ ] The CLI runs directly with Bun and through the root npm wrapper, is absent from the root workspace list, and has dedicated type/test checks using temporary repositories and simulated GitHub responses.
 - [ ] Relevant CLI checks pass; existing application npm tooling and production parser behavior remain unchanged.
 
 ## Implementation Notes
