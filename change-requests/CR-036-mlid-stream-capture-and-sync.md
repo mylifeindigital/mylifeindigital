@@ -14,7 +14,7 @@ The existing [docs workflow](../docs/WIKI.md) already separates raw sources from
 
 [AGENTS.md](../AGENTS.md) places application code and experiments here and publishable Markdown in the sibling content repository. [content-dir.ts](../scripts/content/content-dir.ts) resolves that content checkout; it is not a general notes-directory setting. [package.json](../package.json) currently uses npm workspaces and Node/tsx tooling. A Bun CLI experiment would be a scoped addition, not an implicit migration of the site runtime or Markdown parser.
 
-In the 2026-09-10 discussion, the user identified Git synchronization as the immediate concern and reported protected main branches in both application and content repositories. Protection does not require one PR per note: a working branch can hold pushed commits while integration into main waits. The notes repository has been created at the user's request; the user subsequently selected matching application-repository branch protection, which has been inspected and applied. Batch timing and merge automation remain undecided.
+In the 2026-09-10 discussion, the user identified Git synchronization as the immediate concern and reported protected main branches in both application and content repositories. Protection does not require one PR per note: a working branch can hold pushed commits while integration into main waits. The notes repository has been created at the user's request; the user subsequently selected matching application-repository branch protection, which has been inspected and applied. The user has selected daily batches created on demand, immediate commit/push, and server-side finalization after each capture day; implementation is pending.
 
 ## Goal
 
@@ -24,12 +24,12 @@ Build a small local CLI that captures Markdown thoughts and makes their Git sync
 
 - [x] Should general captures live in a new `mylifeindigital.notes` repository, and which knowledge belongs there versus this repository's `docs/`? Resolved 2026-09-10: new general notes there, application knowledge here, no bulk migration; see Decisions.
 - [x] What branch protection should the notes repository use? Resolved 2026-09-10: match `mylifeindigital` main exactly; settings applied and verified, including the required validation check.
-- [ ] What batch and merge policy should the notes repository use: a daily batch PR or an explicitly closed capture session, and manual merge or policy-controlled auto-merge? Define when main catches up and what happens when a batch remains open overnight.
-- [ ] Should each capture commit and push immediately, with failed pushes retried by an explicit sync command? Define local-only, committed, pushed, and merged states and whether background retries are needed.
+- [x] What batch and merge policy should the notes repository use: a daily batch PR or an explicitly closed capture session, and manual merge or policy-controlled auto-merge? Resolved 2026-09-10: daily batches on active days, server-side finalization, and policy-controlled auto-merge; see Decisions for quiet days and overnight batches.
+- [ ] Should failed pushes be retried by an explicit sync command, background retries, or both, and how should late offline captures be assigned if their original daily batch has already finalized? Immediate commit/push is decided; recovery and late-arrival behavior remain open. Preserve distinct local-only, committed, pushed, and merged states.
 - [ ] Should the CLI start in `experiments/mlid-stream/` using Bun with Shell for `git` and `gh` orchestration? Set its npm invocation and verification boundary before adding a workspace.
 - [ ] Is first-version AI organization an explicit handoff to the existing wiki skill, or a direct integration? Choose the harness/provider, invocation, review behavior, and tracked outputs. Decide whether Markdown index/log files suffice initially or SQLite is necessary.
 
-CLI implementation is blocked on the remaining workflow decisions. Repository ownership is resolved. Next action: settle the notes repository's batch/merge policy and required notes-validation workflow and the remaining unchecked choices before promoting the implementation plan.
+CLI implementation is blocked on the remaining workflow decisions. Repository ownership is resolved. Next action: settle retry/late-arrival behavior, runtime, and organization choices, and define the required notes-validation workflow before promoting the implementation plan.
 
 ## Proposed Implementation
 
@@ -37,7 +37,8 @@ Provisional phases, subject to the open questions:
 
 1. **Capture locally.** Implement capture and inbox commands against an explicitly configured notes checkout. Check: twenty one-line captures produce twenty distinct, recoverable notes without network access or AI availability; neither application docs nor publishable content is modified.
 2. **Synchronize a batch.** Use Git and, if selected, Bun Shell plus authenticated `gh` to commit only owned files, push a working branch, and create or reuse its PR. Check with a disposable remote: twenty captures share one batch PR; retries do not duplicate notes or PRs; push/authentication failures preserve local notes and report pending sync. Dirty checkouts, remote divergence, and a remotely merged branch must produce recoverable behavior without force-pushing or discarding unrelated work.
-3. **Connect organization.** Add the selected explicit organization action or handoff, preserving raw captures and provenance. Check: synthesized entries link to their sources and update the index/log; an unavailable AI integration cannot prevent capture or Git sync.
+3. **Finalize daily batches on the server.** Implement a scheduled GitHub workflow that finds eligible previous-day draft PRs using Africa/Johannesburg dates, marks them ready, and enables auto-merge under existing protection. Implement the required notes-validation check and enable repository auto-merge as prerequisites. Check: quiet days create no PRs; active-day PRs cannot auto-merge early; missed schedule runs catch up older eligible batches; failed checks/conflicts leave batches open; later captures can start a new daily branch while older batches wait. Updating branches and retrying finalization must not discard notes or bypass checks.
+4. **Connect organization.** Add the selected explicit organization action or handoff, preserving raw captures and provenance. Check: synthesized entries link to their sources and update the index/log; an unavailable AI integration cannot prevent capture or Git sync.
 
 For this outcome, content promotion is a documented future handoff into `mylifeindigital.content` using its existing authoring and PR workflow. Automatic publication, a new desktop interface, production Markdown-parser replacement, and bulk docs migration are outside this request.
 
@@ -50,12 +51,16 @@ For this outcome, content promotion is a documented future handoff into `mylifei
 
 - 2026-09-10: At the user's direction, copied `mylifeindigital` main protection to the notes repository: require PRs, zero approving reviews, strict/up-to-date `Validate (no deploy)` from GitHub Actions (app ID 15368), administrator bypass allowed, force pushes and deletion prohibited. Stale-review dismissal, code-owner review, last-push approval, linear history, conversation resolution, signed commits, branch locking, creation blocking, and fork syncing are disabled in both. The application repository has no rulesets. This resolves protection only, not batch cadence or manual versus automated merging.
 
+- 2026-09-10: The user approved daily batches created on demand, immediate commit/push, and server-side finalization. Use Africa/Johannesburg capture dates. The first capture starts that day's branch and draft PR when online; subsequent captures commit and push to the same batch. No captures means no branch or empty PR. Keep auto-merge disabled while the capture day is active. A server-side scheduled workflow finalizes eligible previous-day batches, checks that changes are limited to permitted note paths and have no known unresolved sync failure, marks them ready, and enables GitHub auto-merge. Main catches up only after required validation and up-to-date-branch requirements pass, without administrator bypass. A failed check or conflict leaves the batch open for recovery; new-day captures use a new branch even if an older PR remains open. Finalization catches up overdue batches rather than depending on the laptop being online or an exact midnight run. The deciding constraint is frequent Git synchronization without a manual session-closing step: pushed notes are already remote before integration into main. Late offline arrivals and retry mechanics remain explicit open questions. This records policy only; no scheduler or auto-merge setting was enabled in this decision update.
+
 ## Acceptance Criteria
 
 - [ ] Ownership, storage, runtime, organization, and branch/merge questions are resolved in dated decisions.
 - [ ] A one-line capture succeeds locally without a content-type template, network connection, or AI response.
 - [ ] Twenty captures can be committed and pushed through the chosen batch workflow, with one reusable PR where required and no direct push to protected main.
 - [ ] The CLI distinguishes saved locally, committed, pushed, and merged; failure recovery and retries preserve notes and unrelated changes.
+- [ ] Quiet days produce no empty branches/PRs; active-day batches remain draft; server-side finalization handles overdue batches and enables auto-merge only after day-end eligibility.
+- [ ] Failed validation or conflicts leave notes recoverable on the remote branch while new-day captures continue; no protection bypass is used.
 - [ ] Closing/merging a batch and starting the next works after refreshing from the remote, including an externally merged PR and remote divergence.
 - [ ] The selected organization workflow preserves original captures and source links, and maintains an index and log.
 - [ ] Documentation explains setup, notes location, offline recovery, PR merge ownership, docs boundaries, and the future content-promotion handoff.

@@ -6,6 +6,8 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ### Added
 
+- Recorded the `CR-036` decision for daily note batches created on demand, immediate commit/push, and server-side finalization with policy-controlled auto-merge. Quiet days create nothing; failing or overdue batches remain recoverable. Retry and late offline capture behavior remain open.
+
 - Applied matching application-repository main-branch protection to `mylifeindigital.notes` and recorded the resolved protection decision in `CR-036`. The required notes validation workflow and batch/merge automation remain outstanding.
 
 - Resolved `CR-036` capture ownership and created the private `mylifeindigital.notes` GitHub repository for new general notes. Application documentation stays here without a bulk migration; notes branch/merge policy remains open.
