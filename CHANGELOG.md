@@ -6,6 +6,8 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ### Added
 
+- Resolved `CR-036` retry mechanics: one sync mechanism runs after capture or through `stream sync`, with visible pending failures and no background retries in version one.
+
 - Resolved late arrivals in `CR-036`: notes synced after their original daily batch closes join the next active day’s batch with the original capture timestamp preserved.
 
 - Recorded the `CR-036` decision for daily note batches created on demand, immediate commit/push, and server-side finalization with policy-controlled auto-merge. Quiet days create nothing; failing or overdue batches remain recoverable. Retry and late offline capture behavior remain open.
