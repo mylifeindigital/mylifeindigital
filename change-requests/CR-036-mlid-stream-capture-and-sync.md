@@ -25,11 +25,12 @@ Build a small local CLI that captures Markdown thoughts and makes their Git sync
 - [x] Should general captures live in a new `mylifeindigital.notes` repository, and which knowledge belongs there versus this repository's `docs/`? Resolved 2026-09-10: new general notes there, application knowledge here, no bulk migration; see Decisions.
 - [x] What branch protection should the notes repository use? Resolved 2026-09-10: match `mylifeindigital` main exactly; settings applied and verified, including the required validation check.
 - [x] What batch and merge policy should the notes repository use: a daily batch PR or an explicitly closed capture session, and manual merge or policy-controlled auto-merge? Resolved 2026-09-10: daily batches on active days, server-side finalization, and policy-controlled auto-merge; see Decisions for quiet days and overnight batches.
-- [ ] Should failed pushes be retried by an explicit sync command, background retries, or both, and how should late offline captures be assigned if their original daily batch has already finalized? Immediate commit/push is decided; recovery and late-arrival behavior remain open. Preserve distinct local-only, committed, pushed, and merged states.
+- [x] How should late offline captures be assigned if their original daily batch has already finalized? Resolved 2026-09-10: add them to the next active day’s batch while preserving the original capture timestamp; see Decisions.
+- [ ] Should failed pushes be retried by an explicit sync command, background retries, or both? Immediate commit/push and late-arrival placement are decided; retry mechanics remain open. Preserve distinct local-only, committed, pushed, and merged states.
 - [ ] Should the CLI start in `experiments/mlid-stream/` using Bun with Shell for `git` and `gh` orchestration? Set its npm invocation and verification boundary before adding a workspace.
 - [ ] Is first-version AI organization an explicit handoff to the existing wiki skill, or a direct integration? Choose the harness/provider, invocation, review behavior, and tracked outputs. Decide whether Markdown index/log files suffice initially or SQLite is necessary.
 
-CLI implementation is blocked on the remaining workflow decisions. Repository ownership is resolved. Next action: settle retry/late-arrival behavior, runtime, and organization choices, and define the required notes-validation workflow before promoting the implementation plan.
+CLI implementation is blocked on the remaining workflow decisions. Repository ownership is resolved. Next action: settle retry behavior, runtime, and organization choices, and define the required notes-validation workflow before promoting the implementation plan.
 
 ## Proposed Implementation
 
@@ -53,11 +54,14 @@ For this outcome, content promotion is a documented future handoff into `mylifei
 
 - 2026-09-10: The user approved daily batches created on demand, immediate commit/push, and server-side finalization. Use Africa/Johannesburg capture dates. The first capture starts that day's branch and draft PR when online; subsequent captures commit and push to the same batch. No captures means no branch or empty PR. Keep auto-merge disabled while the capture day is active. A server-side scheduled workflow finalizes eligible previous-day batches, checks that changes are limited to permitted note paths and have no known unresolved sync failure, marks them ready, and enables GitHub auto-merge. Main catches up only after required validation and up-to-date-branch requirements pass, without administrator bypass. A failed check or conflict leaves the batch open for recovery; new-day captures use a new branch even if an older PR remains open. Finalization catches up overdue batches rather than depending on the laptop being online or an exact midnight run. The deciding constraint is frequent Git synchronization without a manual session-closing step: pushed notes are already remote before integration into main. Late offline arrivals and retry mechanics remain explicit open questions. This records policy only; no scheduler or auto-merge setting was enabled in this decision update.
 
+- 2026-09-10: The user resolved late arrivals: “A note synced after its original day’s batch has closed.” Add the note to the next active day’s batch, preserving its original capture timestamp. For example, a Monday note first synced on Tuesday joins Tuesday’s batch with its Monday timestamp; after a longer offline period, use the active sync day’s batch. Do not reopen the original batch or rewrite the capture time to match the batch date. This resolves the late-arrival question left open in the earlier daily-batch decision; retry mechanics remain undecided.
+
 ## Acceptance Criteria
 
 - [ ] Ownership, storage, runtime, organization, and branch/merge questions are resolved in dated decisions.
 - [ ] A one-line capture succeeds locally without a content-type template, network connection, or AI response.
 - [ ] Twenty captures can be committed and pushed through the chosen batch workflow, with one reusable PR where required and no direct push to protected main.
+- [ ] A note synced after its original day’s batch has closed joins the next active day’s batch with its original timestamp unchanged, including after multiple offline days; the original batch is not reopened and retries do not duplicate the note.
 - [ ] The CLI distinguishes saved locally, committed, pushed, and merged; failure recovery and retries preserve notes and unrelated changes.
 - [ ] Quiet days produce no empty branches/PRs; active-day batches remain draft; server-side finalization handles overdue batches and enables auto-merge only after day-end eligibility.
 - [ ] Failed validation or conflicts leave notes recoverable on the remote branch while new-day captures continue; no protection bypass is used.
