@@ -2,6 +2,12 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-09-10
+
+### Added
+
+- Indexed the MLID Stream exploration and supplied Bun Shell reference in the docs wiki, with source links and unresolved capture, authoring, storage, and publishing questions. Catalogued the empty Bun Markdown source as pending synthesis.
+
 ## 2026-08-23
 
 ### Changed

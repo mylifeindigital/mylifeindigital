@@ -39,7 +39,20 @@ Resolved by `CR-018` on 2026-08-09: the admin becomes a read-only operations con
 - How should generated stories be delivered in a mobile-friendly format for bedtime reading?
 - When current change requests are complete, which future CR should own Story Crafter planning without expanding `CR-017`?
 
+## MLID Stream
+
+- How should low-ceremony, free-form note capture connect to the existing template-driven content operations workflow? The new source resists per-type schemas and templates; this tension remains unresolved.
+- Should experiments guide the progression from notes to published content, and which notes should remain unexpanded?
+- Where should canonical notes live, and what should an optional SQLite index store alongside the index and log?
+- What local interface and AI integration would support capture, automatic categorization, feedback, and publication assistance? Bun Shell is only a candidate reference.
+- The [Bun Markdown source](../raw/bunjs/markdown.md) is empty as of 2026-09-10. Ingest its technical content when supplied; it currently provides no basis for changing the [Markdown Parser decision](./decisions/markdown-parser.md).
+
+See [MLID Stream](./projects/mlid-stream.md) and [Bun Shell](./concepts/bun-shell.md).
+
 ## Sources
+
+- [mlid-streams.md](../raw/mlid-streams.md)
+- [Bun Shell reference](../raw/bunjs/shell.md)
 
 - [admin-dashboard.md](../raw/admin-dashboard.md)
 - [editor-design.md](../raw/editor-design.md)

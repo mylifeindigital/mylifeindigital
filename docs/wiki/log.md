@@ -91,3 +91,10 @@ Append-only record of docs wiki activity.
 - Moved existing docs notes and assets into `docs/raw/`.
 - Seeded initial wiki pages for content editor direction, content operations, content pipeline, Markdown processing, Git-backed content, authoring-surface decisions, and open questions.
 - Added `docs/WIKI.md` and the repo-local `llm-wiki` skill workflow.
+
+## [2026-09-10] ingest | MLID Stream and Bun references
+
+- Ingested [mlid-streams.md](../raw/mlid-streams.md) into [MLID Stream](./projects/mlid-stream.md), preserving its exploratory status and optional SQLite indexing.
+- Summarized the supplied [shell.md](../raw/bunjs/shell.md) snapshot in [Bun Shell](./concepts/bun-shell.md), including input-safety boundaries and a possible role in local tooling.
+- Catalogued [markdown.md](../raw/bunjs/markdown.md) as pending because it is empty; no Bun Markdown capabilities or parser changes were inferred.
+- Updated the index and open questions, including the unresolved tension between free-form capture and template-driven authoring. Raw sources were left unchanged.
