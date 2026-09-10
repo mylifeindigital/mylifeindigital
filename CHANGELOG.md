@@ -6,6 +6,8 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ### Added
 
+- Applied matching application-repository main-branch protection to `mylifeindigital.notes` and recorded the resolved protection decision in `CR-036`. The required notes validation workflow and batch/merge automation remain outstanding.
+
 - Resolved `CR-036` capture ownership and created the private `mylifeindigital.notes` GitHub repository for new general notes. Application documentation stays here without a bulk migration; notes branch/merge policy remains open.
 
 - Added `CR-036` for MLID Stream capture and Git synchronization, including a provisional batch PR workflow, notes-versus-docs ownership, and an AI organization handoff. Implementation awaits explicit workflow decisions; no notes repository or CLI was created.
