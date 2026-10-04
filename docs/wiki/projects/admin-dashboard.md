@@ -57,7 +57,7 @@ If every admin action produces a branch, a commit, and a pull request — and ne
 
 ## Scope Boundaries
 
-- **Stories are structurally out of scope.** `content/stories/` inside the resolved content directory is a git-ignored build artifact generated from `story-crafter` by `npm run sync:stories`. It never appears in the content repository's tree, so `getTree()` cannot see it. Editing stories means editing `story-crafter`, a different repository with a different shape. See [Story Crafter](./story-crafter.md).
+- **Stories were structurally out of scope** (and since `CR-037` are no longer on the site at all). `content/stories/` inside the resolved content directory was a git-ignored build artifact generated from `story-crafter` by `npm run sync:stories`. It never appears in the content repository's tree, so `getTree()` cannot see it. Editing stories means editing `story-crafter`, a different repository with a different shape. See [Story Crafter](./story-crafter.md).
 - **A second credential is required.** `CONTENT_CHECKOUT_TOKEN` is read-only by design and used by CI. A pull-request-opening admin needs its own fine-grained token with `Contents: write` and `Pull requests: write` on `mylifeindigital.content`, and deliberately no access to the application repository.
 - **The admin's write surface is posts, pages, and technical sessions** — the directories the content repository actually owns.
 

@@ -69,9 +69,8 @@ export function StatusConsole({ buildInfo, inventory }: StatusConsoleProps) {
                 <h2>Assembled from</h2>
                 <Revision label="mylifeindigital" sha={revisions.app} />
                 <Revision label="mylifeindigital.content" sha={revisions.content} />
-                <Revision label="story-crafter" sha={revisions.story} />
                 <p class="status-note">
-                    Full commits, because a rollback redeploys these three refs.
+                    Full commits, because a rollback redeploys these two refs.
                 </p>
             </section>
 

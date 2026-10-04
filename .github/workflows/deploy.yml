@@ -1,12 +1,13 @@
 # Production deployment — CR-019 phase 3.
 #
 # The ONLY workflow that runs `wrangler deploy`. It assembles the combined
-# Worker artifact from three repositories:
+# Worker artifact from two repositories:
 #
 #   - this repository            → app, pipeline, wrangler configuration
 #   - mylifeindigital.content    → publishable Markdown (private; PAT checkout)
-#   - story-crafter              → Golden Valley stories, transformed at build
-#                                  time by `npm run sync:stories` (private; PAT)
+#
+# story-crafter was a third until CR-037 removed the stories section; its
+# stories now publish only through its own reader.
 #
 # Triggers:
 #   - push to main               → trusted application merges, except commits
@@ -15,12 +16,12 @@
 #   - repository_dispatch        → deployment requested by the content
 #     (type: deploy-content)       repository after a trusted content merge
 #   - workflow_dispatch          → manual/recovery deployment with explicit
-#                                  app/content/story refs (rollback per CR-019)
+#                                  app/content refs (rollback per CR-019)
 #
 # Secrets (repository Actions secrets):
 #   CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID — used only by the deploy step
 #   CONTENT_CHECKOUT_TOKEN — fine-grained PAT, Contents: Read-only on
-#     mylifeindigital.content and story-crafter
+#     mylifeindigital.content
 #
 # The CR-020 cutover is complete: mylifeindigital.content is the sole source of
 # publishable Markdown, and Cloudflare's native Git build is disconnected, so
@@ -36,7 +37,7 @@ on:
   push:
     branches: [main]
     # Documentation and planning changes cannot alter the deployed Worker, so
-    # they must not spend a full three-repository assembly to republish an
+    # they must not spend a full two-repository assembly to republish an
     # identical site. GitHub skips the run only when *every* changed path
     # matches, so a commit touching both code and its changelog still deploys —
     # which is the normal shape of a release commit under AGENTS.md.
@@ -59,10 +60,6 @@ on:
         default: "main"
       content_ref:
         description: "mylifeindigital.content ref to build"
-        required: false
-        default: "main"
-      story_ref:
-        description: "story-crafter ref to build"
         required: false
         default: "main"
 
@@ -96,14 +93,6 @@ jobs:
           # content repository's git log.
           fetch-depth: 0
 
-      - name: Check out story-crafter repository
-        uses: actions/checkout@v5
-        with:
-          repository: mylifeindigital/story-crafter
-          ref: ${{ inputs.story_ref || 'main' }}
-          path: story-crafter
-          token: ${{ secrets.CONTENT_CHECKOUT_TOKEN }}
-
       - name: Set up Node.js
         uses: actions/setup-node@v5
         with:
@@ -118,7 +107,7 @@ jobs:
           npm run typecheck:scripts
           npm run test:scripts
 
-      # Resolve the three commits ONCE, before the build (CR-030).
+      # Resolve the two commits ONCE, before the build (CR-030).
       #
       # They used to be resolved only in the summary step below, after
       # `wrangler deploy` — which meant the bundle had no way to say what it was
@@ -130,14 +119,7 @@ jobs:
           {
             echo "BUILD_APP_SHA=$(git rev-parse HEAD)"
             echo "BUILD_CONTENT_SHA=$(git -C content-repo rev-parse HEAD)"
-            echo "BUILD_STORY_SHA=$(git -C story-crafter rev-parse HEAD)"
           } >> "$GITHUB_ENV"
-
-      - name: Sync stories into the assembled content
-        env:
-          STORY_CRAFTER_PATH: ${{ github.workspace }}/story-crafter
-          CONTENT_DIR: ${{ github.workspace }}/content-repo/content
-        run: npm run sync:stories
 
       - name: Generate content data (posts-data.ts)
         working-directory: web
@@ -157,7 +139,7 @@ jobs:
         run: npx wrangler deploy
 
       # Reads the values resolved above rather than asking git again, so this
-      # table and the stamp compiled into the Worker are the same three commits
+      # table and the stamp compiled into the Worker are the same two commits
       # by construction. `if: always()` means it can run before the resolve step
       # did — a failed checkout, say — so each falls back rather than rendering
       # an empty cell that would read as "no commit" instead of "never got that
@@ -172,7 +154,6 @@ jobs:
             echo "| --- | --- | --- |"
             echo "| mylifeindigital | ${{ inputs.app_ref || github.ref_name }} | ${BUILD_APP_SHA:-unresolved} |"
             echo "| mylifeindigital.content | ${{ inputs.content_ref || github.event.client_payload.content_ref || 'main' }} | ${BUILD_CONTENT_SHA:-unresolved} |"
-            echo "| story-crafter | ${{ inputs.story_ref || 'main' }} | ${BUILD_STORY_SHA:-unresolved} |"
             echo ""
             echo "Trigger: \`${{ github.event_name }}\`"
           } >> "$GITHUB_STEP_SUMMARY"

@@ -1,6 +1,5 @@
 import type { Section } from '../utils/markdown.js';
 import type { SocialLinks } from '../config.js';
-import { getSchemaForSection } from '../schemas/content-schemas.js';
 
 interface PreloadImage {
     href: string;
@@ -85,7 +84,7 @@ export function Layout({ title, siteTitle, sections = [], socialLinks = {}, prel
                         <nav>
                             <a href="/">Home</a>
                             <a href="/about">About</a>
-                            {sections.filter(section => !getSchemaForSection(section.slug).hideFromNav).map(section => (
+                            {sections.map(section => (
                                 <a href={`/${section.slug}`}>{section.title}</a>
                             ))}
                         </nav>

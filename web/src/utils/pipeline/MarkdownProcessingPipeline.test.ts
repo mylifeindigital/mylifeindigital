@@ -124,10 +124,10 @@ describe('content processing', () => {
     });
 
     it('carries the slug and section through unchanged', async () => {
-        const result = await processOk(['---', 'title: T', '---', '', 'Body.'].join('\n'), 's04e04', 'stories');
-        assert.equal(result.item.slug, 's04e04');
-        assert.equal(result.item.section, 'stories');
-        assert.equal(result.item.metadata.section, 'stories');
+        const result = await processOk(['---', 'title: T', '---', '', 'Body.'].join('\n'), 'week-04', 'technical-sessions');
+        assert.equal(result.item.slug, 'week-04');
+        assert.equal(result.item.section, 'technical-sessions');
+        assert.equal(result.item.metadata.section, 'technical-sessions');
     });
 
     it('falls back to the slug when no title is given', async () => {
@@ -136,16 +136,15 @@ describe('content processing', () => {
     });
 
     it('preserves arbitrary frontmatter keys the pipeline does not know about', async () => {
-        // Stories arrive from story-crafter carrying season, episode, and characters.
-        // Nothing in the pipeline declares those fields, and StoryLayout depends on
-        // them surviving the passthrough.
+        // Layouts read fields the pipeline never declares, so unknown keys must
+        // survive the passthrough rather than being filtered to a known set.
         const result = await processOk(
-            ['---', 'title: T', 'season: "4"', 'episode: "4"', 'characters:', '  - Ava', '  - Bo', '---', '', 'Body.'].join('\n'),
-            's04e04',
-            'stories',
+            ['---', 'title: T', 'series: "4"', 'contributors:', '  - Ava', '  - Bo', '---', '', 'Body.'].join('\n'),
+            'week-04',
+            'technical-sessions',
         );
-        assert.equal(result.item.metadata.season, '4');
-        assert.deepEqual(result.item.metadata.characters, ['Ava', 'Bo']);
+        assert.equal(result.item.metadata.series, '4');
+        assert.deepEqual(result.item.metadata.contributors, ['Ava', 'Bo']);
     });
 
     it('removes exclude-marked blocks from the output', async () => {

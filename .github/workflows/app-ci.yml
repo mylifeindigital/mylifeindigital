@@ -8,9 +8,7 @@
 # (CR-020 cutover complete); this workflow checks it out and sets CONTENT_DIR.
 # The checkout uses the read-only CONTENT_CHECKOUT_TOKEN secret, which is
 # available to same-repository pull requests but not to fork pull requests —
-# acceptable for a single-maintainer repository. The stories section is a
-# build-time artifact assembled only by the deploy workflow; it is
-# intentionally absent here.
+# acceptable for a single-maintainer repository.
 #
 # Production deployment is owned exclusively by deploy.yml (phase 3, not yet
 # implemented). This workflow must never receive deployment credentials.

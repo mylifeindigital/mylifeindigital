@@ -6,7 +6,7 @@
  * content items can override via frontmatter.
  */
 
-export type DisplayLayout = 'article' | 'story' | 'technical-session';
+export type DisplayLayout = 'article' | 'technical-session';
 
 export interface DisplaySchema {
   /** The layout component to use */
@@ -29,11 +29,6 @@ export interface DisplaySchema {
    * out by simply not declaring one.
    */
   theme?: string;
-  /**
-   * Leaves the section out of the header menu. Its pages and index stay
-   * reachable by URL; only the nav link is withheld.
-   */
-  hideFromNav?: boolean;
 }
 
 /**
@@ -46,15 +41,6 @@ export const contentSchemas: Record<string, DisplaySchema> = {
     showDate: true,
     showAuthor: true,
     headerStyle: 'minimal',
-  },
-  'stories': {
-    layout: 'story',
-    showTags: false,
-    showDate: false,
-    showAuthor: false,
-    headerStyle: 'minimal',
-    theme: 'story',
-    hideFromNav: true,
   },
   'technical-sessions': {
     layout: 'technical-session',

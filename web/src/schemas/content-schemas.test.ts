@@ -13,26 +13,18 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { contentSchemas, getSchemaForContent, getSchemaForSection } from './content-schemas.js';
 import { getLayoutComponent, layouts } from '../components/layouts/index.js';
-import { StoryLayout } from '../components/layouts/StoryLayout.js';
 import { ArticleLayout } from '../components/layouts/ArticleLayout.js';
 
 describe('getSchemaForSection', () => {
-    it('gives stories the story layout and the story theme', () => {
-        const schema = getSchemaForSection('stories');
-
-        assert.equal(schema.layout, 'story');
-        assert.equal(schema.theme, 'story');
-    });
-
-    it('leaves every other section on the default treatment', () => {
-        // CR-024 shipped exactly one theme on the claim that a second costs only
-        // token values. If another section quietly gains a theme, that claim stops
-        // being testable and the default palette is no longer the shared baseline.
+    it('leaves every section on the default treatment', () => {
+        // CR-024 built section themes, and its only theme went with the stories
+        // section (CR-037). The mechanism stays; a section that gains a theme
+        // should do so deliberately, with this list updated beside it.
         const themed = Object.entries(contentSchemas)
             .filter(([, schema]) => schema.theme !== undefined)
             .map(([section]) => section);
 
-        assert.deepEqual(themed, ['stories']);
+        assert.deepEqual(themed, []);
     });
 
     it('falls back to the posts schema for an unknown section', () => {
@@ -54,12 +46,12 @@ describe('getSchemaForContent', () => {
     });
 
     it('ignores an override that names no known schema', () => {
-        assert.deepEqual(getSchemaForContent('stories', 'nonsense'), contentSchemas['stories']);
+        assert.deepEqual(getSchemaForContent('technical-sessions', 'nonsense'), contentSchemas['technical-sessions']);
     });
 
     it('ignores an empty override rather than treating it as a choice', () => {
-        assert.deepEqual(getSchemaForContent('stories', ''), contentSchemas['stories']);
-        assert.deepEqual(getSchemaForContent('stories', undefined), contentSchemas['stories']);
+        assert.deepEqual(getSchemaForContent('technical-sessions', ''), contentSchemas['technical-sessions']);
+        assert.deepEqual(getSchemaForContent('technical-sessions', undefined), contentSchemas['technical-sessions']);
     });
 
     it('does not let authored frontmatter reach Object.prototype', () => {
@@ -67,9 +59,9 @@ describe('getSchemaForContent', () => {
         // CR-023 this returned Object.prototype.toString as though it were a schema,
         // giving a `layout` of undefined and dropping the section's theme.
         for (const hostile of ['toString', 'constructor', 'valueOf', '__proto__']) {
-            const schema = getSchemaForContent('stories', hostile);
+            const schema = getSchemaForContent('technical-sessions', hostile);
 
-            assert.deepEqual(schema, contentSchemas['stories'], `override "${hostile}" must not resolve`);
+            assert.deepEqual(schema, contentSchemas['technical-sessions'], `override "${hostile}" must not resolve`);
             assert.equal(typeof schema.layout, 'string');
         }
     });
@@ -80,7 +72,6 @@ describe('getLayoutComponent', () => {
         // The registry is keyed by DisplayLayout, so a layout added to the union
         // without a component here is a type error rather than a silent fallback --
         // but only while every member is actually exercised.
-        assert.equal(getLayoutComponent(getSchemaForSection('stories')), StoryLayout);
         assert.equal(getLayoutComponent(getSchemaForSection('posts')), ArticleLayout);
         assert.equal(getLayoutComponent(getSchemaForSection('technical-sessions')), layouts['technical-session']);
     });

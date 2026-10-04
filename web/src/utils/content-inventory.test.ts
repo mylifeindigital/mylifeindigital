@@ -40,13 +40,13 @@ describe('deriveInventory', () => {
         const inventory = deriveInventory(
             siteContent([
                 section('posts', 'Posts', ['a', 'b']),
-                section('stories', 'Stories', ['s1', 's2', 's3']),
+                section('technical-sessions', 'Technical Sessions', ['w1', 'w2', 'w3']),
             ])
         );
 
         assert.deepEqual(inventory.sections, [
             { slug: 'posts', title: 'Posts', published: 2 },
-            { slug: 'stories', title: 'Stories', published: 3 },
+            { slug: 'technical-sessions', title: 'Technical Sessions', published: 3 },
         ]);
         assert.equal(inventory.totalPublished, 5);
     });

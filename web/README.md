@@ -49,10 +49,10 @@ This runs two steps:
 ### Deployment
 
 There is no local deploy command. Production is deployed only by
-`.github/workflows/deploy.yml`, which assembles this app with the content and
-story repositories and is the sole path to Cloudflare (`CR-019`, `CR-025`).
+`.github/workflows/deploy.yml`, which assembles this app with the content
+repository and is the sole path to Cloudflare (`CR-019`, `CR-025`).
 
-- **Ordinary release:** merge to `main` in any of the three repositories.
+- **Ordinary release:** merge to `main` in either repository.
 - **Redeploy or roll back:** run the Deploy workflow manually with explicit
   refs.
 

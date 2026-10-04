@@ -18,7 +18,7 @@ Catalog of LLM-maintained wiki pages. Read this first when querying or maintaini
 | [Content Editor](./projects/content-editor.md) | Direction for the focused Electron content editor, including its boundary with VS Code, templates, planning assistance, assistant panel, and manifest questions. |
 | [Content Operations App](./projects/content-operations-app.md) | Scope and workflow memory for the local-first Electron content operations direction, with VS Code retained for source-code work. |
 | [Content Pipeline](./projects/content-pipeline.md) | Build-time Markdown processing, generated content artifacts, and scaling considerations. Records the `CR-014` artifact boundary: what Git tracks turns on whether an artifact can be regenerated. |
-| [Story Crafter](./projects/story-crafter.md) | Future standalone feature idea for generated story series, continuity, Git-backed story artifacts, and mobile reading workflows. |
+| [Story Crafter](./projects/story-crafter.md) | The Golden Valley stories, now a standalone reader in their own repository; their section on this site was removed by `CR-037`. Also the original feature idea. |
 
 ## Concepts
 

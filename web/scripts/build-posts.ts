@@ -454,7 +454,7 @@ async function main(): Promise<void> {
     console.log('');
     console.log(`🏷️  Build stamp: v${buildInfo.version} — ${buildInfo.trigger} — ${buildInfo.builtAt}`);
     console.log(
-        `   app ${shortSha(buildInfo.revisions.app)} · content ${shortSha(buildInfo.revisions.content)} · story ${shortSha(buildInfo.revisions.story)}`
+        `   app ${shortSha(buildInfo.revisions.app)} · content ${shortSha(buildInfo.revisions.content)}`
     );
 
     if (issues.length > 0) {

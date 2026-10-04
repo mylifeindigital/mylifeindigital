@@ -22,7 +22,7 @@ function buildInfo(overrides: Partial<BuildInfo> = {}): BuildInfo {
         builtAt: '2026-08-10T21:00:17.834Z',
         version: '0.12.0',
         trigger: 'push',
-        revisions: { app: APP_SHA, content: 'bbb', story: 'ccc' },
+        revisions: { app: APP_SHA, content: 'bbb' },
         issues: [],
         ...overrides,
     };
@@ -31,9 +31,9 @@ function buildInfo(overrides: Partial<BuildInfo> = {}): BuildInfo {
 const inventory: ContentInventory = {
     sections: [
         { slug: 'posts', title: 'Posts', published: 8 },
-        { slug: 'stories', title: 'Stories', published: 64 },
+        { slug: 'technical-sessions', title: 'Technical Sessions', published: 5 },
     ],
-    totalPublished: 72,
+    totalPublished: 13,
     standalonePages: 1,
 };
 
@@ -42,16 +42,17 @@ const render = (info: BuildInfo): string =>
 
 describe('StatusConsole', () => {
     it('renders the full commit, because a rollback redeploys it', () => {
-        // DEPLOYMENT.md's rollback procedure is "copy the three SHAs and
+        // DEPLOYMENT.md's rollback procedure is "copy the two SHAs and
         // redeploy them". An abbreviated commit would look tidier and be
         // useless for the one job the page supports.
         assert.match(render(buildInfo()), new RegExp(APP_SHA));
     });
 
     it('says a commit is unknown rather than rendering an empty cell', () => {
-        // App CI stamps a null story commit legitimately. Blank would read as
-        // "no story content", which is a different and false claim.
-        const html = render(buildInfo({ revisions: { app: APP_SHA, content: 'bbb', story: null } }));
+        // A local build outside a git checkout stamps a null commit
+        // legitimately. Blank would read as "no content", which is a
+        // different and false claim.
+        const html = render(buildInfo({ revisions: { app: APP_SHA, content: null } }));
 
         assert.match(html, /unknown/);
         assert.doesNotMatch(html, /null/);
@@ -108,7 +109,7 @@ describe('StatusConsole', () => {
         const html = render(buildInfo());
 
         assert.match(html, /Posts<\/span><span class="status-value">8</);
-        assert.match(html, /Stories<\/span><span class="status-value">64</);
-        assert.match(html, /Published items<\/span><span class="status-value">72</);
+        assert.match(html, /Technical Sessions<\/span><span class="status-value">5</);
+        assert.match(html, /Published items<\/span><span class="status-value">13</);
     });
 });

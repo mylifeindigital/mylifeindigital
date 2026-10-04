@@ -4,6 +4,21 @@ All notable changes to the web app will be documented in this file.
 
 
 
+## 0.14.0 — 2026-10-04
+
+### Removed
+
+- **The `stories` section** (`CR-037`). The Golden Valley stories now publish only through `story-crafter`'s own reader at `stories.mylifeindigital.co.za`. Removed `scripts/sync-stories.ts` and `npm run sync:stories`, `StoryLayout`, the `story` layout and display schema, the story theme and reading styles in `main.css`, read-aloud pacing, the stories card gradient, and the `hideFromNav` flag from 0.13.1, which nothing else used. The section-theme mechanism from `CR-024` stays, with no section using it.
+- **story-crafter from the build.** `deploy.yml` no longer checks it out, syncs it, or takes a `story_ref`. The build stamp, `BuildInfo.revisions`, the build log, and `/status` report two commits, app and content, instead of three.
+
+### Added
+
+- `/stories` and `/stories/*` answer `301` to `https://stories.mylifeindigital.co.za/`. They are registered before `/:section`, so a stale local `content/stories/` cannot shadow them. The reader has no per-episode routes, so every episode link lands on its library.
+
+### Changed
+
+- Tests that used `stories` as a sample section name now use `technical-sessions` or an undeclared `recipes` section.
+
 ## 0.13.1 — 2026-10-04
 
 ### Changed

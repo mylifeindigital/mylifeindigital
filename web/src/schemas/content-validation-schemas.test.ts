@@ -60,13 +60,6 @@ describe('schema lookup', () => {
         assert.ok(!('author' in schema.fields));
     });
 
-    it('holds stories to the base only, because sync-stories.ts owns their rules', () => {
-        const schema = getValidationSchema('stories');
-
-        assert.equal(schema, baseContentSchema);
-        assert.ok(!('season' in schema.fields), 'a second stories schema would compete with sync-stories.ts');
-    });
-
     it('resists prototype pollution in the container name', () => {
         // The container name is a directory on disk, so the lookup is indexed by
         // an untrusted string -- the same hazard CR-023 found in getSchemaForContent.
