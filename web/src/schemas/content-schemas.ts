@@ -29,6 +29,11 @@ export interface DisplaySchema {
    * out by simply not declaring one.
    */
   theme?: string;
+  /**
+   * Leaves the section out of the header menu. Its pages and index stay
+   * reachable by URL; only the nav link is withheld.
+   */
+  hideFromNav?: boolean;
 }
 
 /**
@@ -49,6 +54,7 @@ export const contentSchemas: Record<string, DisplaySchema> = {
     showAuthor: false,
     headerStyle: 'minimal',
     theme: 'story',
+    hideFromNav: true,
   },
   'technical-sessions': {
     layout: 'technical-session',
