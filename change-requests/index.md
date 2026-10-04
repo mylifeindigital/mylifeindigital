@@ -49,7 +49,7 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-033 | Add story-crafter CI so stories validate before merge | Done | High | Deployment | 2026-08-09 | [CR-033-add-story-crafter-ci-so-stories-validate-before-merge.md](./CR-033-add-story-crafter-ci-so-stories-validate-before-merge.md) |
 | CR-034 | Restore hero images to production | Done | High | Content Pipeline | 2026-08-10 | [CR-034-restore-hero-images-to-production.md](./CR-034-restore-hero-images-to-production.md) |
 | CR-035 | Skip drafts when generating images | Done | Medium | Content Pipeline | 2026-08-10 | [CR-035-skip-drafts-when-generating-images.md](./CR-035-skip-drafts-when-generating-images.md) |
-| CR-037 | Remove the stories section | In Progress | Medium | Web Content | 2026-10-04 | [CR-037-remove-the-stories-section.md](./CR-037-remove-the-stories-section.md) |
+| CR-037 | Remove the stories section | Done | Medium | Web Content | 2026-10-04 | [CR-037-remove-the-stories-section.md](./CR-037-remove-the-stories-section.md) |
 
 ## Backlog Grooming Notes
 

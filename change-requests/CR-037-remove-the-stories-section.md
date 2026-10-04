@@ -1,10 +1,11 @@
 # CR-037: Remove The Stories Section
 
-Status: In Progress  
+Status: Done  
 Priority: Medium  
 Area: Web Content  
 Created: 2026-10-04  
-Reviewed: 2026-10-04
+Reviewed: 2026-10-04  
+Completed: 2026-10-04
 
 ## Context
 
@@ -99,11 +100,11 @@ Checks that can fail:
 
 ## Acceptance Criteria
 
-- [ ] `story-crafter`'s `story-ci` passes without checking out this repository, and `request-deploy.yml` is gone.
-- [ ] This site builds and deploys from two repositories; `deploy.yml` no longer checks out `story-crafter`.
-- [ ] `/stories` and `/stories/<anything>` answer `301` to `https://stories.mylifeindigital.co.za/` in production.
+- [x] `story-crafter`'s `story-ci` passes without checking out this repository, and `request-deploy.yml` is gone.
+- [x] This site builds and deploys from two repositories; `deploy.yml` no longer checks out `story-crafter`.
+- [x] `/stories` and `/stories/<anything>` answer `301` to `https://stories.mylifeindigital.co.za/` in production.
 - [x] No code path, schema, layout, theme, or test refers to stories, outside the redirect.
-- [ ] `/status` reports app and content revisions only.
+- [x] `/status` reports app and content revisions only.
 - [x] `npm test` and `npm run typecheck` pass.
 - [x] Living docs no longer describe a three-repository site.
 
@@ -116,3 +117,12 @@ Checks that can fail:
 - `npm test` passes (55 root, 62 web), `npm run typecheck` is clean, and `wrangler deploy --dry-run` bundles.
 
 ## Outcome
+
+Shipped on 2026-10-04 as web 0.14.0.
+
+- `story-crafter` PR #79 merged at 15:27:03Z. It drops the site-sync gate from `story-ci.yml` and deletes `request-deploy.yml`. Its required check passed without checking out this repository.
+- PR #65 merged 24 seconds later, as `5da6c4d`. Its push deploy succeeded, and the run no longer checks out `story-crafter`.
+- Production, checked after deploy: `/stories` and `/stories/s01e01-the-shiny-secret` answer `301` to `https://stories.mylifeindigital.co.za/`, which answers `200`. The header menu is Home, About, Posts, Technical Sessions. `/status` reports version 0.14.0 and two revisions, app `5da6c4d` and content, with no `story-crafter` row.
+- Follow-ups: `DEPLOY_DISPATCH_TOKEN` and the extra `CONTENT_CHECKOUT_TOKEN` are deleted from `story-crafter`, verified by its secret list, which now holds only the reader's Cloudflare secrets. The local generated `content/stories/` is deleted. The owner reports narrowing `CONTENT_CHECKOUT_TOKEN` to the content repository; token scope cannot be read back through the API, so this rests on that report. The content repository's ignore rule is removed in `mylifeindigital.content` PR #8.
+
+`docs/raw/` still mentions stories. It is source material and stays unchanged.
