@@ -4,6 +4,12 @@ All notable changes to the web app will be documented in this file.
 
 
 
+## 0.13.1 — 2026-10-04
+
+### Changed
+
+- **Stories is no longer in the header menu.** The menu is built from the content sections, so the section opts out through a new `hideFromNav` flag on its display schema rather than by its slug being special-cased in `Layout`. `/stories` and every episode stay reachable by URL; only the nav link is withheld.
+
 ## 0.13.0 — 2026-08-10
 
 ### Added
