@@ -87,7 +87,7 @@ describe('image URLs travel as frontmatter', () => {
     });
 
     it('does not treat a missing image as a validation issue', async () => {
-        // Most content has no image and never will — 64 stories among it.
+        // Much content has no image and never will.
         // Warning about it would be noise, which is how a warning surface
         // becomes worth ignoring (CR-013).
         const processor = new ValidationProcessor();

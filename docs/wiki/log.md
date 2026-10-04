@@ -2,6 +2,12 @@
 
 Append-only record of docs wiki activity.
 
+## [2026-10-04] decision | Stories section removed from the site
+
+- `CR-037` removed the `stories` section. The Golden Valley stories publish only through `story-crafter`'s reader at `stories.mylifeindigital.co.za`, and `/stories` and `/stories/*` answer `301` there.
+- The site is assembled from two repositories again. [Story Crafter](./projects/story-crafter.md) records the current status above the original idea, and two of its [open questions](./questions.md) are marked answered.
+- [Content Pipeline](./projects/content-pipeline.md) no longer lists synced stories among generated artifacts.
+
 ## [2026-08-10] decision | Artifact boundary recorded for the content pipeline
 
 - Added an Artifact Boundary section to [Content Pipeline](./projects/content-pipeline.md), closing the last acceptance criterion of `CR-014`.

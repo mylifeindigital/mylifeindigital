@@ -33,10 +33,10 @@ Resolved by `CR-018` on 2026-08-09: the admin becomes a read-only operations con
 
 ## Story Crafter
 
-- Should Story Crafter live as a normal content section, a standalone feature area, or a separate experiment before becoming public site content?
+- Answered 2026-10-04 (`CR-037`): Story Crafter is a separate product in its own repository, published as the Golden Valley reader. It was briefly also a normal content section here, and that section was removed. Should Story Crafter live as a normal content section, a standalone feature area, or a separate experiment before becoming public site content?
 - What content model is needed for generated story series: story, series, characters, settings, values, continuity notes, or all of these?
 - Is Git sufficient as the canonical story store if Story Crafter needs generated variants, revision lineage, continuity updates, and mobile delivery state, or should Git store only durable artifacts while runtime state lives elsewhere?
-- How should generated stories be delivered in a mobile-friendly format for bedtime reading?
+- Answered by `story-crafter`'s reader, an installable static app: How should generated stories be delivered in a mobile-friendly format for bedtime reading?
 - When current change requests are complete, which future CR should own Story Crafter planning without expanding `CR-017`?
 
 ## Sources

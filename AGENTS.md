@@ -6,18 +6,19 @@ This file is the canonical guide for coding agents working in this repository. T
 
 `mylifeindigital` is a personal technical growth platform built as a Hono-based blog deployed on Cloudflare Workers. Content is authored as Markdown with YAML frontmatter, processed at build time, and embedded into the Worker bundle because Workers have no filesystem access at runtime.
 
-The site is assembled from three repositories (CR-007, CR-020):
+The site is assembled from two repositories (CR-007, CR-020):
 
 - `mylifeindigital` (this repository) - application code, content pipeline, deployment, docs wiki, change requests.
 - `mylifeindigital.content` - publishable Markdown (`index.md`, `pages/`, `posts/`, `technical-sessions/`).
-- `story-crafter` - source of the site's `stories` section.
 
-Local work assumes sibling checkouts under one parent directory; `mylifeindigital.code-workspace` opens all three in one VS Code window. Never add publishable Markdown to this repository, and never commit application code to the content repository.
+`story-crafter` used to be a third, as the source of a `stories` section. CR-037 removed that section: the Golden Valley stories publish only through story-crafter's own reader at `stories.mylifeindigital.co.za`, and `/stories` here redirects there. Do not reintroduce a dependency on story-crafter without a change request.
+
+Local work assumes sibling checkouts under one parent directory; `mylifeindigital.code-workspace` opens them together in one VS Code window. Never add publishable Markdown to this repository, and never commit application code to the content repository.
 
 ## Repository Structure
 
 - `web/` - Main Cloudflare Workers web app using Hono and TypeScript.
-- `content/` - Placeholder only (see `content/README.md`). Publishable Markdown lives in `mylifeindigital.content`, resolved through `CONTENT_DIR`. `stories/` inside the resolved content directory is a git-ignored build artifact generated from the sibling `story-crafter` repository via `npm run sync:stories`; do not edit or commit it.
+- `content/` - Placeholder only (see `content/README.md`). Publishable Markdown lives in `mylifeindigital.content`, resolved through `CONTENT_DIR`. A leftover `stories/` folder inside it is output from the retired story sync. Delete it, because the section loader builds every directory it finds.
 - `experiments/` - Isolated technical explorations, including the `ts-core-utils` workspace.
 - `scripts/` - Root-level utilities such as session creation and date updates.
 - `docs/` - Git-backed LLM wiki for non-published repository knowledge, with raw sources in `docs/raw/` and maintained pages in `docs/wiki/`.
@@ -44,7 +45,6 @@ cd web && npm run build:posts
 npm run new-content -- --type post --title "My New Post"
 npm run new-session
 npm run update-date
-npm run sync:stories          # regenerate stories/ from the sibling story-crafter
 
 # Checks
 npm test                      # both suites: root scripts and web
@@ -66,8 +66,7 @@ post is excluded from the build entirely, so an image generated for one cannot b
 rendered by anything; `generate:images` skips drafts and says so, and
 `--include-drafts` releases them (CR-035). Always scope a run — `posts/` rather
 than a bare invocation — because the script walks every directory under
-`CONTENT_DIR`, and a local `content/stories/` holds 64 synced episodes that are
-deliberately imageless.
+`CONTENT_DIR`.
 
 Generated URLs are written into the content's own frontmatter and committed in
 `mylifeindigital.content` (CR-034). Frontmatter is the only thing the site
@@ -80,7 +79,7 @@ when, and from which prompt (CR-014). Nothing reads it and no build consults it;
 it is committed only because it is the one artifact here that cannot be
 regenerated. Never rewrite or prune it, and never restore a lookup from it.
 
-Production is deployed only by `.github/workflows/deploy.yml` (CR-019), which assembles all three repositories; `.github/DEPLOYMENT.md` is the runbook for deploying, redeploying, rolling back, and diagnosing failures. There is no local deploy command — the `deploy` scripts were removed in CR-025 so the single deployment path is structural rather than a convention. Do not add one back, and do not run `wrangler deploy` by hand; use the workflow's manual dispatch with explicit refs instead.
+Production is deployed only by `.github/workflows/deploy.yml` (CR-019), which assembles both repositories; `.github/DEPLOYMENT.md` is the runbook for deploying, redeploying, rolling back, and diagnosing failures. There is no local deploy command — the `deploy` scripts were removed in CR-025 so the single deployment path is structural rather than a convention. Do not add one back, and do not run `wrangler deploy` by hand; use the workflow's manual dispatch with explicit refs instead.
 
 ## Web App Architecture
 
@@ -120,9 +119,9 @@ The test runner is Node's built-in `node:test` executed through `tsx`. There is 
 - Tests are colocated with the code they cover, named `*.test.ts` or `*.test.tsx`. Do not create a separate tests directory: `tsx` resolves the JSX transform from the nearest `tsconfig.json` whose `include` covers the file, so a `.tsx` test outside `web/src/` silently compiles to `React.createElement` and fails at runtime with `React is not defined`.
 - Web tests are type-checked by `web/tsconfig.test.json`, not `web/tsconfig.json`. The Worker program excludes `*.test.ts(x)` and admits only `@cloudflare/workers-types`, which is what makes a stray `process.env` in `web/src/` a build error; the test program adds `node` so tests can import `node:test`. Keep that split — do not add `node` to the Worker program's `types`.
 - Nothing in the web test import graph may reach `web/src/utils/posts-data.ts`. Tests must not depend on generated content or on a content-repository checkout, which is what lets them run first in CI. The rule is enforced rather than trusted: `tsconfig.test.json` includes only the test files and follows their imports, so a test that reaches `post-cache.ts` fails `typecheck:tests` before the content step has generated anything.
-- Hono JSX renders to a string, so component tests assert on real markup without a DOM. See `web/src/components/layouts/StoryLayout.test.tsx`.
+- Hono JSX renders to a string, so component tests assert on real markup without a DOM. Call the component as a function and `String()` the result, as `web/src/components/StatusConsole.test.tsx` does.
 
-What blocks a deploy today: dependency install, `typecheck:scripts`, `test:scripts`, `test:web`, `typecheck:tests`, `build:posts`, the web typecheck, and the wrangler dry run. Coverage is deliberately narrow and aimed at the highest-consequence paths — the build pipeline, schema resolution, and story rendering — rather than broad. Add tests where a silent regression would ship, not to raise a number.
+What blocks a deploy today: dependency install, `typecheck:scripts`, `test:scripts`, `test:web`, `typecheck:tests`, `build:posts`, the web typecheck, and the wrangler dry run. Coverage is deliberately narrow and aimed at the highest-consequence paths — the build pipeline, schema resolution, and the operations console — rather than broad. Add tests where a silent regression would ship, not to raise a number.
 
 ## TypeScript And Node.js Changes
 

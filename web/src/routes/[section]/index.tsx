@@ -21,8 +21,8 @@ export function sectionRoute(sectionSlug: string, config: AppConfig) {
         );
     }
 
-    // The listing themes with the section it lists, so /stories and a story
-    // page are one reading surface rather than two.
+    // The listing themes with the section it lists, so a themed section's
+    // index and its pages are one reading surface rather than two.
     const schema = getSchemaForContent(sectionSlug);
 
     return (

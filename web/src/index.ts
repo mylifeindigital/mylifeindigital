@@ -33,6 +33,14 @@ app.get('/status', (c) => {
     return c.render(statusRoute(config));
 });
 
+// The stories section was removed in favour of the Golden Valley reader
+// (CR-037). The reader is a single page with no per-episode routes, so every
+// old link goes to its front page. Registered before /:section, and ahead of
+// any local content/stories/ left over from the retired sync.
+const STORY_READER_URL = 'https://stories.mylifeindigital.co.za/';
+app.get('/stories', (c) => c.redirect(STORY_READER_URL, 301));
+app.get('/stories/*', (c) => c.redirect(STORY_READER_URL, 301));
+
 // Section listing route (e.g., /posts, /technical-sessions)
 app.get('/:section', (c) => {
     const section = c.req.param('section');

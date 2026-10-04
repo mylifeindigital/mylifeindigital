@@ -143,19 +143,20 @@ describe('ordering guarantees', () => {
         assert.deepEqual([...issues], [], 'a draft is missing everything, and that is fine');
     });
 
-    it('holds a story to the base only', async () => {
-        // No author, no date, no tags — all absent by design, none required.
+    it('holds an undeclared section to the base only', async () => {
+        // No author, no date, no tags — a section with no schema of its own is
+        // not asked for posts' fields.
         const { issues } = await validate(
-            frontmatter(['title: The Shiny Secret', 'season: 1', 'episode: 1']),
-            'stories',
-            's01e01'
+            frontmatter(['title: Sourdough', 'serves: 4']),
+            'recipes',
+            'sourdough'
         );
 
         assert.deepEqual([...issues], []);
     });
 
-    it('still holds a story to the base title rule', async () => {
-        const { issues } = await validate(frontmatter(['season: 1']), 'stories', 's01e02');
+    it('still holds an undeclared section to the base title rule', async () => {
+        const { issues } = await validate(frontmatter(['serves: 4']), 'recipes', 'focaccia');
 
         assert.deepEqual(issues.map(i => i.field), ['title']);
     });

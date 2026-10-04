@@ -1,6 +1,6 @@
 # CR-037: Remove The Stories Section
 
-Status: Planned  
+Status: In Progress  
 Priority: Medium  
 Area: Web Content  
 Created: 2026-10-04  
@@ -93,6 +93,8 @@ Checks that can fail:
 - 2026-10-04: **`story-crafter` is updated in the same piece of work, and merged first.** The owner chose this. Order is forced by `story-ci.yml` checking out this repository's `main`: removing `sync-stories.ts` first would turn `story-crafter`'s required check red.
 - 2026-10-04: **Tracked as `CR-037`.** The owner chose this, following `AGENTS.md`. `CR-036` is allocated on the unmerged `codex/cr-036-mlid-stream` branch, so `037` is the next unused ID.
 - 2026-10-04: **`hideFromNav` is removed.** It was added in 0.13.1 for `stories` alone. With no section using it, it is untested surface. Reintroducing it is a one-line field.
+- 2026-10-04: **The section-theme mechanism stays.** Unlike `hideFromNav`, it is `CR-024`'s deliberate design and cost nothing to keep: a `theme` field and `data-theme` on `<body>`. Only the story theme's values go. The schema test now asserts that no section declares a theme.
+- 2026-10-04: **`mylifeindigital.code-workspace` keeps `story-crafter`.** It already opens unrelated projects (`gainline`, `mylifeinprint`), so it is the owner's working set, not a list of site dependencies.
 - 2026-10-04: **The status console drops the `story-crafter` row instead of showing it as unresolved.** `CR-030` made the console report what the deployment was built from. After this change the deployment is built from two repositories, and a permanently "unknown" third row would read as a fault.
 
 ## Acceptance Criteria
@@ -100,11 +102,17 @@ Checks that can fail:
 - [ ] `story-crafter`'s `story-ci` passes without checking out this repository, and `request-deploy.yml` is gone.
 - [ ] This site builds and deploys from two repositories; `deploy.yml` no longer checks out `story-crafter`.
 - [ ] `/stories` and `/stories/<anything>` answer `301` to `https://stories.mylifeindigital.co.za/` in production.
-- [ ] No code path, schema, layout, theme, or test refers to stories, outside the redirect.
+- [x] No code path, schema, layout, theme, or test refers to stories, outside the redirect.
 - [ ] `/status` reports app and content revisions only.
-- [ ] `npm test` and `npm run typecheck` pass.
-- [ ] Living docs no longer describe a three-repository site.
+- [x] `npm test` and `npm run typecheck` pass.
+- [x] Living docs no longer describe a three-repository site.
 
 ## Implementation Notes
+
+- Phase 1: `story-crafter` PR #79 (`ci/drop-site-sync`). `story-ci.yml` keeps only checkout, Node, and `validate-all.mjs`, under the unchanged job name. `request-deploy.yml` is deleted. `validate-all.mjs` passes locally.
+- Phase 2, on `codex/cr-037-remove-stories-section`: redirect in `web/src/index.ts`; deletions as planned; `revisions.story` removed from `build-stamp.ts`, `build-info.ts`, `StatusConsole.tsx`, and `build-posts.ts`; `deploy.yml` and `app-ci.yml` comments updated; web version 0.14.0.
+- Verified against the Hono app with `app.request`: `/stories`, `/stories/`, `/stories/s01e01-the-shiny-secret`, and `/stories/anything/deeper` all answer `301` to the reader, with a stale 64-file `content/stories/` present. `/posts` and `/status` answer `200`.
+- That stale folder makes the local menu show "Stories" again, because `hideFromNav` is gone. Production never has the folder. This is why deleting it locally is a follow-up.
+- `npm test` passes (55 root, 62 web), `npm run typecheck` is clean, and `wrangler deploy --dry-run` bundles.
 
 ## Outcome

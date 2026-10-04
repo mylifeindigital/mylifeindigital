@@ -27,19 +27,23 @@ If you’re reading this: welcome to the engine room.
 
 ---
 
-## 🗺️ Three Repositories, One Site
+## 🗺️ Two Repositories, One Site
 
-The published site is assembled from three repositories (`CR-007`, `CR-020`):
+The published site is assembled from two repositories (`CR-007`, `CR-020`):
 
 | Repository | Owns | Notes |
 | --- | --- | --- |
 | [`mylifeindigital`](https://github.com/mylifeindigital/mylifeindigital) (this one) | Application code, content pipeline, deployment, docs wiki, change requests | Public |
 | [`mylifeindigital.content`](https://github.com/mylifeindigital/mylifeindigital.content) | Publishable Markdown — `index.md`, `pages/`, `posts/`, `technical-sessions/` | Private |
-| [`story-crafter`](https://github.com/mylifeindigital/story-crafter) | The Golden Valley story universe behind the site's `stories` section | Private |
 
-Rule of thumb: everything you can **read** on the site lives in the content and
-story repositories; everything that **turns it into a site** lives here. The
+Rule of thumb: everything you can **read** on the site lives in the content
+repository; everything that **turns it into a site** lives here. The
 published result is [mylifeindigital.co.za](https://mylifeindigital.co.za).
+
+The Golden Valley bedtime stories were a `stories` section here until `CR-037`.
+They now live only in [`story-crafter`](https://github.com/mylifeindigital/story-crafter)'s
+own reader at [stories.mylifeindigital.co.za](https://stories.mylifeindigital.co.za/),
+and old `/stories` links redirect there.
 
 This repository no longer holds publishable Markdown or a catalogue of it —
 `content/` is a placeholder ([`content/README.md`](./content/README.md)) and the
@@ -51,7 +55,7 @@ content repository is the single source of truth for what has been written.
 
 ```
 /web              → Cloudflare Workers site (Hono + TypeScript)
-/scripts          → Root content tooling (new-content, update-date, sync-stories)
+/scripts          → Root content tooling (new-content, update-date)
 /content          → Placeholder only — publishable Markdown lives in mylifeindigital.content
 /experiments      → Isolated technical explorations (ts-core-utils)
 /docs             → Git-backed LLM wiki for non-published repository knowledge
@@ -75,7 +79,6 @@ to the content repository.
 projects/
   mylifeindigital/            ← this repository
   mylifeindigital.content/
-  story-crafter/              ← only needed when working on the stories section
 ```
 
 The sibling layout is what the default paths assume, so keep the directory
@@ -88,7 +91,7 @@ code mylifeindigital/mylifeindigital.code-workspace
 ```
 
 [`mylifeindigital.code-workspace`](./mylifeindigital.code-workspace) lives in
-this repository and points at the siblings with relative paths, so all three
+this repository and points at the siblings with relative paths, so they all
 show up in one window while staying independent Git repositories with their own
 branches, history, and CI. A repository you haven't cloned simply shows as
 unavailable — the rest of the workspace still works.
@@ -137,16 +140,11 @@ never consulted for the content path.
 (`pages/`, `posts/`, `technical-sessions/`) and `index.md`. Relative values
 resolve against this repository's root.
 
-Stories are read from a sibling `../story-crafter` by default; override that
-with the `STORY_CRAFTER_PATH` environment variable (an actual environment
-variable — the root `.env` only configures `CONTENT_DIR`).
-
 ---
 
 ## 🔁 Local Build And Preview
 
 ```bash
-npm run sync:stories          # from the root: refresh stories/ from story-crafter
 cd web && npm run build:posts # read CONTENT_DIR, generate embedded content
 cd web && npm run dev         # local Worker
 ```
@@ -154,8 +152,7 @@ cd web && npm run dev         # local Worker
 The Worker has no filesystem at runtime, so content is embedded at build time:
 `build:posts` reads Markdown from `CONTENT_DIR` and generates
 `web/src/utils/posts-data.ts`. Edits in the content repository are only visible
-after a rebuild. `sync:stories` writes a git-ignored `stories/` section into the
-content directory — a build artifact, never committed content.
+after a rebuild.
 
 ---
 
@@ -207,7 +204,7 @@ deploys. Content is committed and reviewed in the content repository, never here
 ## 🚢 Deployment
 
 Production is deployed exclusively by `.github/workflows/deploy.yml` (`CR-019`),
-which checks out all three repositories, syncs stories, builds, and deploys one
+which checks out both repositories, builds, and deploys one
 combined Worker artifact — recording every resolved SHA per deployment. It runs
 on application `main` merges, on dispatch from the content repository, or
 manually with explicit refs for rollback. Cloudflare's native Git build is

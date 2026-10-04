@@ -1,5 +1,13 @@
 # Story Crafter
 
+## Current Status (2026-10-04)
+
+Story Crafter became its own repository, [`story-crafter`](https://github.com/mylifeindigital/story-crafter), and its own product: the Golden Valley reader, a static installable app at [stories.mylifeindigital.co.za](https://stories.mylifeindigital.co.za/), deployed from that repository by `deploy-reader.yml`.
+
+For a while the stories were also a `stories` section on this site, synced in at build time by `npm run sync:stories` (`CR-019`, `CR-024`, `CR-033`). `CR-037` removed that section. This site no longer builds from, deploys for, or validates against `story-crafter`, and every `/stories` URL redirects to the reader. The reader has no per-episode routes, so episode links land on its library.
+
+The rest of this page is the original idea, kept as history.
+
 Story Crafter is a future standalone feature idea for showcasing generated bedtime or read-aloud stories on `mylifeindigital`. The site has always been a place to showcase ideas and thinking, and Story Crafter can fit as one such idea rather than as a replacement for the existing blog/content workflow.
 
 This must not be folded into the current `CR-017` docs wiki work. Treat it as later feature planning after current change requests are complete.

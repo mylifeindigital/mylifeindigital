@@ -12,11 +12,11 @@ Authoring logic should remain independent enough to support terminal, script-bas
 
 ## Local Workspace After The Repository Split
 
-The split-repository model puts publishable Markdown in `mylifeindigital.content` and story source in `story-crafter`, while the application, content pipeline, docs wiki, and change requests stay in `mylifeindigital`. Authoring now spans repositories, but not editors.
+The split-repository model puts publishable Markdown in `mylifeindigital.content` (and, until `CR-037` removed the stories section, story source in `story-crafter`), while the application, content pipeline, docs wiki, and change requests stay in `mylifeindigital`. Authoring now spans repositories, but not editors.
 
 - Sibling checkouts under one parent directory are the assumed local layout.
 - `mylifeindigital.code-workspace`, committed in the application repository, opens all three as folders in one VS Code window; each stays an independent Git repository with its own branches, history, and CI.
-- Content tooling runs from the application repository and reads or writes the content checkout resolved through `CONTENT_DIR` (`CR-021`), so the authoring surface is unchanged by the split: one editor, one window, three repositories.
+- Content tooling runs from the application repository and reads or writes the content checkout resolved through `CONTENT_DIR` (`CR-021`), so the authoring surface is unchanged by the split: one editor, one window, several repositories.
 - The Electron content operations app remains future tooling. Nothing in the near-term authoring flow depends on it.
 
 ## Rationale

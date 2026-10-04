@@ -2,6 +2,14 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-10-04
+
+### Changed
+
+- Planned and implemented `CR-037`, removing the stories section. The site is assembled from two repositories again: `AGENTS.md`, `README.md`, `web/README.md`, `content/README.md`, `.github/DEPLOYMENT.md`, and the living wiki pages now describe it that way, and the wiki log records the decision. `docs/raw/` is source material and is unchanged.
+- `.github/DEPLOYMENT.md` records the 2026-10-01 to 2026-10-04 outage: an expired `CONTENT_CHECKOUT_TOKEN` failed App CI and Deploy alike. It also corrects the claim that no secret reaches pull-request workflows, since same-repository pull requests get `CONTENT_CHECKOUT_TOKEN`.
+- Removed the `content/stories/` ignore rule. Nothing generates that folder any more.
+
 ## 2026-08-23
 
 ### Changed

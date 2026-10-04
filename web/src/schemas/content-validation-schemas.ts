@@ -47,8 +47,7 @@ export const baseContentSchema: ContentSchema = {
         // `metadata.draft === true`, so a quoted "true" is a string and
         // publishes the very file its author meant to hide.
         draft: { type: 'boolean' },
-        // Optional at the base — stories carry season and episode instead.
-        // Containers that show a date require it below.
+        // Optional at the base. Containers that show a date require it below.
         date: { type: 'date' },
     },
 };
@@ -62,12 +61,6 @@ export const contentValidationSchemas: Record<string, ContentSchema> = {
         date: { required: true, type: 'date' },
         tags: { required: true, type: 'string[]', nonEmpty: true },
     }),
-    // No `stories` entry, on purpose. scripts/sync-stories.ts already enforces
-    // a stricter schema -- eight hard-required fields, and a hard error on any
-    // frontmatter line outside three accepted shapes -- before a story is ever
-    // written into the content tree. A second declaration here would be a
-    // competing source of truth (CR-013 decision, 2026-08-09).
-    //
     // `description` is deliberately absent everywhere: no post or technical
     // session has ever carried one, and nothing in web/src renders it. Requiring
     // a field the site ignores would warn on every item forever.

@@ -11,7 +11,7 @@
 
 import { execFileSync } from 'child_process';
 import { existsSync, readFileSync } from 'fs';
-import { basename, dirname, join, relative, resolve } from 'path';
+import { basename, dirname, join, relative } from 'path';
 
 import type { BuildInfo, BuildValidationIssue } from '../../src/utils/build-info.js';
 import type { ValidationIssue } from '../processors/index.js';
@@ -92,23 +92,6 @@ export const readGitHead: HeadReader = directory => {
 };
 
 /**
- * Where story-crafter is checked out.
- *
- * Mirrors `storyCrafterRoot` in `scripts/sync-stories.ts` deliberately rather
- * than importing it: that module is a script with its own execution, and it
- * sits outside this program's tsconfig. If one of the two ever moves, the
- * stories in the build and the commit stamped beside them would disagree, so
- * the duplication is a fact worth keeping visible.
- */
-export function resolveStoryRoot(
-    env: Record<string, string | undefined>,
-    repositoryRoot: string
-): string {
-    const override = env.STORY_CRAFTER_PATH;
-    return override ? resolve(override) : resolve(repositoryRoot, '..', 'story-crafter');
-}
-
-/**
  * Environment first, then the checkout on disk, then unknown.
  */
 export function resolveRevision(
@@ -134,11 +117,6 @@ export function createBuildInfo(input: BuildStampInput): BuildInfo {
         revisions: {
             app: resolveRevision(env.BUILD_APP_SHA, repositoryRoot, readHead),
             content: resolveRevision(env.BUILD_CONTENT_SHA, contentDir, readHead),
-            story: resolveRevision(
-                env.BUILD_STORY_SHA,
-                resolveStoryRoot(env, repositoryRoot),
-                readHead
-            ),
         },
         issues: stampIssues(issues, contentDir),
     };

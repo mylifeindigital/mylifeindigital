@@ -16,7 +16,6 @@ import {
     relativeContentPath,
     renderBuildData,
     resolveRevision,
-    resolveStoryRoot,
     readPackageVersion,
     stampIssues,
     type HeadReader,
@@ -61,19 +60,6 @@ describe('resolveRevision', () => {
     });
 });
 
-describe('resolveStoryRoot', () => {
-    it('defaults to a sibling checkout', () => {
-        assert.equal(resolveStoryRoot({}, '/projects/mylifeindigital'), '/projects/story-crafter');
-    });
-
-    it('honours STORY_CRAFTER_PATH, which is what CI sets', () => {
-        assert.equal(
-            resolveStoryRoot({ STORY_CRAFTER_PATH: '/work/story-crafter' }, '/projects/mylifeindigital'),
-            '/work/story-crafter'
-        );
-    });
-});
-
 describe('createBuildInfo', () => {
     const base = {
         repositoryRoot: '/projects/mylifeindigital',
@@ -83,14 +69,13 @@ describe('createBuildInfo', () => {
         issues: [],
     };
 
-    it('stamps the three commits the workflow resolved', () => {
+    it('stamps the two commits the workflow resolved', () => {
         const info = createBuildInfo({
             ...base,
             env: {
                 GITHUB_EVENT_NAME: 'repository_dispatch',
                 BUILD_APP_SHA: 'aaa',
                 BUILD_CONTENT_SHA: 'bbb',
-                BUILD_STORY_SHA: 'ccc',
             },
             readHead: NEVER_ASKED,
         });
@@ -99,7 +84,7 @@ describe('createBuildInfo', () => {
             builtAt: '2026-08-10T18:00:00.000Z',
             version: '0.10.0',
             trigger: 'repository_dispatch',
-            revisions: { app: 'aaa', content: 'bbb', story: 'ccc' },
+            revisions: { app: 'aaa', content: 'bbb' },
             issues: [],
         });
     });
@@ -113,7 +98,6 @@ describe('createBuildInfo', () => {
             readHead: heads({
                 '/projects/mylifeindigital': 'local-app',
                 '/projects/mylifeindigital.content/content': 'local-content',
-                '/projects/story-crafter': 'local-story',
             }),
         });
 
@@ -121,22 +105,19 @@ describe('createBuildInfo', () => {
         assert.deepEqual(info.revisions, {
             app: 'local-app',
             content: 'local-content',
-            story: 'local-story',
         });
     });
 
-    it('nulls the story commit when no stories were part of the build', () => {
-        // App CI checks out no stories. The stamp must say "not known" rather
-        // than inherit whatever happens to sit in a sibling directory — but a
-        // sibling that genuinely is the story checkout is exactly the local
-        // case above, so the distinction is made by git answering, not by CI.
+    it('nulls a commit that neither the environment nor git can answer', () => {
+        // The stamp must say "not known" rather than invent a value, and must
+        // not treat the absence as "unchanged".
         const info = createBuildInfo({
             ...base,
-            env: { GITHUB_EVENT_NAME: 'pull_request', BUILD_APP_SHA: 'aaa', BUILD_CONTENT_SHA: 'bbb' },
+            env: { GITHUB_EVENT_NAME: 'pull_request', BUILD_APP_SHA: 'aaa' },
             readHead: heads({}),
         });
 
-        assert.equal(info.revisions.story, null);
+        assert.equal(info.revisions.content, null);
         assert.equal(info.trigger, 'pull_request');
     });
 });
@@ -216,7 +197,7 @@ describe('renderBuildData', () => {
         builtAt: '2026-08-10T18:00:00.000Z',
         version: '0.10.0',
         trigger: 'push',
-        revisions: { app: 'aaa', content: 'bbb', story: null },
+        revisions: { app: 'aaa', content: null },
         issues: [],
     };
 
@@ -229,7 +210,7 @@ describe('renderBuildData', () => {
     });
 
     it('renders an unresolved commit as null, not as a string', () => {
-        assert.match(renderBuildData(info), /"story": null/);
+        assert.match(renderBuildData(info), /"content": null/);
     });
 
     it('is deterministic for the same input', () => {

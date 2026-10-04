@@ -10,7 +10,6 @@ import type { ContentItem, Section } from '../../utils/markdown.js';
 import type { DisplaySchema, DisplayLayout } from '../../schemas/content-schemas.js';
 
 import { ArticleLayout } from './ArticleLayout.js';
-import { StoryLayout } from './StoryLayout.js';
 import { TechnicalSessionLayout } from './TechnicalSessionLayout.js';
 
 export interface LayoutProps {
@@ -24,7 +23,6 @@ export interface LayoutProps {
  */
 export const layouts: Record<DisplayLayout, FC<LayoutProps>> = {
   'article': ArticleLayout,
-  'story': StoryLayout,
   'technical-session': TechnicalSessionLayout,
 };
 
@@ -37,6 +35,5 @@ export function getLayoutComponent(schema: DisplaySchema): FC<LayoutProps> {
 
 // Re-export individual layouts for direct imports
 export { ArticleLayout } from './ArticleLayout.js';
-export { StoryLayout } from './StoryLayout.js';
 export { TechnicalSessionLayout } from './TechnicalSessionLayout.js';
 

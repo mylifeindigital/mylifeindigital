@@ -16,7 +16,6 @@
     "preview-worker:poc": "npm run preview-worker:poc --workspace=web",
     "new-content": "tsx scripts/new-content.ts",
     "new-session": "tsx scripts/new-session.ts",
-    "sync:stories": "tsx scripts/sync-stories.ts",
     "test": "npm run test:scripts && npm run test:web",
     "test:scripts": "tsx --test scripts/content/*.test.ts web/scripts/utils/*.test.ts",
     "test:web": "npm test --workspace=web",
