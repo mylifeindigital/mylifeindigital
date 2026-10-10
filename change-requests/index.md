@@ -40,7 +40,7 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-024 | Section-specific content styling | Done | Medium | Web Content | 2026-08-02 | [CR-024-section-specific-content-styling.md](./CR-024-section-specific-content-styling.md) |
 | CR-025 | Retire local deployment paths | Done | Medium | Deployment | 2026-08-02 | [CR-025-retire-local-deployment-paths.md](./CR-025-retire-local-deployment-paths.md) |
 | CR-026 | Make content update dates authored | Done | High | Content Pipeline | 2026-08-02 | [CR-026-make-content-update-dates-authored.md](./CR-026-make-content-update-dates-authored.md) |
-| CR-027 | Schema-driven listing components | Proposed | Medium | Web Content | 2026-08-09 | Pending detail |
+| CR-027 | Schema-driven listing components | Dropped | Medium | Web Content | 2026-08-09 | [CR-027-schema-driven-listing-components.md](./CR-027-schema-driven-listing-components.md) |
 | CR-028 | Fail the build on malformed frontmatter | Done | High | Content Pipeline | 2026-08-09 | [CR-028-fail-the-build-on-malformed-frontmatter.md](./CR-028-fail-the-build-on-malformed-frontmatter.md) |
 | CR-029 | Remove the web admin write path | Done | High | Web Admin | 2026-08-09 | [CR-029-remove-the-web-admin-write-path.md](./CR-029-remove-the-web-admin-write-path.md) |
 | CR-030 | Build the deployment and content-health console | Done | Medium | Web Admin | 2026-08-09 | [CR-030-build-the-deployment-and-content-health-console.md](./CR-030-build-the-deployment-and-content-health-console.md) |

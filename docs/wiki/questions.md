@@ -41,6 +41,8 @@ Resolved by `CR-018` on 2026-08-09: the admin becomes a read-only operations con
 
 ## MLID Stream
 
+Parked on 2026-10-10: `CR-036` was dropped, so these questions are not being worked on.
+
 - How should low-ceremony, free-form note capture connect to the existing template-driven content operations workflow? The new source resists per-type schemas and templates; this tension remains unresolved.
 - Should experiments guide the progression from notes to published content, and which notes should remain unexpanded?
 - Where should canonical notes live, and what should an optional SQLite index store alongside the index and log?

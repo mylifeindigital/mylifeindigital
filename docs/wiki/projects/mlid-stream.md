@@ -1,5 +1,7 @@
 # MLID Stream
 
+> **Status (2026-10-10):** Not being pursued. [`CR-036`](../../../change-requests/CR-036-mlid-stream-capture-and-sync.md), the capture-and-sync CLI, was dropped before implementation. This page keeps the original exploration. The open boundaries below are parked, not resolved.
+
 An exploratory local tool for capturing short thoughts with little ceremony, then using AI to organize them and support content authoring. A note can remain a one-liner or general-knowledge question; it need not become a post or application idea.
 
 ## Intended Workflow

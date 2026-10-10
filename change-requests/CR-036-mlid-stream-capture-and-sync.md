@@ -1,10 +1,10 @@
 # CR-036: MLID Stream Capture and Sync
 
-Status: Blocked  
+Status: Dropped  
 Priority: Medium  
 Area: Content Operations  
 Created: 2026-09-10  
-Reviewed: 2026-09-10
+Reviewed: 2026-10-10
 
 ## Context
 
@@ -86,4 +86,11 @@ For this outcome, content promotion is a documented future handoff into `mylifei
 
 ## Outcome
 
-Pending implementation; workflow decisions remain open.
+Dropped by the owner on 2026-10-10, before implementation. It was blocked at the time on its last open question (the first-version AI organization handoff), which stays unanswered. No CLI was built, and nothing in this repository depends on the work.
+
+The planning docs were on the unmerged `codex/cr-036-mlid-stream` branch. They were merged to `main` with this status so the decisions above stay findable and the `CR-036` ID stays accounted for.
+
+Left as they were outside this repository:
+
+- [mylifeindigital/mylifeindigital.notes](https://github.com/mylifeindigital/mylifeindigital.notes) still exists, private, with only its initial README.
+- Its `main` protection requires a `Validate (no deploy)` check that no workflow produces there, so a pull request to that repository cannot merge until the requirement is removed or the workflow is added. Archive or delete the repository if it will not be used.
