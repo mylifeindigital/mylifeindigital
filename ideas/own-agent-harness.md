@@ -36,6 +36,42 @@ so first idea then - what would the benefit be of creating my own harness? from 
   - It kills the idea if you finish the time box with a worse Claude Code and nothing you could not have learned from reading its documentation.
   - Either way, the write-up is a candidate for the site, because it is a specific problem explored, which is what the site is for.
 
+**What changed:** Before choosing whether to experiment, the owner moved to the conceptual boundary: a harness is more than an orchestrator, so what is the extra? Round 2 takes up that question. Neither round-1 question was answered directly. Question 2 was partly answered by the distinction itself.
+
+## Round 2 — 2026-10-10
+
+**My understanding** *(drafted, not yet confirmed)*: The first practical thing to settle is that a harness is more than an orchestrator. I want to know what exactly makes it more than just something that coordinates agents.
+
+**Feedback:**
+
+- **Restated:** An orchestrator decides *which agent does what*. A harness decides *what one agent sees, can do, and is allowed to do on every turn*. An orchestrator assumes agents exist. A harness is what turns a model, which only produces text, into an agent in the first place.
+- **What the harness adds:**
+  - **The loop and stop conditions:** call the model, run the requested tools, return the results, decide when to stop.
+  - **Tools:** schemas, execution, and output shaped to fit the model (truncation, chunked reads).
+  - **Context:** system prompt, project instructions, skills loaded on demand, and summarising or dropping history when the window fills.
+  - **Permissions:** what runs unasked, what needs approval, what is sandboxed.
+  - **State:** sessions, resume, and memory across sessions.
+  - **Human interface:** streaming, interrupting, showing diffs.
+  - **Extensions:** skills, MCP, hooks, and subagents.
+- **Subagents are orchestration, and they are one feature inside a harness.** Claude Code contains a small orchestrator; the reverse is not true. At system scale it inverts again, because an orchestrator coordinates several harnessed agents.
+- **Weakest assumption:** *that harness and orchestrator are separate layers you can learn one at a time.* Mostly true, but not cleanly: a harness grows orchestration as soon as it spawns a subagent. The experiment should stop before subagents, so the harness layer is learned on its own.
+- **Correction to round 1:** round 1 called a personal harness "the smallest version" of the [orchestration PRD](../docs/raw/prd-ai-agent-orchestrator.md). That was wrong. It is the layer *underneath* the PRD. The PRD's Phase 1 lists "Agent interface definition" and "Single LLM provider integration", which assumes a harness without naming one.
+- **Questions:**
+  1. Unchanged from round 1: is there a specific job Claude Code or Codex serves badly? Without one, this stays a learning project.
+  2. Is the orchestration PRD still something you want? If yes, the harness is a prerequisite and gets more weight. If no, the harness is judged on learning alone.
+- **Prior art:** as round 1. Claude Code's own documentation on context, compaction, permission modes, hooks, and subagents is the clearest map of the harness layer. Read it *after* building the experiment, to compare.
+
+**Recommendation:** Experiment. Unchanged, but the scope is sharpened to cover the parts that make a harness more than an orchestrator.
+
+- **Hypothesis:** as in round 1.
+- **Smallest build:** as in round 1, with the same four tools and approval before `run_command`, plus:
+  - load a project instructions file into the system prompt, like a mini `AGENTS.md`
+  - a deliberately small context limit that forces the harness to summarise older turns
+
+  No subagents.
+- **Time box:** unchanged, two sessions, about six hours.
+- **Signal:** as in round 1. Two of the three behaviours explained must be about context or permissions, because those are the harness-only layers.
+
 **What changed:**
 
 ## Experiment
