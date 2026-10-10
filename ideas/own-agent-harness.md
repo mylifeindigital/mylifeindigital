@@ -72,6 +72,32 @@ so first idea then - what would the benefit be of creating my own harness? from 
 - **Time box:** unchanged, two sessions, about six hours.
 - **Signal:** as in round 1. Two of the three behaviours explained must be about context or permissions, because those are the harness-only layers.
 
+**What changed:** The owner answered both questions and turned each answer into a new direction. See round 3.
+
+## Round 3 — 2026-10-10
+
+**My understanding** *(drafted, not yet confirmed)*: Nothing in particular is missing from Claude Code or Codex, and it would be naive to think I could build something at their scale. What would interest me is going from ideation to implementation, hosted on a platform like Cloudflare, with a harness or set of tools doing both the ideating and the building. Is that already possible? Separately, could a harness increase my change-request velocity, or should that work keep going through my approval?
+
+**Feedback:**
+
+- **Restated:** No functional gap exists. The interest is in (a) idea-to-deployed-solution end to end, and (b) faster change requests, possibly with less approval.
+- **Idea to running on Cloudflare is mostly achieved already.** `CR-032` went from backlog note through reconnaissance, plan, implementation, local verification, PR, CI, `deploy.yml` deploying to Cloudflare, and a production check, in one Claude Code session on 2026-10-10. The only steps that were not automated were the owner's decisions and merges. The question contains two ideas:
+  - **A harness that deploys to Cloudflare.** Done, with existing tools.
+  - **A harness that runs on Cloudflare.** The loop lives on Workers: Durable Objects hold its state, a container gives it a sandbox, and it works while the laptop is closed. Not done, and it is where the [orchestration PRD](../docs/raw/prd-ai-agent-orchestrator.md) was heading. The Cloudflare building blocks (as of the agent's knowledge: the Agents SDK, the Sandbox SDK, Containers) were not checked this round.
+- **What slows change requests is decisions, not the agent.** Six PRs (#67–#72) merged on 2026-10-10, and every wait was on the owner: a merge, or an open question only the owner could answer. A faster harness does not move that. Removing approvals does, so this is a question of where judgement belongs. Approvals did real work that day: a "drop CR-036" instruction was checked against the earlier recommendation to drop `CR-027`, and the owner meant both. Merges to `main` also go to production on a site that represents the owner.
+- **Weakest assumption:** *that a custom harness is the lever for any of this.* It is false for both functional goals. Deploying is done, and velocity can be gained by automating the steps between decisions with existing tools: Claude Code running headless in GitHub Actions, or scheduled agents. It still holds for learning.
+- **Questions:**
+  1. Of the two new ideas, which matters more right now: the agent running on Cloudflare, or CR automation with approval only at decisions?
+  2. For CR automation, which approvals would you actually give up? Proposed:
+     - **Keep:** answering open questions, idea verdicts, and merging anything that changes the live site.
+     - **Automate:** post-deploy production checks with the CR-closing PR, auto-merging docs-only PRs after CI, and overnight first-pass reconnaissance.
+- **Prior art:** Claude Code in GitHub Actions and scheduled cloud agents cover CR automation. Hosted cloud coding agents already run the loop away from the laptop, but not on infrastructure the owner controls.
+
+**Recommendation:** Experiment, for learning, unchanged from round 2. Building a harness for functional gain is abandoned: the owner states nothing is missing, and both functional goals can be reached with existing tools. Two separate ideas came out of this round and belong in their own files:
+
+1. **An agent that runs on Cloudflare.** The natural second step after `experiments/mini-harness/`, and where the orchestration PRD meets this idea.
+2. **CR automation with approval only at decisions.** About the owner's workflow, not about harnesses.
+
 **What changed:**
 
 ## Experiment
