@@ -2,6 +2,12 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-10-10
+
+### Changed
+
+- Planned and implemented `CR-032`: every not-found path now answers 404 from one not-found page (web `0.14.1`). Completed it after verifying production: unknown sections, unknown items, and deeper paths answer 404, and existing pages are unchanged.
+
 ## 2026-10-04
 
 ### Changed
