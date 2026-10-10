@@ -1,6 +1,6 @@
 # CR-032: Fix Soft 404s and Unify Not-Found Pages
 
-Status: In Progress  
+Status: Done  
 Priority: Medium  
 Area: Web Content  
 Created: 2026-08-09  
@@ -53,7 +53,7 @@ Every path the site cannot serve answers 404 with one not-found page, rendered i
 - [x] All not-found responses render the same page, inside `Layout`, with a site-suffixed title.
 - [x] `/`, `/posts`, an existing post, `/about` (published), `/status`, and `/stories` (301) are unchanged.
 - [x] Typecheck, web tests, and `build:posts` pass.
-- [ ] Production answers 404 for `/nope` and `/posts/nope` after deploy.
+- [x] Production answers 404 for `/nope` and `/posts/nope` after deploy.
 
 ## Implementation Notes
 
@@ -75,3 +75,7 @@ Every path the site cannot serve answers 404 with one not-found page, rendered i
 - `npm test` (55 script tests, 62 web tests), `npm run typecheck`, and `build:posts` pass.
 
 ## Outcome
+
+Shipped in web `0.14.1` (PR #67) and verified on production on 2026-10-10, after the deploy from the merge succeeded. `/status` reports `0.14.1`. `/nope`, `/posts/nope`, `/a/b/c`, and `/dashboard` answer 404 with the single `Not Found | My Life In Digital` page inside `Layout`. `/`, `/posts`, `/posts/why-do-i-build`, `/about`, and `/status` still answer 200, and `/stories` still answers 301.
+
+Every not-found response now comes from `app.notFound`. Routes return `null` for a miss and set no status themselves. There is no automated test for the status code (see Decisions). The production check above and the `wrangler dev` path matrix are the record.
