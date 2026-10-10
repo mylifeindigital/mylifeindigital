@@ -1,6 +1,6 @@
 # CR-038: Capture and Explore Ideas With a Feedback Loop
 
-Status: Proposed  
+Status: In Progress  
 Priority: High  
 Area: Process  
 Created: 2026-10-10  
@@ -37,10 +37,10 @@ Capture a technology idea in seconds, then explore it in rounds of the owner's o
 
 ## Open Questions
 
-- [ ] **Feedback shape.** Is the proposed round right: restate the idea, name the weakest assumption, ask one or two questions that move the thinking forward, point to prior art, and suggest the smallest experiment that could prove or kill the idea? Or should it be weighted differently, for example more Socratic questioning and less critique?
-- [ ] **Who writes the understanding.** Does the owner always write the "my understanding" part of each round themselves, because explaining is the learning? Or may the agent draft it from a conversation for the owner to correct?
-- [ ] **PR cadence.** Collect several rounds into an occasional pull request to `main`, or keep `ideas/` on a long-running branch that merges periodically?
-- [ ] **Skill discovery.** Keep the feedback skill in `.agents/skills/`, reached through `AGENTS.md` like the existing skills, or also expose it to Claude Code through `.claude/skills/` so it can start without the pointer?
+- [x] **Feedback shape.** Is the proposed round right: restate the idea, name the weakest assumption, ask one or two questions that move the thinking forward, point to prior art, and suggest the smallest experiment that could prove or kill the idea? Or should it be weighted differently, for example more Socratic questioning and less critique?
+- [x] **Who writes the understanding.** Does the owner always write the "my understanding" part of each round themselves, because explaining is the learning? Or may the agent draft it from a conversation for the owner to correct?
+- [x] **PR cadence.** Collect several rounds into an occasional pull request to `main`, or keep `ideas/` on a long-running branch that merges periodically?
+- [x] **Skill discovery.** Keep the feedback skill in `.agents/skills/`, reached through `AGENTS.md` like the existing skills, or also expose it to Claude Code through `.claude/skills/` so it can start without the pointer?
 
 ## Proposed Implementation
 
@@ -77,13 +77,19 @@ Out of scope:
 ## Decisions
 
 - 2026-10-10: **Ideas get their own top-level `ideas/` directory.** Not `docs/raw/`, because raw sources must not be edited during wiki work (`docs/WIKI.md`), while an idea is edited every round. Not `change-requests/`, because a request means work already accepted, and most ideas should be allowed to fail without ever becoming one. A verdict of "Building" is the hand-off point to a change request, an experiment, or a new repository.
+- 2026-10-10: **A round exists to answer one question: is this idea worth an experiment?** The owner's answer reframed the feedback round. It is not open-ended critique. The restatement, the weakest assumption, the questions, and the prior art all feed a closing recommendation, which is one of: run an experiment (with hypothesis, smallest build, time box, and the signal that would prove or kill it), go another round (naming what is unresolved), park, or abandon. This adds an `Experimenting` status between `Exploring` and `Building`. Experiments are code in `experiments/`, and their result is recorded back in the idea file.
+- 2026-10-10: **A second workflow: "what should I focus on next?"** The owner will sometimes ask this directly. The skill answers it by reading every idea's status, latest round, and pending experiment, together with the open change requests, and recommends one thing with its reasons rather than a list. This is the portfolio view the per-idea rounds cannot give.
+- 2026-10-10: **The agent drafts "my understanding" from the conversation, and the owner corrects it.** Drafted text is marked as drafted until the owner confirms it, so the record never presents the agent's summary as the owner's own words.
+- 2026-10-10: **Rounds collect into an occasional pull request to `main`.** No long-running branch. Change this only if the friction turns out to be real.
+- 2026-10-10: **The skill is reachable both ways.** It is canonical in `.agents/skills/`, pointed to from `AGENTS.md` like the existing skills, and also exposed in `.claude/skills/` so Claude Code finds it without the pointer. The `.claude/skills/` entry is a symlink to the canonical directory, so there is one copy. Whether Claude Code discovers a symlinked skill can be confirmed only by a fresh session, so that check is an acceptance criterion.
 - 2026-10-10: **No tooling in this request.** `CR-036` was dropped after a month of tooling decisions that produced no captured notes. Files and conversation come first, and tooling needs a new request backed by observed friction.
 
 ## Acceptance Criteria
 
 - [ ] `AGENTS.md` states that this repository is exclusively for technology topics.
 - [ ] `ideas/` exists with a README defining its purpose and boundaries, and an idea template.
-- [ ] A feedback skill defines capture, a feedback round, and a verdict, and `AGENTS.md` points to it.
+- [ ] A feedback skill defines capture, a feedback round ending in an experiment recommendation, a verdict, and a "what to focus on next" review, and `AGENTS.md` points to it.
+- [ ] A fresh Claude Code session lists the skill without being pointed to `AGENTS.md`.
 - [ ] At least one real idea has completed two or more rounds using the skill.
 - [ ] The template and skill reflect what that first idea taught, or `Implementation Notes` records that nothing needed to change.
 

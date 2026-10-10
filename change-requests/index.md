@@ -51,7 +51,7 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-035 | Skip drafts when generating images | Done | Medium | Content Pipeline | 2026-08-10 | [CR-035-skip-drafts-when-generating-images.md](./CR-035-skip-drafts-when-generating-images.md) |
 | CR-036 | MLID Stream capture and sync | Dropped | Medium | Content Operations | 2026-09-10 | [CR-036-mlid-stream-capture-and-sync.md](./CR-036-mlid-stream-capture-and-sync.md) |
 | CR-037 | Remove the stories section | Done | Medium | Web Content | 2026-10-04 | [CR-037-remove-the-stories-section.md](./CR-037-remove-the-stories-section.md) |
-| CR-038 | Capture and explore ideas with a feedback loop | Proposed | High | Process | 2026-10-10 | [CR-038-capture-and-explore-ideas-with-a-feedback-loop.md](./CR-038-capture-and-explore-ideas-with-a-feedback-loop.md) |
+| CR-038 | Capture and explore ideas with a feedback loop | In Progress | High | Process | 2026-10-10 | [CR-038-capture-and-explore-ideas-with-a-feedback-loop.md](./CR-038-capture-and-explore-ideas-with-a-feedback-loop.md) |
 | CR-039 | Reshape the site to showcase solved problems | Proposed | Medium | Web Content | 2026-10-10 | Pending detail |
 
 ## Backlog Grooming Notes
