@@ -51,8 +51,16 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-035 | Skip drafts when generating images | Done | Medium | Content Pipeline | 2026-08-10 | [CR-035-skip-drafts-when-generating-images.md](./CR-035-skip-drafts-when-generating-images.md) |
 | CR-036 | MLID Stream capture and sync | Dropped | Medium | Content Operations | 2026-09-10 | [CR-036-mlid-stream-capture-and-sync.md](./CR-036-mlid-stream-capture-and-sync.md) |
 | CR-037 | Remove the stories section | Done | Medium | Web Content | 2026-10-04 | [CR-037-remove-the-stories-section.md](./CR-037-remove-the-stories-section.md) |
+| CR-038 | Capture and explore ideas with a feedback loop | Proposed | High | Process | 2026-10-10 | [CR-038-capture-and-explore-ideas-with-a-feedback-loop.md](./CR-038-capture-and-explore-ideas-with-a-feedback-loop.md) |
+| CR-039 | Reshape the site to showcase solved problems | Proposed | Medium | Web Content | 2026-10-10 | Pending detail |
 
 ## Backlog Grooming Notes
+
+### 2026-10-10
+
+- Cleared the backlog. `CR-032` shipped as web `0.14.1`. `CR-027`, `CR-031`, and `CR-036` were dropped, with reasons in their detail files.
+- Added `CR-038` after the owner set out what the repository is for: technology topics only, a place to capture ideas and get feedback on them, and a site that shows specific problems solved rather than every thought. The gap is the middle of an idea's life. Change requests hold accepted work, the site holds finished work, and nothing holds exploration, including ideas that will not work. `CR-038` adds `ideas/` and a feedback-loop skill, and deliberately builds no tooling. `CR-036` is the cautionary case: a month of sync and batching design, and no captured notes.
+- Added `CR-039` as a Gate 1 note. The owner's view is that the current sections (posts, technical sessions, about) do not show what the site is for, which is specific problems solved, with `story-crafter` as the model. It is deliberately left unplanned until ideas from `CR-038` have produced real case studies, because the shape of a showcase should come from the material it shows.
 
 ### 2026-08-10
 
