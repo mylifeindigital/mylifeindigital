@@ -7,7 +7,7 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 ### Changed
 
 - Planned and implemented `CR-032`: every not-found path now answers 404 from one not-found page (web `0.14.1`). Completed it after verifying production: unknown sections, unknown items, and deeper paths answer 404, and existing pages are unchanged.
-- Dropped `CR-036` (MLID Stream capture and sync) before implementation. Merged its planning docs, Bun reference sources, and wiki pages from the unmerged `codex/cr-036-mlid-stream` branch so the record survives, and marked the wiki pages as not pursued. The private `mylifeindigital.notes` repository was left as it is.
+- Dropped `CR-036` (MLID Stream capture and sync) before implementation. Merged its planning docs, Bun reference sources, and wiki pages from the unmerged `codex/cr-036-mlid-stream` branch so the record survives, and marked the wiki pages as not pursued. The owner then deleted the private `mylifeindigital.notes` repository, and the CR's outcome records that.
 - Dropped `CR-027` (schema-driven listing components). Its motivating case, a distinct story card, was removed with the stories section in `CR-037`.
 - Dropped `CR-031` (caching policy). Production headers show the current behaviour is cheap and correct at this traffic. Its outcome lists what would justify reopening it. No change request is open.
 

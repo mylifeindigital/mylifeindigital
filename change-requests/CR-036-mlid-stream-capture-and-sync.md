@@ -90,7 +90,4 @@ Dropped by the owner on 2026-10-10, before implementation. It was blocked at the
 
 The planning docs were on the unmerged `codex/cr-036-mlid-stream` branch. They were merged to `main` with this status so the decisions above stay findable and the `CR-036` ID stays accounted for.
 
-Left as they were outside this repository:
-
-- [mylifeindigital/mylifeindigital.notes](https://github.com/mylifeindigital/mylifeindigital.notes) still exists, private, with only its initial README.
-- Its `main` protection requires a `Validate (no deploy)` check that no workflow produces there, so a pull request to that repository cannot merge until the requirement is removed or the workflow is added. Archive or delete the repository if it will not be used.
+The `mylifeindigital.notes` repository created for this request was deleted by the owner on 2026-10-10, and nothing in this repository depended on it. It held only its initial README. The 2026-09-10 notes above, which link to it, are kept as history.
