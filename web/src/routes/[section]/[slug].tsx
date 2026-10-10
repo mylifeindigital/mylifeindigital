@@ -11,17 +11,9 @@ export function contentItemRoute(sectionSlug: string, itemSlug: string, config: 
     const { siteTitle, socialLinks } = config;
     
     if (!item || !section) {
-        return (
-            <Layout title="Not Found" siteTitle={siteTitle} sections={allSections} socialLinks={socialLinks}>
-                <div class="not-found">
-                    <h2>404</h2>
-                    <p>The content you're looking for doesn't exist.</p>
-                    <a href="/" class="btn">← Back to Home</a>
-                </div>
-            </Layout>
-        );
+        return null;
     }
-    
+
     // Get display schema - check frontmatter override first, then section default
     const layoutOverride = item.metadata.layout as string | undefined;
     const schema = getSchemaForContent(sectionSlug, layoutOverride);

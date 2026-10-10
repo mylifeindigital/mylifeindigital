@@ -4,6 +4,16 @@ All notable changes to the web app will be documented in this file.
 
 
 
+## 0.14.1 — 2026-10-10
+
+### Fixed
+
+- **Not-found paths answer `404`** (`CR-032`). They all answered `200` before, so search engines could index unknown URLs and monitoring could not tell a broken link from a working page. Covers unknown sections (`/nope`, `/dashboard`), unknown items (`/posts/nope`), deeper paths (`/a/b/c`, `/posts/`), and `/about` when the content repository has no About page.
+
+### Changed
+
+- **One not-found page instead of four.** The section, item, and About routes return `null` for a miss, and `index.ts` passes it to `c.notFound()`. `app.notFound` sets the status and renders `routes/not-found.tsx`, so a new route cannot forget the 404. The old handler for three-segment paths built raw HTML outside `Layout` and had no header, nav, or footer. It is replaced, and every not-found title now reads `Not Found | <site title>`.
+
 ## 0.14.0 — 2026-10-04
 
 ### Removed

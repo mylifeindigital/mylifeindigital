@@ -10,15 +10,7 @@ export function aboutRoute(config: AppConfig) {
     const { siteTitle, socialLinks } = config;
 
     if (!page) {
-        return (
-            <Layout title={`About | ${siteTitle}`} siteTitle={siteTitle} sections={sections} socialLinks={socialLinks}>
-                <div class="not-found">
-                    <h2>404</h2>
-                    <p>The About page isn't published yet.</p>
-                    <a href="/" class="btn">← Back to Home</a>
-                </div>
-            </Layout>
-        );
+        return null;
     }
 
     const layoutOverride = page.metadata.layout as string | undefined;

@@ -48,12 +48,30 @@ Every path the site cannot serve answers 404 with one not-found page, rendered i
 
 ## Acceptance Criteria
 
-- [ ] `/nope`, `/dashboard`, `/posts/nope`, `/nope/nope`, and `/a/b/c` answer 404.
-- [ ] `/about` answers 404 when the content repository has no `about` page.
-- [ ] All not-found responses render the same page, inside `Layout`, with a site-suffixed title.
-- [ ] `/`, `/posts`, an existing post, `/about` (published), `/status`, and `/stories` (301) are unchanged.
-- [ ] Typecheck, web tests, and `build:posts` pass.
+- [x] `/nope`, `/dashboard`, `/posts/nope`, `/nope/nope`, and `/a/b/c` answer 404.
+- [x] `/about` answers 404 when the content repository has no `about` page.
+- [x] All not-found responses render the same page, inside `Layout`, with a site-suffixed title.
+- [x] `/`, `/posts`, an existing post, `/about` (published), `/status`, and `/stories` (301) are unchanged.
+- [x] Typecheck, web tests, and `build:posts` pass.
+- [ ] Production answers 404 for `/nope` and `/posts/nope` after deploy.
 
 ## Implementation Notes
+
+- 2026-10-10, web `0.14.1`: added `web/src/routes/not-found.tsx`. `aboutRoute`, `sectionRoute`, and `contentItemRoute` now return `null` for a miss, and their handlers in `web/src/index.ts` call `c.notFound()`. `app.notFound` calls `c.status(404)` and then `c.render(...)`, so the not-found page goes through the same `jsxRenderer` and `Layout` as every other page.
+- Path matrix against `wrangler dev`, after the change:
+
+  | Path | Before | After |
+  | --- | --- | --- |
+  | `/nope`, `/dashboard` | 200 `Section Not Found` | 404 `Not Found \| My Life In Digital` |
+  | `/posts/nope`, `/nope/nope` | 200 `Not Found` | 404, same page |
+  | `/a/b/c` | 200, raw HTML with no header | 404, same page, inside `Layout` |
+  | `/posts/` (trailing slash) | 200, raw HTML with no header | 404, same page |
+  | `/about`, About removed from a scratch copy of the content | 200 placeholder | 404, same page |
+  | `HEAD /nope` | — | 404 |
+  | `/`, `/posts`, `/posts/why-do-i-build`, `/about`, `/status` | 200 | 200 |
+  | `/stories` | 301 | 301 |
+
+- Trailing-slash URLs such as `/posts/` were never served as content: Hono's strict routing already sent them to the raw not-found handler. Only their status changed. Redirecting them to the slash-less path would be a separate change.
+- `npm test` (55 script tests, 62 web tests), `npm run typecheck`, and `build:posts` pass.
 
 ## Outcome

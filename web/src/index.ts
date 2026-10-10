@@ -5,6 +5,7 @@ import { aboutRoute } from './routes/about.js';
 import { sectionRoute } from './routes/[section]/index.js';
 import { contentItemRoute } from './routes/[section]/[slug].js';
 import { statusRoute } from './routes/status.js';
+import { notFoundRoute } from './routes/not-found.js';
 import { type Env, getConfig } from './config.js';
 
 // Create app with environment bindings type
@@ -21,8 +22,8 @@ app.get('/', (c) => {
 
 // Standalone authored pages must be registered before dynamic section routes
 app.get('/about', (c) => {
-    const config = getConfig(c.env);
-    return c.render(aboutRoute(config));
+    const page = aboutRoute(getConfig(c.env));
+    return page ? c.render(page) : c.notFound();
 });
 
 // The operations console. Registered before /:section for the same reason the
@@ -44,39 +45,24 @@ app.get('/stories/*', (c) => c.redirect(STORY_READER_URL, 301));
 // Section listing route (e.g., /posts, /technical-sessions)
 app.get('/:section', (c) => {
     const section = c.req.param('section');
-    const config = getConfig(c.env);
-    return c.render(sectionRoute(section, config));
+    const page = sectionRoute(section, getConfig(c.env));
+    return page ? c.render(page) : c.notFound();
 });
 
 // Individual content item route (e.g., /posts/my-article, /technical-sessions/week-01)
 app.get('/:section/:slug', (c) => {
     const section = c.req.param('section');
     const slug = c.req.param('slug');
-    const config = getConfig(c.env);
-    return c.render(contentItemRoute(section, slug, config));
+    const page = contentItemRoute(section, slug, getConfig(c.env));
+    return page ? c.render(page) : c.notFound();
 });
 
-// 404 handler
+// The only not-found page (CR-032). Routes return null for a miss and hand it
+// here, so every unmatched path and every missing item answers 404 from one
+// place rather than each route having to remember the status code.
 app.notFound((c) => {
-    const config = getConfig(c.env);
-    return c.html(`
-        <!DOCTYPE html>
-        <html>
-            <head>
-                <title>404 - Not Found | ${config.siteTitle}</title>
-                <link rel="stylesheet" href="/styles/main.css" />
-            </head>
-            <body>
-                <main class="container">
-                    <div class="not-found">
-                        <h2>404</h2>
-                        <p>The page you're looking for doesn't exist.</p>
-                        <a href="/" class="btn">← Go Home</a>
-                    </div>
-                </main>
-            </body>
-        </html>
-    `);
+    c.status(404);
+    return c.render(notFoundRoute(getConfig(c.env)));
 });
 
 // Export for Cloudflare Workers
