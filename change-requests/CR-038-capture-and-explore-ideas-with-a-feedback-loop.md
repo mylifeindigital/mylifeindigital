@@ -86,13 +86,21 @@ Out of scope:
 
 ## Acceptance Criteria
 
-- [ ] `AGENTS.md` states that this repository is exclusively for technology topics.
-- [ ] `ideas/` exists with a README defining its purpose and boundaries, and an idea template.
-- [ ] A feedback skill defines capture, a feedback round ending in an experiment recommendation, a verdict, and a "what to focus on next" review, and `AGENTS.md` points to it.
-- [ ] A fresh Claude Code session lists the skill without being pointed to `AGENTS.md`.
+- [x] `AGENTS.md` states that this repository is exclusively for technology topics.
+- [x] `ideas/` exists with a README defining its purpose and boundaries, and an idea template.
+- [x] A feedback skill defines capture, a feedback round ending in an experiment recommendation, a verdict, and a "what to focus on next" review, and `AGENTS.md` points to it.
+- [x] A fresh Claude Code session lists the skill without being pointed to `AGENTS.md`.
 - [ ] At least one real idea has completed two or more rounds using the skill.
 - [ ] The template and skill reflect what that first idea taught, or `Implementation Notes` records that nothing needed to change.
 
 ## Implementation Notes
+
+- 2026-10-10, phase 1: `AGENTS.md` states the technology-only scope in `Project Overview`, lists `ideas/` under `Repository Structure`, and has a new `Ideas` section. Added `ideas/README.md` (lifecycle, statuses, boundaries table, naming) and `ideas/templates/idea.md`. Ideas are named by subject with no numeric IDs: unlike a change request, an idea is not referenced from commits or code, and most will never be.
+- 2026-10-10, phase 2: added `.agents/skills/idea-loop/SKILL.md` with five sections: a scope gate, capture, feedback round, verdict, and focus. `.claude/skills/idea-loop` is a relative symlink to it, which Git stores as mode `120000`, so there is one copy. Checked with a fresh non-interactive Claude Code session (`claude -p`) in the repository root: it listed `idea-loop` among its skills.
+- Choices the decisions did not settle, to be tested by phase 3:
+  - Capture does not start a round unless asked, so capture stays quick.
+  - A round gives exactly one weakest assumption and one recommendation, not a list.
+  - The focus workflow puts an overdue experiment ahead of new exploration, because judging finished work beats starting more.
+- Phase 3 waits for an idea from the owner.
 
 ## Outcome
