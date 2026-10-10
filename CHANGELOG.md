@@ -17,6 +17,26 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 - Removed the `content/stories/` ignore rule. Nothing generates that folder any more.
 - Completed `CR-037` after verifying production: `/stories` redirects to the reader, and `/status` reports two revisions on 0.14.0.
 
+## 2026-09-10
+
+### Added
+
+- Resolved the `CR-036` CLI boundary: an isolated Bun experiment outside npm workspaces, with direct Bun invocation, an optional root npm entry point, and dedicated verification separate from the site.
+
+- Resolved `CR-036` retry mechanics: one sync mechanism runs after capture or through `stream sync`, with visible pending failures and no background retries in version one.
+
+- Resolved late arrivals in `CR-036`: notes synced after their original daily batch closes join the next active day’s batch with the original capture timestamp preserved.
+
+- Recorded the `CR-036` decision for daily note batches created on demand, immediate commit/push, and server-side finalization with policy-controlled auto-merge. Quiet days create nothing; failing or overdue batches remain recoverable. Retry and late offline capture behavior remain open.
+
+- Applied matching application-repository main-branch protection to `mylifeindigital.notes` and recorded the resolved protection decision in `CR-036`. The required notes validation workflow and batch/merge automation remain outstanding.
+
+- Resolved `CR-036` capture ownership and created the private `mylifeindigital.notes` GitHub repository for new general notes. Application documentation stays here without a bulk migration; notes branch/merge policy remains open.
+
+- Added `CR-036` for MLID Stream capture and Git synchronization, including a provisional batch PR workflow, notes-versus-docs ownership, and an AI organization handoff. Implementation awaits explicit workflow decisions; no notes repository or CLI was created.
+
+- Indexed the MLID Stream exploration and supplied Bun Shell reference in the docs wiki, with source links and unresolved capture, authoring, storage, and publishing questions. Catalogued the empty Bun Markdown source as pending synthesis.
+
 ## 2026-08-23
 
 ### Changed
