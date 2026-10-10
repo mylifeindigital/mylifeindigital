@@ -10,6 +10,7 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 - Dropped `CR-036` (MLID Stream capture and sync) before implementation. Merged its planning docs, Bun reference sources, and wiki pages from the unmerged `codex/cr-036-mlid-stream` branch so the record survives, and marked the wiki pages as not pursued. The owner then deleted the private `mylifeindigital.notes` repository, and the CR's outcome records that.
 - Dropped `CR-027` (schema-driven listing components). Its motivating case, a distinct story card, was removed with the stories section in `CR-037`.
 - Dropped `CR-031` (caching policy). Production headers show the current behaviour is cheap and correct at this traffic. Its outcome lists what would justify reopening it. No change request is open.
+- Added `CR-038` (capture and explore ideas with a feedback loop) with reconnaissance, two recorded decisions, and four open questions for the owner. Added `CR-039` (reshape the site to showcase solved problems) as a backlog note, to be planned once `CR-038` has produced case studies.
 
 ## 2026-10-04
 
