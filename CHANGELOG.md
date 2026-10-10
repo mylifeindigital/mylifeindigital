@@ -4,6 +4,11 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ## 2026-10-10
 
+### Added
+
+- `ideas/` and the `idea-loop` skill (`CR-038` phases 1–2). Technology ideas are captured as one file each and explored in feedback rounds. Each round ends in a recommendation: experiment, another round, park, or abandon. A "what should I focus on next?" workflow reads every idea and open change request and recommends one thing. The skill is canonical in `.agents/skills/idea-loop/`, and `.claude/skills/idea-loop` is a symlink to it so Claude Code discovers it directly.
+- `AGENTS.md` now states that this repository is exclusively for technology topics.
+
 ### Changed
 
 - Planned and implemented `CR-032`: every not-found path now answers 404 from one not-found page (web `0.14.1`). Completed it after verifying production: unknown sections, unknown items, and deeper paths answer 404, and existing pages are unchanged.

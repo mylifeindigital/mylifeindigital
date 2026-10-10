@@ -6,6 +6,8 @@ This file is the canonical guide for coding agents working in this repository. T
 
 `mylifeindigital` is a personal technical growth platform built as a Hono-based blog deployed on Cloudflare Workers. Content is authored as Markdown with YAML frontmatter, processed at build time, and embedded into the Worker bundle because Workers have no filesystem access at runtime.
 
+**Scope: this repository is exclusively for technology topics.** That covers ideas, notes, experiments, docs, and planning. Non-technical notes do not belong here, whatever folder they would fit. The site exists to show specific problems the owner has solved as a software engineer. It is not a publishing channel for every thought (CR-038).
+
 The site is assembled from two repositories (CR-007, CR-020):
 
 - `mylifeindigital` (this repository) - application code, content pipeline, deployment, docs wiki, change requests.
@@ -23,6 +25,7 @@ Local work assumes sibling checkouts under one parent directory; `mylifeindigita
 - `scripts/` - Root-level utilities such as session creation and date updates.
 - `docs/` - Git-backed LLM wiki for non-published repository knowledge, with raw sources in `docs/raw/` and maintained pages in `docs/wiki/`.
 - `change-requests/` - Local-first planned implementation requests.
+- `ideas/` - Technology ideas under exploration, one file per idea, explored in feedback rounds until parked, abandoned, or built (CR-038). Private thinking, not publishable content.
 
 ## Commands
 
@@ -165,6 +168,15 @@ Use `docs/` as an LLM-maintained wiki for repository knowledge.
 - `.agents/skills/llm-wiki/SKILL.md` is the repo-local skill for docs wiki work.
 
 When a user asks to ingest a note into the wiki, query the docs wiki, or lint/maintain wiki pages, use the `llm-wiki` skill and preserve source provenance back to `docs/raw/`.
+
+## Ideas
+
+Use `ideas/` to capture technology ideas and explore them with feedback (CR-038). `ideas/README.md` defines the lifecycle and its boundaries with `docs/`, `change-requests/`, and `experiments/`.
+
+- `.agents/skills/idea-loop/SKILL.md` is the repo-local skill. `.claude/skills/idea-loop` is a symlink to it, so Claude Code discovers it directly. Edit only the canonical copy.
+- Use it when the user captures an idea, asks for feedback on one, asks whether an idea is worth an experiment, records a verdict, or asks what to focus on next.
+- Feedback rounds end in a recommendation: experiment, another round, park, or abandon. "My understanding" may be drafted from conversation, but it stays marked as drafted until the user confirms it.
+- Ideas are never published from `ideas/`. A solved problem reaches the site only as content in `mylifeindigital.content`.
 
 ## Git Workflow
 
