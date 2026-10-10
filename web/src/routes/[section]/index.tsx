@@ -10,15 +10,7 @@ export function sectionRoute(sectionSlug: string, config: AppConfig) {
     const { siteTitle, socialLinks } = config;
 
     if (!section) {
-        return (
-            <Layout title="Section Not Found" siteTitle={siteTitle} sections={allSections} socialLinks={socialLinks}>
-                <div class="not-found">
-                    <h2>404</h2>
-                    <p>The section you're looking for doesn't exist.</p>
-                    <a href="/" class="btn">← Back to Home</a>
-                </div>
-            </Layout>
-        );
+        return null;
     }
 
     // The listing themes with the section it lists, so a themed section's
