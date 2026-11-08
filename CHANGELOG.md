@@ -7,6 +7,7 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 ### Added
 
 - `CR-039` detail file. It was waiting for a first case study, and the Golden Valley post now provides one. The file records what the site shows today (tags don't do anything, and the homepage features reflective posts) and five open questions for the owner, starting with whether case studies get their own section.
+- Reframed `CR-039` as "Show ideas and their verdicts" after the owner restated the site's purpose: it records ideas being tested and judged, and dropped ideas count as much as successful ones. The case-studies section and required case-study shape are dropped in favour of mixed posts with an optional idea status and verdict.
 - `ideas/own-agent-harness.md`, the first idea taken through `CR-038`'s feedback loop: three rounds, still exploring. Round 3 isn't confirmed yet.
 
 ### Changed
