@@ -2,6 +2,16 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-11-08
+
+### Added
+
+- `ideas/own-agent-harness.md`, the first idea taken through `CR-038`'s feedback loop: three rounds, still exploring. Round 3 isn't confirmed yet.
+
+### Changed
+
+- `mylifeindigital.code-workspace` is no longer committed here. It lives in the parent directory as the owner's own file. `AGENTS.md`, `README.md`, `content/README.md` and the authoring-surface wiki page now say so, and `README.md` has a minimal example to copy.
+
 ## 2026-10-10
 
 ### Added

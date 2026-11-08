@@ -10,8 +10,8 @@ files.
 
 Publishable Markdown lives in `mylifeindigital.content/content/` — `index.md`,
 `pages/`, `posts/`, and `technical-sessions/`. Edit it there, in the same VS
-Code window: `mylifeindigital.code-workspace` in this repository's root opens
-the application and content repositories side by side.
+Code window, through a workspace file in the parent directory that opens the
+application and content repositories side by side (see the root `README.md`).
 
 ## Local builds
 

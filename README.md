@@ -86,15 +86,25 @@ names as-is unless you plan to set the overrides below.
 
 ### 2. Open one VS Code workspace
 
-```bash
-code mylifeindigital/mylifeindigital.code-workspace
+This repository doesn't ship a workspace file. Keep your own in the parent
+directory, beside the checkouts, for example `projects/mylifeindigital.code-workspace`:
+
+```json
+{
+  "folders": [
+    { "path": "mylifeindigital" },
+    { "path": "mylifeindigital.content" }
+  ]
+}
 ```
 
-[`mylifeindigital.code-workspace`](./mylifeindigital.code-workspace) lives in
-this repository and points at the siblings with relative paths, so they all
-show up in one window while staying independent Git repositories with their own
-branches, history, and CI. A repository you haven't cloned simply shows as
-unavailable — the rest of the workspace still works.
+```bash
+code mylifeindigital.code-workspace
+```
+
+The checkouts all show up in one window while staying independent Git
+repositories with their own branches, history, and CI. Add any other sibling
+repositories you work on to `folders`.
 
 ### 3. Install dependencies
 

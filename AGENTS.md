@@ -15,7 +15,7 @@ The site is assembled from two repositories (CR-007, CR-020):
 
 `story-crafter` used to be a third, as the source of a `stories` section. CR-037 removed that section: the Golden Valley stories publish only through story-crafter's own reader at `stories.mylifeindigital.co.za`, and `/stories` here redirects there. Do not reintroduce a dependency on story-crafter without a change request.
 
-Local work assumes sibling checkouts under one parent directory; `mylifeindigital.code-workspace` opens them together in one VS Code window. Never add publishable Markdown to this repository, and never commit application code to the content repository.
+Local work assumes sibling checkouts under one parent directory. A VS Code workspace file that opens them together is the owner's own file in that parent directory, not part of this repository. Never add publishable Markdown to this repository, and never commit application code to the content repository.
 
 ## Repository Structure
 
