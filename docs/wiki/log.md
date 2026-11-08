@@ -2,6 +2,10 @@
 
 Append-only record of docs wiki activity.
 
+## [2026-11-08] update | Workspace file moved out of the repository
+
+- `mylifeindigital.code-workspace` was removed from the application repository and now lives in the parent directory as the owner's own file. The [authoring-surface decision](./decisions/authoring-surface.md) records the move, and `AGENTS.md`, `README.md` and `content/README.md` no longer describe it as committed.
+
 ## [2026-10-10] decision | MLID Stream not pursued
 
 - `CR-036` was dropped before implementation. [MLID Stream](./projects/mlid-stream.md) carries a status note, and its [open questions](./questions.md#mlid-stream) are marked parked.
