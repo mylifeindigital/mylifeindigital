@@ -6,6 +6,7 @@ Repository-level changes for `mylifeindigital`. Web app release changes are trac
 
 ### Added
 
+- `CR-039` detail file. It was waiting for a first case study, and the Golden Valley post now provides one. The file records what the site shows today (tags don't do anything, and the homepage features reflective posts) and five open questions for the owner, starting with whether case studies get their own section.
 - `ideas/own-agent-harness.md`, the first idea taken through `CR-038`'s feedback loop: three rounds, still exploring. Round 3 isn't confirmed yet.
 
 ### Changed
