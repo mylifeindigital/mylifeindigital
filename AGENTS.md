@@ -10,7 +10,7 @@ This file is the canonical guide for coding agents working in this repository. T
 
 The site is assembled from two repositories (CR-007, CR-020):
 
-- `mylifeindigital` (this repository) - application code, content pipeline, deployment, docs wiki, change requests.
+- `mylifeindigital` (this repository) - application code, content pipeline, deployment, docs wiki.
 - `mylifeindigital.content` - publishable Markdown (`index.md`, `pages/`, `posts/`, `technical-sessions/`).
 
 `story-crafter` used to be a third, as the source of a `stories` section. CR-037 removed that section: the Golden Valley stories publish only through story-crafter's own reader at `stories.mylifeindigital.co.za`, and `/stories` here redirects there. Do not reintroduce a dependency on story-crafter without a change request.
@@ -24,7 +24,7 @@ Local work assumes sibling checkouts under one parent directory. A VS Code works
 - `experiments/` - Isolated technical explorations, including the `ts-core-utils` workspace.
 - `scripts/` - Root-level utilities such as session creation and date updates.
 - `docs/` - Git-backed LLM wiki for non-published repository knowledge, with raw sources in `docs/raw/` and maintained pages in `docs/wiki/`.
-- `change-requests/` - Local-first planned implementation requests.
+- `change-requests/` - Read-only archive of the old `CR-xxx` change requests. New work is tracked in GitHub issues (see Issues and the Board).
 - `ideas/` - Technology ideas under exploration, one file per idea, explored in feedback rounds until parked, abandoned, or built (CR-038). Private thinking, not publishable content.
 
 ## Commands
@@ -146,17 +146,17 @@ There is none, and reintroducing one needs a change request. `CR-018` decided th
 - Do not add a GitHub token, a Cloudflare Access allowlist, or an OpenAI key to `wrangler.toml` or Worker secrets without a change request stating what runtime need they serve. Build-time credentials belong in `web/scripts/` and the local `.env`.
 - `CR-030` may add a read-only operations console. It reports deployment state and pipeline warnings; it does not read or write content files.
 
-## Change Requests
+## Issues and the Board
 
-Use `change-requests/` for local-first planning and implementation tracking.
+Track changes, ideas, and decisions as GitHub issues in the repository they affect. Issues live on GitHub rather than on a branch, so they can be opened, edited, and closed without a pull request. Issues from every `mylifeindigital` repository also appear on one board, the **My Life In Digital** GitHub Project owned by `mylifeindigital`, which holds each issue's Status.
 
-- The shared `$manage-change-requests` skill defines the reusable lifecycle.
-- `change-requests/index.md` is the dashboard.
-- `change-requests/WORKFLOW.md` defines this repository's local contract and overrides.
-- `change-requests/templates/change-request.md` is the template for new requests.
-- Use stable IDs such as `CR-001`, `CR-002`, and keep one implementation outcome per request.
+- Label each issue `idea` (worth exploring, may be dropped), `change` (accepted work), or `decision` (a question to settle; the issue records the answer and why). The `area:` labels still apply.
+- Give an issue as much shape as it needs: a few lines for a small change; context, goal, open questions, plan, and acceptance criteria for a large one. Record decisions and the outcome in the issue with dates, as comments or by editing the body.
+- A pull request that finishes an issue says `Closes #n` so that merging closes it. Refer to an issue in another repository as `mylifeindigital/<repo>#n`.
+- A long design write-up may live in `docs/` and be linked from its issue, but status is tracked in the issue.
+- Do not add new files to `change-requests/`. It is a read-only archive: old `CR-xxx` IDs in commits, code, and docs still resolve there. The requests that were open on 2026-11-21 moved to issues that keep their `CR-xxx` in the title.
 
-When a user asks for planned work, implementation tracking, CRs, or PRD-like notes, follow the change-request workflow before or during implementation as appropriate.
+When a user asks for planned work, implementation tracking, CRs, or PRD-like notes, open or update an issue before or during implementation as appropriate.
 
 ## Docs Wiki
 
@@ -171,7 +171,7 @@ When a user asks to ingest a note into the wiki, query the docs wiki, or lint/ma
 
 ## Ideas
 
-Use `ideas/` to capture technology ideas and explore them with feedback (CR-038). `ideas/README.md` defines the lifecycle and its boundaries with `docs/`, `change-requests/`, and `experiments/`.
+Use `ideas/` to capture technology ideas and explore them with feedback (CR-038). `ideas/README.md` defines the lifecycle and its boundaries with `docs/`, GitHub issues, and `experiments/`.
 
 - `.agents/skills/idea-loop/SKILL.md` is the repo-local skill. `.claude/skills/idea-loop` is a symlink to it, so Claude Code discovers it directly. Edit only the canonical copy.
 - Use it when the user captures an idea, asks for feedback on one, asks whether an idea is worth an experiment, records a verdict, or asks what to focus on next.
@@ -180,11 +180,11 @@ Use `ideas/` to capture technology ideas and explore them with feedback (CR-038)
 
 ## Git Workflow
 
-Use one branch per change request by default. Branch names should be scoped and readable, for example `codex/cr-001-admin-editor-autosave`. For small docs-only or maintenance changes that do not need a change request, use a scoped branch such as `codex/docs-agent-guidance` or `codex/fix-build-posts`.
+Use one branch per issue by default. Branch names should be scoped and readable, for example `codex/76-idea-loop-first-idea`. For small docs-only or maintenance changes that do not need an issue, use a scoped branch such as `codex/docs-agent-guidance` or `codex/fix-build-posts`.
 
-Commit at meaningful checkpoints rather than after every small edit or only at the end. A good rhythm is one commit for planning or CR updates, one or more commits for implementation, and a final commit for validation, changelog, and version updates when applicable.
+Commit at meaningful checkpoints rather than after every small edit or only at the end. A good rhythm is one commit for planning, one or more commits for implementation, and a final commit for validation, changelog, and version updates when applicable.
 
-Keep commits coherent and reviewable. Avoid mixing unrelated cleanup with feature work. Each branch or pull request should usually represent one change-request outcome.
+Keep commits coherent and reviewable. Avoid mixing unrelated cleanup with feature work. Each branch or pull request should usually represent one issue's outcome.
 
 ## Release Management
 

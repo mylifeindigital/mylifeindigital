@@ -16,7 +16,7 @@ capture → explore (rounds) → experiment → build → ship
 | --- | --- |
 | `Exploring` | Being thought through in feedback rounds. |
 | `Experimenting` | Judged worth an experiment. One is defined and running in `experiments/`. |
-| `Building` | The experiment proved enough. Real work continues in a change request, an experiment, or its own repository. |
+| `Building` | The experiment proved enough. Real work continues in a `change` issue, an experiment, or its own repository. |
 | `Shipped` | Built and in use. It may become a case study on the site. |
 | `Parked` | Not now. The verdict says what would bring it back. |
 | `Abandoned` | Not worth pursuing. The verdict says why. |
@@ -28,7 +28,7 @@ The workflows live in [`.agents/skills/idea-loop/SKILL.md`](../.agents/skills/id
 - **Capture:** "new idea: …". This creates a file from [`templates/idea.md`](./templates/idea.md) with the thought as its seed, unedited.
 - **Explore:** "let's do a round on …". You explain, the agent drafts your understanding from the conversation, and the round ends in a recommendation: experiment, another round, park, or abandon.
 - **Verdict:** record why an idea is parked, abandoned, or moving forward.
-- **Focus:** "what should I focus on next?". This reads every idea and open change request and recommends one thing.
+- **Focus:** "what should I focus on next?". This reads every idea and open `change` issue and recommends one thing.
 
 Rounds collect on a branch and reach `main` in an occasional pull request.
 
@@ -38,7 +38,7 @@ Rounds collect on a branch and reach `main` in an occasional pull request.
 | --- | --- | --- |
 | `ideas/` | Thinking that may not survive | The start of the lifecycle |
 | `experiments/` | Code that tests an idea | An idea in `Experimenting` links to its experiment |
-| `change-requests/` | Work already accepted for this repository | An idea in `Building` may become one |
+| GitHub issues labelled `change` | Work already accepted for this repository | An idea in `Building` may become one |
 | `docs/` | The agent's working memory for this repository | Not for ideas. Raw sources there are not edited, and ideas are edited every round |
 | `mylifeindigital.content` | Published content | A shipped idea may become a case study there |
 

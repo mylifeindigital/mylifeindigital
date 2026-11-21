@@ -33,7 +33,7 @@ The published site is assembled from two repositories (`CR-007`, `CR-020`):
 
 | Repository | Owns | Notes |
 | --- | --- | --- |
-| [`mylifeindigital`](https://github.com/mylifeindigital/mylifeindigital) (this one) | Application code, content pipeline, deployment, docs wiki, change requests | Public |
+| [`mylifeindigital`](https://github.com/mylifeindigital/mylifeindigital) (this one) | Application code, content pipeline, deployment, docs wiki | Public |
 | [`mylifeindigital.content`](https://github.com/mylifeindigital/mylifeindigital.content) | Publishable Markdown — `index.md`, `pages/`, `posts/`, `technical-sessions/` | Private |
 
 Rule of thumb: everything you can **read** on the site lives in the content
@@ -59,13 +59,13 @@ content repository is the single source of truth for what has been written.
 /content          → Placeholder only — publishable Markdown lives in mylifeindigital.content
 /experiments      → Isolated technical explorations (ts-core-utils)
 /docs             → Git-backed LLM wiki for non-published repository knowledge
-/change-requests  → Local-first planned implementation requests (CR-xxx)
+/change-requests  → Archive of the old CR-xxx requests; new work is GitHub issues
 /.github          → Pull-request validation and the single production deployment workflow
 /AGENTS.md        → Canonical coding-agent guide
 /CHANGELOG.md     → Repository-level changelog
 ```
 
-`docs/` and `change-requests/` are working memory for building the site, not
+`docs/` and the `change-requests/` archive are working memory for building the site, not
 site content. Nothing in this repository is published; publishable writing goes
 to the content repository.
 
