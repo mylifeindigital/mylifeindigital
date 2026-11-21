@@ -2,6 +2,12 @@
 
 Repository-level changes for `mylifeindigital`. Web app release changes are tracked separately in `web/CHANGELOG.md`.
 
+## 2026-11-21
+
+### Changed
+
+- Change requests moved to GitHub issues, so planning is no longer tied to a branch and works the same way across every `mylifeindigital` repository. Issues are labelled `idea`, `change`, or `decision` and appear on one [**My Life In Digital** project board](https://github.com/users/mylifeindigital/projects/4). `CR-038` is now #76 and `CR-039` is #77, with their full text. `change-requests/` stays as a read-only archive of done and dropped requests so old `CR-xxx` references still resolve; `WORKFLOW.md`, the template, and the two open detail files are removed. `AGENTS.md`, `README.md`, `ideas/README.md`, and the `backlog-grooming` and `idea-loop` skills now point to issues.
+
 ## 2026-11-08
 
 ### Added

@@ -1,14 +1,10 @@
-# Change Requests
+# Change Requests (archive)
 
-Local-first change requests for `mylifeindigital`. Proposed rows may start as lightweight dashboard entries. Detail files capture the intent, proposed implementation, acceptance criteria, notes, and outcome once a request is ready for planning or implementation.
+**This folder is a read-only archive.** On 2026-11-21 change requests moved to GitHub issues, so that they are no longer tied to a branch and work the same way in every `mylifeindigital` repository. See `Issues and the Board` in [`AGENTS.md`](../AGENTS.md).
 
-## Workflow
-
-1. Add a new row to this index with the next available `CR-xxx` ID.
-2. Create a matching detail file from `templates/change-request.md` when a request moves toward active planning or implementation.
-3. Move status through `Proposed`, `Planned`, `In Progress`, `Blocked`, `Done`, or `Dropped`.
-4. Update the detail file as implementation decisions are made.
-5. Record the final result in `Outcome` before marking a request `Done`.
+- New changes, ideas, and decisions are [issues in this repository](https://github.com/mylifeindigital/mylifeindigital/issues), labelled `change`, `idea`, or `decision`, and they all appear on the [**My Life In Digital** project board](https://github.com/users/mylifeindigital/projects/4).
+- The two requests that were still open moved to issues that keep their IDs in the title: `CR-038` is [#76](https://github.com/mylifeindigital/mylifeindigital/issues/76) and `CR-039` is [#77](https://github.com/mylifeindigital/mylifeindigital/issues/77).
+- Done and dropped requests stay here unchanged, so `CR-xxx` references in commits, code, changelogs, and the docs wiki still resolve. Do not add new files.
 
 ## Index
 
@@ -51,8 +47,8 @@ Local-first change requests for `mylifeindigital`. Proposed rows may start as li
 | CR-035 | Skip drafts when generating images | Done | Medium | Content Pipeline | 2026-08-10 | [CR-035-skip-drafts-when-generating-images.md](./CR-035-skip-drafts-when-generating-images.md) |
 | CR-036 | MLID Stream capture and sync | Dropped | Medium | Content Operations | 2026-09-10 | [CR-036-mlid-stream-capture-and-sync.md](./CR-036-mlid-stream-capture-and-sync.md) |
 | CR-037 | Remove the stories section | Done | Medium | Web Content | 2026-10-04 | [CR-037-remove-the-stories-section.md](./CR-037-remove-the-stories-section.md) |
-| CR-038 | Capture and explore ideas with a feedback loop | In Progress | High | Process | 2026-10-10 | [CR-038-capture-and-explore-ideas-with-a-feedback-loop.md](./CR-038-capture-and-explore-ideas-with-a-feedback-loop.md) |
-| CR-039 | Show ideas and their verdicts | Proposed | Medium | Web Content | 2026-10-10 | [CR-039-show-ideas-and-their-verdicts.md](./CR-039-show-ideas-and-their-verdicts.md) |
+| CR-038 | Capture and explore ideas with a feedback loop | Moved to issue | High | Process | 2026-10-10 | Moved to [#76](https://github.com/mylifeindigital/mylifeindigital/issues/76) |
+| CR-039 | Show ideas and their verdicts | Moved to issue | Medium | Web Content | 2026-10-10 | Moved to [#77](https://github.com/mylifeindigital/mylifeindigital/issues/77) |
 
 ## Backlog Grooming Notes
 

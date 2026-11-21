@@ -10,7 +10,7 @@ The owner learns by ruminating: explaining an idea, receiving feedback, and goin
 ## First Steps
 
 1. Read `ideas/README.md` for the lifecycle and boundaries.
-2. For capture, read `ideas/templates/idea.md`. For a round or a verdict, read the idea's file. For focus, read every file in `ideas/` (not `templates/`) and `change-requests/index.md`.
+2. For capture, read `ideas/templates/idea.md`. For a round or a verdict, read the idea's file. For focus, read every file in `ideas/` (not `templates/`) and the open GitHub issues labelled `change` in this repository.
 
 ## Scope Gate
 
@@ -46,17 +46,17 @@ Capture must stay quick. Do not start giving feedback unless asked.
 
 When the user decides:
 
-1. Set `Status`. `Experimenting` needs a linked `experiments/<name>/`, and `Building` needs a link to the change request, experiment, or repository where the work continues.
+1. Set `Status`. `Experimenting` needs a linked `experiments/<name>/`, and `Building` needs a link to the `change` issue, experiment, or repository where the work continues.
 2. Write `Verdict` in the user's reasoning, not the agent's. For `Parked`, record what would bring the idea back. For `Abandoned`, record which assumption failed or what prior art made it unnecessary.
 3. A verdict is never a reason to delete a file. Abandoned ideas stay.
 
 ## Focus: "What Should I Focus On Next?"
 
-1. Read every idea's `Status`, `Updated`, latest recommendation, and any running experiment. Read the open rows in `change-requests/index.md`.
+1. Read every idea's `Status`, `Updated`, latest recommendation, and any running experiment. Read the open issues labelled `change`.
 2. Prefer, in order:
    1. A running experiment whose time box has passed. It needs a judgment, not more work.
    2. An idea whose latest recommendation is Experiment but which has no experiment yet.
-   3. An open change request already in progress.
+   3. An open `change` issue already in progress.
    4. The `Exploring` idea most worth a next round, given how much is unresolved and how long it has been idle.
 3. Recommend **one** thing, with the reason it comes first and the single next action. Mention at most two alternatives in one line each.
 4. If ideas are stale (`Exploring` and untouched for weeks), say so, and suggest parking them rather than carrying them forever.
