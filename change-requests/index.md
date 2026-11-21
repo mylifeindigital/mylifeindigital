@@ -2,7 +2,7 @@
 
 **This folder is a read-only archive.** On 2026-11-21 change requests moved to GitHub issues, so that they are no longer tied to a branch and work the same way in every `mylifeindigital` repository. See `Issues and the Board` in [`AGENTS.md`](../AGENTS.md).
 
-- New changes, ideas, and decisions are [issues in this repository](https://github.com/mylifeindigital/mylifeindigital/issues), labelled `change`, `idea`, or `decision`, and they all appear on the **My Life In Digital** GitHub Project board.
+- New changes, ideas, and decisions are [issues in this repository](https://github.com/mylifeindigital/mylifeindigital/issues), labelled `change`, `idea`, or `decision`, and they all appear on the [**My Life In Digital** project board](https://github.com/users/mylifeindigital/projects/4).
 - The two requests that were still open moved to issues that keep their IDs in the title: `CR-038` is [#76](https://github.com/mylifeindigital/mylifeindigital/issues/76) and `CR-039` is [#77](https://github.com/mylifeindigital/mylifeindigital/issues/77).
 - Done and dropped requests stay here unchanged, so `CR-xxx` references in commits, code, changelogs, and the docs wiki still resolve. Do not add new files.
 

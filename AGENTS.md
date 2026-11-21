@@ -148,7 +148,7 @@ There is none, and reintroducing one needs a change request. `CR-018` decided th
 
 ## Issues and the Board
 
-Track changes, ideas, and decisions as GitHub issues in the repository they affect. Issues live on GitHub rather than on a branch, so they can be opened, edited, and closed without a pull request. Issues from every `mylifeindigital` repository also appear on one board, the **My Life In Digital** GitHub Project owned by `mylifeindigital`, which holds each issue's Status.
+Track changes, ideas, and decisions as GitHub issues in the repository they affect. Issues live on GitHub rather than on a branch, so they can be opened, edited, and closed without a pull request. Issues from every `mylifeindigital` repository also appear on one board, the [**My Life In Digital** project board](https://github.com/users/mylifeindigital/projects/4), which holds each issue's Status (Todo, In Progress, Blocked, Done). New issues are added to it automatically.
 
 - Label each issue `idea` (worth exploring, may be dropped), `change` (accepted work), or `decision` (a question to settle; the issue records the answer and why). The `area:` labels still apply.
 - Give an issue as much shape as it needs: a few lines for a small change; context, goal, open questions, plan, and acceptance criteria for a large one. Record decisions and the outcome in the issue with dates, as comments or by editing the body.
